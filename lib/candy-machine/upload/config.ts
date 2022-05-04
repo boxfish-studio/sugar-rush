@@ -1,16 +1,55 @@
 import * as anchor from "@project-serum/anchor";
 import { CANDY_MACHINE_PROGRAM_V2_ID } from "../constants";
 
-import { PublicKey, Keypair } from "@solana/web3.js";
-
+import { PublicKey } from "@solana/web3.js";
 import { getMint, TOKEN_PROGRAM_ID, getAccount } from "@solana/spl-token";
-
 export interface WhitelistMintMode {
   neverBurn: undefined | boolean;
   burnEveryTime: undefined | boolean;
 }
 
-import { getAtaForMint,parseDate } from "./helpers";
+export interface CandyMachineConfig {
+  price: number;
+  number: number;
+  gatekeeper: typeof Gatekeeper | null;
+  solTreasuryAccount: string;
+  splTokenAccount: null;
+  splToken: null;
+  goLiveDate: string;
+  endSettings: any;
+  whitelistMintSettings: whitelistMintSettings | null;
+  hiddenSettings: hiddenSettings | null;
+  storage: StorageType;
+  ipfsInfuraProjectId: null;
+  ipfsInfuraSecret: null;
+  nftStorageKey: null;
+  awsS3Bucket: null;
+  noRetainAuthority: boolean;
+  noMutable: boolean;
+  pinataJwt: null;
+  pinataGateway: null;
+  batchSize: null;
+  uuid: null;
+  arweaveJwk: null;
+}
+export const Gatekeeper = {
+  gatekeeperNetwork: "ignREusXmGrscGNUesoU9mxfds9AiYTezUKex2PsZV6",
+  expireOnUse: true,
+} as const;
+
+interface whitelistMintSettings {
+  mode: any;
+  mint: PublicKey;
+  presale: boolean;
+  discountPrice: null | anchor.BN;
+}
+interface hiddenSettings {
+  name: string;
+  uri: string;
+  hash: Uint8Array;
+}
+
+import { getAtaForMint, parseDate } from "./helpers";
 
 export interface CandyMachineData {
   itemsAvailable: anchor.BN;
@@ -57,7 +96,6 @@ export enum StorageType {
 
 export async function loadCandyProgramV2(customRpcUrl?: string) {
   if (customRpcUrl) console.log("USING CUSTOM URL", customRpcUrl);
-
   const provider = anchor.getProvider();
   const idl = (await anchor.Program.fetchIdl(
     CANDY_MACHINE_PROGRAM_V2_ID,
@@ -74,20 +112,20 @@ export async function loadCandyProgramV2(customRpcUrl?: string) {
 }
 
 export async function getCandyMachineV2Config(
-  walletKeyPair: Keypair,
-  configForm?: any
+  walletKeyPair: PublicKey,
+  configForm: CandyMachineConfig
 ): Promise<{
   storage: StorageType;
-  nftStorageKey: string;
-  ipfsInfuraProjectId: string;
+  nftStorageKey: string | null;
+  ipfsInfuraProjectId: string | null;
   number: number;
-  ipfsInfuraSecret: string;
-  pinataJwt: string;
-  pinataGateway: string;
-  awsS3Bucket: string;
+  ipfsInfuraSecret: string | null;
+  pinataJwt: string | null;
+  pinataGateway: string | null;
+  awsS3Bucket: string | null;
   retainAuthority: boolean;
   mutable: boolean;
-  batchSize: number;
+  batchSize: number | null;
   price: anchor.BN;
   treasuryWallet: PublicKey;
   splToken: PublicKey | null;
@@ -108,17 +146,14 @@ export async function getCandyMachineV2Config(
     hash: Uint8Array;
   };
   goLiveDate: anchor.BN | null;
-  uuid: string;
-  arweaveJwk: string;
+  uuid: string | null;
+  arweaveJwk: string | null;
 }> {
   if (configForm === undefined) {
     throw new Error("The configForm is undefined");
   }
 
-  const configString = fs.readFileSync(configForm);
-
-  //@ts-ignore
-  const config = JSON.parse(configString);
+  const config = configForm;
 
   const {
     storage,
@@ -151,8 +186,9 @@ export async function getCandyMachineV2Config(
   const splTokenAccountFigured = splTokenAccount
     ? splTokenAccount
     : splToken
-    ? (await getAtaForMint(new PublicKey(splToken), walletKeyPair.publicKey))[0]
+    ? (await getAtaForMint(new PublicKey(splToken), walletKeyPair))[0]
     : null;
+
   if (splToken) {
     if (solTreasuryAccount) {
       throw new Error(
@@ -165,7 +201,9 @@ export async function getCandyMachineV2Config(
       );
     }
     const splTokenKey = new PublicKey(splToken);
-    const splTokenAccountKey = new PublicKey(splTokenAccountFigured);
+    const splTokenAccountKey = new PublicKey(
+      splTokenAccountFigured as anchor.web3.PublicKey
+    );
     if (!splTokenAccountFigured) {
       throw new Error(
         "If spl-token is set, spl-token-account must also be set"
@@ -173,6 +211,7 @@ export async function getCandyMachineV2Config(
     }
 
     const anchorProgram = await loadCandyProgramV2();
+    console.log("anchor program loaded", anchorProgram);
 
     const mintInfo = await getMint(
       anchorProgram.provider.connection,
@@ -201,29 +240,30 @@ export async function getCandyMachineV2Config(
     wallet = new PublicKey(splTokenAccountKey);
     parsedPrice = price * 10 ** mintInfo.decimals;
     if (
-      whitelistMintSettings?.discountPrice ||
-      whitelistMintSettings?.discountPrice === 0
+      (whitelistMintSettings && whitelistMintSettings?.discountPrice) ||
+      (whitelistMintSettings &&
+        whitelistMintSettings?.discountPrice?.toNumber() === 0)
     ) {
-      whitelistMintSettings.discountPrice *= 10 ** mintInfo.decimals;
+      (whitelistMintSettings.discountPrice as any) *= 10 ** mintInfo.decimals;
     }
   } else {
     parsedPrice = price * 10 ** 9;
     if (
       whitelistMintSettings?.discountPrice ||
-      whitelistMintSettings?.discountPrice === 0
+      whitelistMintSettings?.discountPrice?.toNumber() === 0
     ) {
-      whitelistMintSettings.discountPrice *= 10 ** 9;
+      (whitelistMintSettings.discountPrice as any) *= 10 ** 9;
     }
     wallet = solTreasuryAccount
       ? new PublicKey(solTreasuryAccount)
-      : walletKeyPair.publicKey;
+      : walletKeyPair;
   }
 
   if (whitelistMintSettings) {
     whitelistMintSettings.mint = new PublicKey(whitelistMintSettings.mint);
     if (
       whitelistMintSettings?.discountPrice ||
-      whitelistMintSettings?.discountPrice === 0
+      whitelistMintSettings?.discountPrice?.toNumber() === 0
     ) {
       whitelistMintSettings.discountPrice = new anchor.BN(
         whitelistMintSettings.discountPrice
@@ -242,12 +282,9 @@ export async function getCandyMachineV2Config(
 
   if (hiddenSettings) {
     const utf8Encode = new TextEncoder();
-    hiddenSettings.hash = utf8Encode.encode(hiddenSettings.hash);
+    hiddenSettings.hash = utf8Encode.encode(hiddenSettings.hash.toString());
   }
-
-  if (gatekeeper) {
-    gatekeeper.gatekeeperNetwork = new PublicKey(gatekeeper.gatekeeperNetwork);
-  }
+  console.log("correct config");
 
   return {
     storage,
@@ -264,7 +301,12 @@ export async function getCandyMachineV2Config(
     price: new anchor.BN(parsedPrice),
     treasuryWallet: wallet,
     splToken: splToken ? new PublicKey(splToken) : null,
-    gatekeeper,
+    gatekeeper: gatekeeper
+      ? {
+          gatekeeperNetwork: new PublicKey(gatekeeper.gatekeeperNetwork),
+          expireOnUse: gatekeeper.expireOnUse,
+        }
+      : null,
     endSettings,
     hiddenSettings,
     whitelistMintSettings,
@@ -272,4 +314,73 @@ export async function getCandyMachineV2Config(
     uuid,
     arweaveJwk,
   };
+}
+
+const supportedImageTypes = [
+  "image/png",
+  "image/gif",
+  "image/jpeg",
+]
+
+const supportedAnimationTypes = [
+  "video/mp4",
+  "video/quicktime",
+  "audio/mpeg",
+  "audio/x-flac",
+  "audio/wav",
+  "model/gltf-binary",
+  "text/html",
+]
+const JSON_EXTENSION = "application/json";
+export function verifyAssets(files: File[], storage: any, number: number) {
+  let imageFileCount = 0;
+  let animationFileCount = 0;
+  let jsonFileCount = 0;
+
+  // Filter out any non-supported file types and find the JSON vs Image file count
+  const supportedFiles = files.filter((it) => {
+      if (supportedImageTypes.some(e => e === it.type)) {
+        imageFileCount++;
+      } else if (supportedAnimationTypes.some(e => e === it.type)) {
+        animationFileCount++;
+      } else if (it.type == JSON_EXTENSION) {
+        jsonFileCount++;
+      } else {
+        console.warn(`WARNING: Skipping unsupported file type ${it}`);
+        return false;
+      }
+
+    return true;
+  });
+
+  if (animationFileCount !== 0 && storage === StorageType.Arweave) {
+    throw new Error(
+      'The "arweave" storage option is incompatible with animation files. Please try again with another storage option using `--storage <option>`.'
+    );
+  }
+
+  if (animationFileCount !== 0 && animationFileCount !== jsonFileCount) {
+    throw new Error(
+      `number of animation files (${animationFileCount}) is different than the number of json files (${jsonFileCount})`
+    );
+  } else if (imageFileCount !== jsonFileCount) {
+    throw new Error(
+      `number of img files (${imageFileCount}) is different than the number of json files (${jsonFileCount})`
+    );
+  }
+
+  const elemCount = number ? number : imageFileCount;
+  if (elemCount < imageFileCount) {
+    throw new Error(
+      `max number (${elemCount}) cannot be smaller than the number of images in the source folder (${imageFileCount})`
+    );
+  }
+
+  if (animationFileCount === 0) {
+    console.info(`Beginning the upload for ${elemCount} (img+json) pairs`);
+  } else {
+    console.info(
+      `Beginning the upload for ${elemCount} (img+animation+json) sets`
+    );
+  }
 }
