@@ -1,24 +1,98 @@
-import { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 
+const Gatekeeper = {
+  gatekeeperNetwork: "ignREusXmGrscGNUesoU9mxfds9AiYTezUKex2PsZV6",
+  expireOnUse: true
+} as const;
+type Storage = "arweave" | "ipfs" | "pinata";
+
+interface CandyMachineConfig {
+  price: number;
+  number: number;
+  gatekeeper: typeof Gatekeeper | null;
+  solTreasuryAccount: string;
+  splTokenAccount: null;
+  splToken: null;
+  goLiveDate: string;
+  endSettings: null;
+  whitelistMintSettings: null;
+  hiddenSettings: null;
+  storage: Storage;
+  ipfsInfuraProjectId: null;
+  ipfsInfuraSecret: null;
+  nftStorageKey: null;
+  awsS3Bucket: null;
+  noRetainAuthority: boolean;
+  noMutable: boolean;
+}
+
+function UTCify(dateTime: string, time: string): string {
+  let UTCDate: string[] | string = new Date(dateTime)
+    .toDateString()
+    .slice(4)
+    .split(" ");
+  const tempA = UTCDate[0];
+  UTCDate[0] = UTCDate[1];
+  UTCDate[1] = tempA;
+  UTCDate = UTCDate.join(".").replaceAll(".", " ");
+
+  const UTCTime = `${time}:00 GMT`;
+
+  return `${UTCDate} ${UTCTime}`;
+}
+
 const Form: FC = () => {
-  const { publicKey, } = useWallet();
+  const { publicKey } = useWallet();
   const [dateTime, setDateTime] = useState("");
   const [time, setTime] = useState("");
 
-  function UTCify(dateTime: string, time: string): string {
-    let UTCDate: string[] | string = new Date(dateTime)
-      .toDateString()
-      .slice(4)
-      .split(" ");
-    const tempA = UTCDate[0];
-    UTCDate[0] = UTCDate[1];
-    UTCDate[1] = tempA;
-    UTCDate = UTCDate.join(".").replaceAll(".", " ");
+  // TODO change any for correct type
+  function createCandyMachineV2(e: any) {
+    e.preventDefault();
 
-    const UTCTime = `${time}:00 GMT`;
+    const fields = [
+      "price",
+      "number-of-nfts",
+      "treasury-account",
+      "captcha",
+      "mutable",
+      "date-mint",
+      "time-mint",
+    ] as const;
 
-    return `${UTCDate} ${UTCTime}`;
+  // TODO change any for correct type
+
+    const form: {
+      [key: string]: any;
+    } = {};
+
+    for (let field of fields) {
+      if (e.target[field].type == "checkbox") {
+        form[field] = e.target[field]?.checked;
+      } else {
+        form[field] = e.target[field]?.value;
+      }
+    }
+    const config: CandyMachineConfig = {
+      price: form.price,
+      number: form["number-of-nfts"],
+      gatekeeper: form.captcha ? Gatekeeper : null,
+      solTreasuryAccount: form.treasuryAccount,
+      splTokenAccount: null,
+      splToken: null,
+      goLiveDate: UTCify(form["date-mint"], form["time-mint"]),
+      endSettings: null,
+      whitelistMintSettings: null,
+      hiddenSettings: null,
+      storage: form.storage,
+      ipfsInfuraProjectId: null,
+      ipfsInfuraSecret: null,
+      nftStorageKey: null,
+      awsS3Bucket: null,
+      noRetainAuthority: false,
+      noMutable: form.mutable,
+    };
   }
 
   useEffect(() => {
@@ -26,7 +100,10 @@ const Form: FC = () => {
   }, [dateTime, time]);
 
   return (
-    <form className="flex flex-col items-center h-auto justify-center mt-8">
+    <form
+      className="flex flex-col items-center h-auto justify-center mt-8"
+      onSubmit={createCandyMachineV2}
+    >
       <div className="flex flex-col p-4 xxl-shadow rounded-2xl scale-90 bg-gray-200 min-w-max items-center justify-center">
         <FormInput id="price" text="Price of each NFT" type="number" />
         <FormInput id="number-of-nfts" text="Number of NFTs" type="number" />
@@ -53,7 +130,12 @@ const Form: FC = () => {
           setValue={setTime}
         />
 
-        <button type="submit" className="bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white">Create Candy Machine</button>
+        <button
+          type="submit"
+          className="bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white"
+        >
+          Create Candy Machine
+        </button>
       </div>
     </form>
   );
