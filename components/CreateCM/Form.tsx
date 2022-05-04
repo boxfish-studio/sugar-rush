@@ -1,15 +1,24 @@
-import { FC,  useState, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 const Form: FC = () => {
-  const { publicKey } = useWallet();
-
+  const { publicKey, } = useWallet();
   const [dateTime, setDateTime] = useState("");
   const [time, setTime] = useState("");
 
   function UTCify(dateTime: string, time: string): string {
-    // TODO
-    return "";
+    let UTCDate: string[] | string = new Date(dateTime)
+      .toDateString()
+      .slice(4)
+      .split(" ");
+    const tempA = UTCDate[0];
+    UTCDate[0] = UTCDate[1];
+    UTCDate[1] = tempA;
+    UTCDate = UTCDate.join(".").replaceAll(".", " ");
+
+    const UTCTime = `${time}:00 GMT`;
+
+    return `${UTCDate} ${UTCTime}`;
   }
 
   useEffect(() => {
@@ -18,7 +27,7 @@ const Form: FC = () => {
 
   return (
     <form className="flex flex-col items-center h-auto justify-center mt-8">
-      <div className="flex flex-col p-4 xxl-shadow rounded-2xl scale-90 bg-gray-200 min-w-full">
+      <div className="flex flex-col p-4 xxl-shadow rounded-2xl scale-90 bg-gray-200 min-w-max items-center justify-center">
         <FormInput id="price" text="Price of each NFT" type="number" />
         <FormInput id="number-of-nfts" text="Number of NFTs" type="number" />
         <FormInput
@@ -44,7 +53,7 @@ const Form: FC = () => {
           setValue={setTime}
         />
 
-        <input type="submit" value="Create CandyMachine" />
+        <button type="submit" className="bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white">Create Candy Machine</button>
       </div>
     </form>
   );
@@ -71,6 +80,7 @@ const FormInput: FC<Props> = ({
     <>
       <label htmlFor={id}>{text}</label>
       <input
+        className="w-[40rem]"
         id={id}
         type={type}
         name={id}
