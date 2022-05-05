@@ -164,3 +164,8 @@ export async function createCandyMachineV2Account(
   console.log("account created",account);
   return account;
 }
+
+export const getUnixTs = () => {
+  return new Date().getTime() / 1000;
+};
+

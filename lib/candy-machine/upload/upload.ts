@@ -122,6 +122,7 @@ export async function uploadV2({
     [],
     filesNames
   );
+  console.log("dedupedAssetKeys",dedupedAssetKeys);
 
   let candyMachine =
     // cacheContent.program.candyMachine
@@ -229,8 +230,9 @@ export async function uploadV2({
       .process(async (asset) => {
         const jsonFile = files.find(
           (file) =>
-            file.name === asset.index && file.type === "application/json"
-        );
+          file.name.split(".")[0] === asset.index && file.type === "application/json"
+          );
+        const imageFile = files.find((file) => file.name.split(".")[0] === asset.index && file.type === "image/png");
         if (!jsonFile) {
           throw new Error(`JSON file ${asset.index}.json is missing`);
         }
@@ -240,13 +242,10 @@ export async function uploadV2({
         );
 
         // TODO - ADD ANIMATIONS
-        const image = files.find(
-          (file) =>
-            file.name === asset.index && manifest.image.startsWith(file.name)
-        );
+       
 
         const manifestBuffer = Buffer.from(JSON.stringify(manifest));
-
+        if(!imageFile) throw new Error(`Image file ${asset.index} is missing`);
         let link, imageLink, animationLink;
         try {
           switch (storage) {
@@ -256,10 +255,10 @@ export async function uploadV2({
                 walletKeyPair,
                 anchorProgram,
                 env,
-                image,
+                imageFile,
                 manifestBuffer,
                 manifest,
-                asset.index
+                Number(asset.index)
               );
           }
         } catch (err) {
@@ -311,7 +310,7 @@ type Cache = {
  * This object holds the contents of the asset's JSON file.
  * Represented here in its minimal form.
  */
-type Manifest = {
+export type Manifest = {
   image: string;
   animation_url: string;
   name: string;
