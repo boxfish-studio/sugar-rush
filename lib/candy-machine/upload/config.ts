@@ -3,6 +3,9 @@ import { CANDY_MACHINE_PROGRAM_V2_ID } from "../constants";
 
 import { PublicKey } from "@solana/web3.js";
 import { getMint, TOKEN_PROGRAM_ID, getAccount } from "@solana/spl-token";
+import { getAtaForMint, parseDate } from "./helpers";
+
+
 export interface WhitelistMintMode {
   neverBurn: undefined | boolean;
   burnEveryTime: undefined | boolean;
@@ -49,7 +52,6 @@ interface hiddenSettings {
   hash: Uint8Array;
 }
 
-import { getAtaForMint, parseDate } from "./helpers";
 
 export interface CandyMachineData {
   itemsAvailable: anchor.BN;
@@ -94,9 +96,8 @@ export enum StorageType {
   Pinata = "pinata",
 }
 
-export async function loadCandyProgramV2(customRpcUrl?: string) {
+export async function loadCandyProgramV2(provider:anchor.Provider,customRpcUrl?: string) {
   if (customRpcUrl) console.log("USING CUSTOM URL", customRpcUrl);
-  const provider = anchor.getProvider();
   const idl = (await anchor.Program.fetchIdl(
     CANDY_MACHINE_PROGRAM_V2_ID,
     provider
@@ -113,7 +114,8 @@ export async function loadCandyProgramV2(customRpcUrl?: string) {
 
 export async function getCandyMachineV2Config(
   walletKeyPair: PublicKey,
-  configForm: CandyMachineConfig
+  configForm: CandyMachineConfig,
+  anchorProgram: anchor.Program<anchor.Idl>
 ): Promise<{
   storage: StorageType;
   nftStorageKey: string | null;
@@ -210,7 +212,6 @@ export async function getCandyMachineV2Config(
       );
     }
 
-    const anchorProgram = await loadCandyProgramV2();
     console.log("anchor program loaded", anchorProgram);
 
     const mintInfo = await getMint(
@@ -332,12 +333,29 @@ const supportedAnimationTypes = [
   "text/html",
 ]
 const JSON_EXTENSION = "application/json";
-export function verifyAssets(files: File[], storage: any, number: number) {
+
+/**
+ * @typedef {Object} VerifiedAssets
+ * @property {File[]} supportedFiles how the person is called
+ * @property {number} elemCount how many years the person lived
+ */
+
+/**
+ * 
+ * @param files : list of files to analuze (json+image)
+ * @param storage : Storage to use
+ * @param number :number of assets
+ * @returns {VerifiedAssets} returns an array of verified assets and the number of assets
+ */
+
+export function verifyAssets(files: File[], storage: StorageType, number: number) {
   let imageFileCount = 0;
   let animationFileCount = 0;
   let jsonFileCount = 0;
 
-  // Filter out any non-supported file types and find the JSON vs Image file count
+  /**
+   * From the files list, check that the files are valid images and animations or json files.
+   */
   const supportedFiles = files.filter((it) => {
       if (supportedImageTypes.some(e => e === it.type)) {
         imageFileCount++;
@@ -351,7 +369,8 @@ export function verifyAssets(files: File[], storage: any, number: number) {
       }
 
     return true;
-  });
+  })
+  // .map((it) => it.name);
 
   if (animationFileCount !== 0 && storage === StorageType.Arweave) {
     throw new Error(
@@ -383,4 +402,9 @@ export function verifyAssets(files: File[], storage: any, number: number) {
       `Beginning the upload for ${elemCount} (img+animation+json) sets`
     );
   }
+  console.log("supportedFiles", supportedFiles);
+  return {supportedFiles, elemCount};
+  
 }
+
+

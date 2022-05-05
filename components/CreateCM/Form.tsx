@@ -1,5 +1,9 @@
 import React, { FC, useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
+import {
+  useWallet,
+  useAnchorWallet,
+  useConnection,
+} from "@solana/wallet-adapter-react";
 import { useForm } from "hooks/useForm";
 import {
   getCandyMachineV2Config,
@@ -7,14 +11,20 @@ import {
   Gatekeeper,
   StorageType,
   verifyAssets,
+  loadCandyProgramV2,
 } from "lib/candy-machine/upload/config";
 import { UTCify } from "./utils";
+import { uploadV2 } from "lib/candy-machine/upload/upload";
+import {AnchorProvider} from "@project-serum/anchor";
 
 const Form: FC = () => {
   const { publicKey } = useWallet();
+  const anchorWallet = useAnchorWallet();
+  const { connection } = useConnection();
+
   const [files, setFiles] = useState<File[]>([]);
 
-  function checkFormIsValid() {
+  function checkFormIsValid(): boolean {
     // TODO add more conditions
     if (files.length == 0) return false;
     if (!values["date-mint"] || !values["time-mint"]) return false;
@@ -26,7 +36,10 @@ const Form: FC = () => {
   }
 
   function uploadAssets(e: React.ChangeEvent<HTMLInputElement>) {
-    if (!e.target.files) return false;
+    if (!e.target.files || e.target.files.length == 0) {
+      window.alert("No files uploaded");
+      return;
+    }
     const fileList = new Array<File>();
     Array.from(e.target.files).forEach((file) => {
       fileList.push(file);
@@ -34,7 +47,7 @@ const Form: FC = () => {
     setFiles(fileList);
   }
 
-  function createCandyMachineV2() {
+  async function createCandyMachineV2() {
     if (!checkFormIsValid()) return;
     const config: CandyMachineConfig = {
       price: values.price,
@@ -60,11 +73,84 @@ const Form: FC = () => {
       pinataJwt: null,
       uuid: null,
     };
-    console.log(files.length);
-    if (publicKey) {
-      verifyAssets(files, config.storage, config.number);
 
-      getCandyMachineV2Config(publicKey, config);
+    if (publicKey && anchorWallet) {
+      const { supportedFiles, elemCount } = verifyAssets(
+        files,
+        config.storage,
+        config.number
+      );
+
+      const provider = new AnchorProvider(connection, anchorWallet, {
+        preflightCommitment: "recent",
+      });
+
+      const anchorProgram = await loadCandyProgramV2(provider);
+
+      const {
+        storage,
+        nftStorageKey,
+        ipfsInfuraProjectId,
+        number,
+        ipfsInfuraSecret,
+        pinataJwt,
+        pinataGateway,
+        arweaveJwk,
+        awsS3Bucket,
+        retainAuthority,
+        mutable,
+        batchSize,
+        price,
+        splToken,
+        treasuryWallet,
+        gatekeeper,
+        endSettings,
+        hiddenSettings,
+        whitelistMintSettings,
+        goLiveDate,
+        uuid,
+      } = await getCandyMachineV2Config(publicKey, config, anchorProgram);
+
+      const startMs = Date.now();
+      
+      console.info("started at: " + startMs.toString());
+      try {
+        await uploadV2({
+          files: supportedFiles,
+          cacheName: "example",
+          env: "devnet",
+          totalNFTs: elemCount,
+          gatekeeper,
+          storage,
+          retainAuthority,
+          mutable,
+          // nftStorageKey,
+          // ipfsCredentials:null,
+          // pinataJwt,
+          // pinataGateway,
+          // awsS3Bucket,
+          batchSize,
+          price,
+          treasuryWallet,
+          anchorProgram,
+          walletKeyPair: anchorWallet,
+          // splToken,
+          endSettings,
+          hiddenSettings,
+          whitelistMintSettings,
+          goLiveDate,
+          // uuid,
+          // arweaveJwk,
+          // rateLimit,
+          // collectionMintPubkey,
+          // setCollectionMint,
+          // rpcUrl,
+        });
+      } catch (err) {
+        console.error("upload was not successful, please re-run.", err);
+      }
+      const endMs = Date.now();
+      console.log(endMs.toString());
     }
   }
 
@@ -84,6 +170,20 @@ const Form: FC = () => {
     createCandyMachineV2,
     initialState
   );
+
+  /*
+   
+  get options from CLI  👍️
+
+  loadCandyProgramV2 👍️
+
+  getCandyMachineV2Config 👍️
+
+  parseCollectionMintPubkey
+
+  uploadV2
+
+  */
 
   return (
     <form
@@ -137,7 +237,9 @@ const Form: FC = () => {
         <label htmlFor="storage">Storage</label>
         <input list="storage" name="storage" className="w-[40rem]" />
         <datalist id="storage" defaultValue="Arweave">
-          <option value="Arweave" />
+          {Object.keys(StorageType).map((key) => (
+            <option key={key} value={key} />
+          ))}
         </datalist>
 
         <label htmlFor="files">Files</label>
@@ -188,26 +290,3 @@ const FormInput: FC<Props> = ({
 };
 
 export default Form;
-
-/** 
-"price": 0.01,
-"number": 4,
-"gatekeeper": {
-  "gatekeeperNetwork": "ignREusXmGrscGNUesoU9mxfds9AiYTezUKex2PsZV6",
-  "expireOnUse": true
-},
-"solTreasuryAccount": "BoX451MZzydoVdZE4NFfmMT3J5Ztqo7YgUNbwwMfjPFu",
-"splTokenAccount": null,
-"splToken": null,
-"goLiveDate": "3 May 2021 08:00:00 GMT",
-"endSettings": null,
-"whitelistMintSettings": null,
-"hiddenSettings": null,
-"storage": "arweave",
-"ipfsInfuraProjectId": null,
-"ipfsInfuraSecret": null,
-"nftStorageKey": null,
-"awsS3Bucket": null,
-"noRetainAuthority": false,
-"noMutable": false
-**/

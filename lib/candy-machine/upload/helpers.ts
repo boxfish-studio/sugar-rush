@@ -1,9 +1,10 @@
 import * as anchor from "@project-serum/anchor";
 import { SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID } from "../constants";
 
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, Keypair , SystemProgram} from "@solana/web3.js";
 
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { AnchorWallet } from "@solana/wallet-adapter-react";
 
 export interface WhitelistMintMode {
   neverBurn: undefined | boolean;
@@ -49,7 +50,9 @@ export function parseDate(date: string) {
   }
   return Date.parse(date) / 1000;
 }
-
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 export const getAtaForMint = async (
   mint: anchor.web3.PublicKey,
   buyer: anchor.web3.PublicKey
@@ -59,3 +62,98 @@ export const getAtaForMint = async (
     SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
   );
 };
+
+export function uuidFromConfigPubkey(configAccount: PublicKey) {
+  return configAccount.toBase58().slice(0, 6);
+}
+
+export const createCandyMachineV2 = async function (
+  anchorProgram: anchor.Program,
+  payerWallet: AnchorWallet,
+  treasuryWallet: PublicKey,
+  // splToken: PublicKey,
+  candyData: CandyMachineData
+) {
+
+  console.log(11);
+  const candyAccount = Keypair.generate();
+  candyData.uuid = uuidFromConfigPubkey(candyAccount.publicKey);
+
+  if (!candyData.symbol) {
+    throw new Error(`Invalid config, there must be a symbol.`);
+  }
+
+  if (!candyData.creators || candyData.creators.length === 0) {
+    throw new Error(`Invalid config, there must be at least one creator.`);
+  }
+
+  const totalShare = (candyData.creators || []).reduce(
+    (acc, curr) => acc + curr.share,
+    0
+  );
+
+  if (totalShare !== 100) {
+    throw new Error(`Invalid config, creators shares must add up to 100`);
+  }
+
+  let remainingAccounts: AnchorWallet[] = [];
+  // if (splToken) {
+  //   remainingAccounts.push({
+  //     pubkey: splToken,
+  //     isSigner: false,
+  //     isWritable: false,
+  //   });
+  // }
+  return {
+    candyMachine: candyAccount.publicKey,
+    uuid: candyData.uuid,
+    txId: await anchorProgram.methods.initializeCandyMachine(candyData, {
+      accounts: {
+        candyMachine: candyAccount.publicKey,
+        wallet: treasuryWallet,
+        authority: payerWallet.publicKey,
+        payer: payerWallet.publicKey,
+        systemProgram: SystemProgram.programId,
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+      },
+      signers: [payerWallet, candyAccount],
+      remainingAccounts:
+        remainingAccounts.length > 0 ? remainingAccounts : undefined,
+      instructions: [
+        await createCandyMachineV2Account(
+          anchorProgram,
+          candyData,
+          payerWallet.publicKey,
+          candyAccount.publicKey
+        ),
+      ],
+    }).rpc(),
+  };
+};
+
+export async function createCandyMachineV2Account(
+  anchorProgram,
+  candyData: CandyMachineData,
+  payerWallet,
+  candyAccount
+) {
+  const size =
+    CONFIG_ARRAY_START_V2 +
+    4 +
+    candyData.itemsAvailable.toNumber() * CONFIG_LINE_SIZE_V2 +
+    8 +
+    2 * (Math.floor(candyData.itemsAvailable.toNumber() / 8) + 1);
+
+  return anchor.web3.SystemProgram.createAccount({
+    fromPubkey: payerWallet,
+    newAccountPubkey: candyAccount,
+    space: size,
+    lamports:
+      await anchorProgram.provider.connection.getMinimumBalanceForRentExemption(
+        size
+      ),
+    programId: CANDY_MACHINE_PROGRAM_V2_ID,
+  });
+}
+
+
