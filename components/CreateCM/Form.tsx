@@ -112,7 +112,7 @@ const Form: FC = () => {
       } = await getCandyMachineV2Config(publicKey, config, anchorProgram);
 
       const startMs = Date.now();
-      
+
       console.info("started at: " + startMs.toString());
       try {
         await uploadV2({
@@ -141,7 +141,7 @@ const Form: FC = () => {
           goLiveDate,
           // uuid,
           // arweaveJwk,
-          // rateLimit,
+          rateLimit:null,
           // collectionMintPubkey,
           // setCollectionMint,
           // rpcUrl,

@@ -1,7 +1,12 @@
 import * as anchor from "@project-serum/anchor";
-import { SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID } from "../constants";
+import {
+  SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
+  CONFIG_ARRAY_START_V2,
+  CONFIG_LINE_SIZE_V2,
+  CANDY_MACHINE_PROGRAM_V2_ID,
+} from "../constants";
 
-import { PublicKey, Keypair , SystemProgram} from "@solana/web3.js";
+import { PublicKey, Keypair, SystemProgram } from "@solana/web3.js";
 
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
@@ -74,8 +79,6 @@ export const createCandyMachineV2 = async function (
   // splToken: PublicKey,
   candyData: CandyMachineData
 ) {
-
-  console.log(11);
   const candyAccount = Keypair.generate();
   candyData.uuid = uuidFromConfigPubkey(candyAccount.publicKey);
 
@@ -96,7 +99,7 @@ export const createCandyMachineV2 = async function (
     throw new Error(`Invalid config, creators shares must add up to 100`);
   }
 
-  let remainingAccounts: AnchorWallet[] = [];
+  let remainingAccounts:any[] = [];
   // if (splToken) {
   //   remainingAccounts.push({
   //     pubkey: splToken,
@@ -104,39 +107,43 @@ export const createCandyMachineV2 = async function (
   //     isWritable: false,
   //   });
   // }
-  return {
+  const cmCreation =  {
     candyMachine: candyAccount.publicKey,
     uuid: candyData.uuid,
-    txId: await anchorProgram.methods.initializeCandyMachine(candyData, {
-      accounts: {
-        candyMachine: candyAccount.publicKey,
-        wallet: treasuryWallet,
-        authority: payerWallet.publicKey,
-        payer: payerWallet.publicKey,
-        systemProgram: SystemProgram.programId,
-        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-      },
-      signers: [payerWallet, candyAccount],
-      remainingAccounts:
-        remainingAccounts.length > 0 ? remainingAccounts : undefined,
-      instructions: [
-        await createCandyMachineV2Account(
-          anchorProgram,
-          candyData,
-          payerWallet.publicKey,
-          candyAccount.publicKey
-        ),
-      ],
-    }).rpc(),
+    txId: await anchorProgram.methods
+      .initializeCandyMachine(candyData).
+        accounts({
+          candyMachine: candyAccount.publicKey,
+          wallet: treasuryWallet,
+          authority: payerWallet.publicKey,
+          payer: payerWallet.publicKey,
+          systemProgram: SystemProgram.programId,
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+        }).
+        // MAYBE NEED TO ADD PAYER WALLET
+        signers([ candyAccount]).
+        remainingAccounts(remainingAccounts).
+        preInstructions([
+          await createCandyMachineV2Account(
+            anchorProgram,
+            candyData,
+            payerWallet.publicKey,
+            candyAccount.publicKey
+          ),
+        ])      
+      .rpc(),
   };
+  console.log("cmCreation",cmCreation);
+  return cmCreation;
 };
 
 export async function createCandyMachineV2Account(
-  anchorProgram,
+  anchorProgram:anchor.Program,
   candyData: CandyMachineData,
-  payerWallet,
-  candyAccount
+  payerWallet:PublicKey,
+  candyAccount:PublicKey
 ) {
+  console.log("creating v2 account");
   const size =
     CONFIG_ARRAY_START_V2 +
     4 +
@@ -144,7 +151,7 @@ export async function createCandyMachineV2Account(
     8 +
     2 * (Math.floor(candyData.itemsAvailable.toNumber() / 8) + 1);
 
-  return anchor.web3.SystemProgram.createAccount({
+  const account = anchor.web3.SystemProgram.createAccount({
     fromPubkey: payerWallet,
     newAccountPubkey: candyAccount,
     space: size,
@@ -154,6 +161,6 @@ export async function createCandyMachineV2Account(
       ),
     programId: CANDY_MACHINE_PROGRAM_V2_ID,
   });
+  console.log("account created",account);
+  return account;
 }
-
-
