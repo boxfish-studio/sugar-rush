@@ -37,5 +37,5 @@ export function saveCache(
 ) {
   cacheContent.env = env;
   cacheContent.cacheName = cacheName;
- fileDownloader(cacheName, JSON.stringify(cacheContent))
+ fileDownloader(JSON.stringify(cacheContent),cacheName)
 }

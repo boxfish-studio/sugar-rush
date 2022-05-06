@@ -46,9 +46,8 @@ export async function uploadV2({
   // uuid,
   walletKeyPair,
   anchorProgram,
-  rateLimit
-}: 
-// arweaveJwk,
+  rateLimit,
+}: // arweaveJwk,
 // collectionMintPubkey,
 // rpcUrl,
 // setCollectionMint,
@@ -97,15 +96,15 @@ export async function uploadV2({
   // rpcUrl: null | string;
 }): Promise<boolean> {
   // const savedContent = loadCache(cacheName, env);
-  let cacheContent =
+  let cacheContent: any =
     //  savedContent
     //  ||
     {
       program: {
-        uuid:"",
-        candyMachine:""
+        uuid: "",
+        candyMachine: "",
       },
-      items:[]
+      items: {},
     };
   const filesNames = files.map((file) => file.name);
 
@@ -122,7 +121,7 @@ export async function uploadV2({
     [],
     filesNames
   );
-  console.log("dedupedAssetKeys",dedupedAssetKeys);
+  console.log("dedupedAssetKeys", dedupedAssetKeys);
 
   let candyMachine =
     // cacheContent.program.candyMachine
@@ -176,7 +175,7 @@ export async function uploadV2({
           }),
         }
       );
-      console.log("res",res);
+      console.log("res", res);
       cacheContent.program.uuid = res.uuid;
       cacheContent.program.candyMachine = res.candyMachine.toBase58();
       candyMachine = res.candyMachine;
@@ -218,7 +217,8 @@ export async function uploadV2({
   if (dedupedAssetKeys.length) {
     // TODO - progress bar
 
-    await PromisePool.withConcurrency(batchSize || 10)
+    // TODO make single promise not overlap each other
+    await PromisePool.withConcurrency(batchSize || 1)
       .for(dedupedAssetKeys)
       .handleError(async (err, asset) => {
         console.error(
@@ -227,12 +227,19 @@ export async function uploadV2({
         );
         await sleep(5000);
       })
+
       .process(async (asset) => {
+        console.log("processing asset: ", asset);
         const jsonFile = files.find(
           (file) =>
-          file.name.split(".")[0] === asset.index && file.type === "application/json"
-          );
-        const imageFile = files.find((file) => file.name.split(".")[0] === asset.index && file.type === "image/png");
+            file.name.split(".")[0] === asset.index &&
+            file.type === "application/json"
+        );
+        const imageFile = files.find(
+          (file) =>
+            file.name.split(".")[0] === asset.index &&
+            file.type.startsWith("image/")
+        );
         if (!jsonFile) {
           throw new Error(`JSON file ${asset.index}.json is missing`);
         }
@@ -242,10 +249,9 @@ export async function uploadV2({
         );
 
         // TODO - ADD ANIMATIONS
-       
 
         const manifestBuffer = Buffer.from(JSON.stringify(manifest));
-        if(!imageFile) throw new Error(`Image file ${asset.index} is missing`);
+        if (!imageFile) throw new Error(`Image file ${asset.index} is missing`);
         let link, imageLink, animationLink;
         try {
           switch (storage) {
@@ -260,37 +266,55 @@ export async function uploadV2({
                 manifest,
                 Number(asset.index)
               );
+
+              if (link && imageLink) {
+                cacheContent.items[asset.index] = {
+                  link,
+                  imageLink,
+                  name: manifest.name,
+                  onChain: false,
+                };
+                saveCache(cacheName, env, cacheContent);
+              }
           }
         } catch (err) {
           console.error(err);
         }
       });
-
-    saveCache(cacheName, env, cacheContent);
   }
 
   let uploadSuccessful = true;
-  if (!hiddenSettings) {
-    uploadSuccessful = await writeIndices({
-      anchorProgram,
-      cacheContent,
-      cacheName,
-      env,
-      candyMachine,
-      walletKeyPair,
-      rateLimit,
-    });
+  try {
+    if (!hiddenSettings) {
 
-    const uploadedItems = Object.values(cacheContent.items).filter(
-      (f: any) => !!f.link
-    ).length;
-    uploadSuccessful = uploadSuccessful && uploadedItems === totalNFTs;
-  } else {
-    console.info("Skipping upload to chain as this is a hidden Candy Machine");
+      uploadSuccessful = await writeIndices({
+        anchorProgram,
+        cacheContent,
+        cacheName,
+        env,
+        candyMachine,
+        walletKeyPair,
+        rateLimit,
+      });
+      console.log("cache content: ", cacheContent);
+      const uploadedItems = Object.values(cacheContent.items).filter(
+        (f: any) => !!f.link
+      ).length;
+      console.log("uploadedItems: ", uploadedItems);
+      console.log("totalNFTs: ", totalNFTs);
+      console.log("uploadSuccessful: ", uploadSuccessful);
+
+      uploadSuccessful = uploadSuccessful && uploadedItems == totalNFTs;
+    } else {
+      console.log("Skipping upload to chain as this is a hidden Candy Machine");
+    }
+
+    console.log(`Done. Successful = ${uploadSuccessful}.`);
+    return uploadSuccessful;
+  } catch (err) {
+    console.error(err);
+    return false;
   }
-
-  console.log(`Done. Successful = ${uploadSuccessful}.`);
-  return uploadSuccessful;
 }
 
 /**
@@ -430,25 +454,28 @@ async function writeIndices({
   console.info(`Writing all indices in ${poolArray.length} transactions...`);
 
   // TODO - progress bar
-
-  const addConfigLines = async ({ index, configLines }:{index:any,configLines:any[]}) => {
+  const addConfigLines = async ({
+    index,
+    configLines,
+  }: {
+    index: any;
+    configLines: any[];
+  }) => {
     const response = await anchorProgram.methods
       .addConfigLines(
         index,
         configLines.map((i) => ({
           uri: cacheContent.items[keys[i]].link,
           name: cacheContent.items[keys[i]].name,
-        })),
-        {
-          accounts: {
-            candyMachine,
-            authority: walletKeyPair.publicKey,
-          },
-          signers: [walletKeyPair],
-        }
+        }))
       )
+      .accounts({
+        candyMachine,
+        authority: walletKeyPair.publicKey,
+
+      }).        signers( [])
       .rpc();
-    console.debug(response);
+    console.log(response);
     configLines.forEach((i) => {
       cacheContent.items[keys[i]] = {
         ...cacheContent.items[keys[i]],
@@ -479,45 +506,3 @@ async function writeIndices({
   saveCache(cacheName, env, cacheContent);
   return uploadSuccessful;
 }
-
-/**
- * Save the Candy Machine's authority (public key) to the Cache object / file.
- */
-function setAuthority(publicKey: PublicKey, cache:any, cacheName:any, env:string) {
-  cache.authority = publicKey.toBase58();
-  saveCache(cacheName, env, cache);
-}
-
-/**
- * Update the Cache object for assets that were uploaded with their matching
- * Manifest link. Also set the `onChain` property to `false` so we know this
- * asset should later be appended to the deployed Candy Machine program's
- * configuration on chain.
- */
-function updateCacheAfterUpload(
-  cache: Cache,
-  cacheKeys: Array<keyof Cache["items"]>,
-  links: string[],
-  names: string[]
-) {
-  cacheKeys.forEach((cacheKey, idx) => {
-    cache.items[cacheKey] = {
-      link: links[idx],
-      name: names[idx],
-      onChain: false,
-    };
-  });
-}
-
-type UploadParams = {
-  files: string[];
-  cacheName: string;
-  env: "mainnet-beta" | "devnet";
-  keypair: string;
-  storage: string;
-  rpcUrl: string;
-  // ipfsCredentials: ipfsCreds;
-  awsS3Bucket: string;
-  arweaveJwk: string;
-  batchSize: number;
-};

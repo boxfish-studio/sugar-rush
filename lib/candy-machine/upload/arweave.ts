@@ -3,14 +3,14 @@ import { calculate } from "@metaplex/arweave-cost";
 import { ARWEAVE_PAYMENT_WALLET } from "../constants";
 import { sendTransactionWithRetryWithKeypair } from "./transactions";
 import { Manifest } from "./upload";
-import { type } from "os";
+
 
 const ARWEAVE_UPLOAD_ENDPOINT =
   "https://us-central1-metaplex-studios.cloudfunctions.net/uploadFile";
 
 async function fetchAssetCostToStore(fileSizes: number[]) {
   const result = await calculate(fileSizes);
-  console.debug("Arweave cost estimates:", result);
+  console.log("Arweave cost estimates:", result);
 
   return result.solana * anchor.web3.LAMPORTS_PER_SOL;
 }
@@ -24,7 +24,6 @@ async function upload(data: FormData, manifest: Manifest, index: number) {
       body: data,
     })
   ).json();
-    console.log("r",res);
   return res;
 }
 
@@ -62,17 +61,18 @@ export async function arweaveUpload(
   manifest: any, // TODO rename metadata
   index: number
 ) {
-  console.log("arweave upload");
   const imageExt = image.type;
   const estimatedManifestSize = estimateManifestSize([
     image.name,
     "metadata.json",
   ]);
+
   const storageCost = await fetchAssetCostToStore([
     image.size,
     manifestBuffer.length,
     estimatedManifestSize,
   ]);
+
   console.log(`lamport cost to store ${image.name}: ${storageCost}`);
 
   const instructions = [
@@ -82,6 +82,7 @@ export async function arweaveUpload(
       lamports: storageCost,
     }),
   ];
+
   const tx = await sendTransactionWithRetryWithKeypair(
     anchorProgram.provider.connection,
     walletKeyPair,
@@ -91,21 +92,13 @@ export async function arweaveUpload(
   console.log(`solana transaction (${env}) for arweave payment:`, tx);
 
   const data = new FormData();
-  const b = new Blob([image], { type: "image/png" });
-  const c = new Blob([manifestBuffer], { type: "application/json" });
-  const a = new ReadableStream({
-      start(controller){
-        controller.enqueue(image);
-        controller.close();
-      },
-    
-  })
+  const manifestBlob = new Blob([manifestBuffer], { type: "application/json" });
+
   data.append("transaction", tx["txid"]);
   data.append("env", env);
-  data.append("file[]", a, image.name);
-  data.append("file[]", c, "metadata.json");
+  data.append("file[]", image, image.name);
+  data.append("file[]", manifestBlob, "metadata.json");
     
-  console.log("d",[...data]);
   const result = await upload(data, manifest, index);
 
   console.log("result", result);
@@ -114,14 +107,17 @@ export async function arweaveUpload(
     (m:any) => m.filename === "manifest.json"
   );
   const imageFile = result.messages?.find(
-    (m:any) => m.filename === `${index}${imageExt}`
+    (m:any) => m.filename === image.name
   );
+  
   if (metadataFile?.transactionId) {
     const link = `https://arweave.net/${metadataFile.transactionId}`;
     const imageLink = `https://arweave.net/${
       imageFile.transactionId
     }?ext=${imageExt.replace(".", "")}`;
-    console.debug(`File uploaded: ${link}`);
+    console.log(`File uploaded: ${link}`);
+    console.log(`imageLink uploaded: ${imageLink}`);
+
     return [link, imageLink];
   } else {
     // @todo improve

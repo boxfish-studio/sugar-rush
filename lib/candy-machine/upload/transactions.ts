@@ -28,15 +28,20 @@ export const sendTransactionWithRetryWithKeypair = async (
   block?: BlockhashAndFeeCalculator,
   beforeSend?: () => void
 ) => {
+  console.log("sendTransactionWithRetryWithKeypair");
   const transaction = new Transaction();
+
   instructions.forEach((instruction) => transaction.add(instruction));
+  
   transaction.recentBlockhash = (
     block || (await connection.getLatestBlockhash(commitment))
   ).blockhash;
 
   transaction.feePayer = wallet.publicKey;
+  console.log("await signTransaction");
 
   await wallet.signTransaction(transaction);
+  console.log("signTransaction");
 
   if (beforeSend) {
     beforeSend();
