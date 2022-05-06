@@ -4,15 +4,17 @@ import {
   useAnchorWallet,
   useConnection,
 } from '@solana/wallet-adapter-react';
-import { useForm } from 'hooks/useForm';
+import { useForm } from 'hooks';
 import {
   getCandyMachineV2Config,
-  CandyMachineConfig,
-  Gatekeeper,
-  StorageType,
   verifyAssets,
   loadCandyProgramV2,
 } from 'lib/candy-machine/upload/config';
+import {
+  CandyMachineConfig,
+  Gatekeeper,
+  StorageType,
+} from 'lib/candy-machine/types';
 import { UTCify } from './utils';
 import { uploadV2 } from 'lib/candy-machine/upload/upload';
 import { AnchorProvider } from '@project-serum/anchor';
@@ -247,7 +249,7 @@ const Form: FC = () => {
   );
 };
 
-interface InputProps {
+interface Input {
   id: string;
   text: string;
   type: string;
@@ -256,7 +258,7 @@ interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const FormInput: FC<InputProps> = ({
+const FormInput: FC<Input> = ({
   id,
   text,
   type,

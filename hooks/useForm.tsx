@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const useForm = <T,>(cb: () => any, initialState: T) => {
+const useForm = <T,>(cb: () => any, initialState: T) => {
   const [values, setValues] = useState(initialState);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,3 +18,5 @@ export const useForm = <T,>(cb: () => any, initialState: T) => {
     values,
   };
 };
+
+export default useForm;

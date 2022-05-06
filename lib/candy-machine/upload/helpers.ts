@@ -10,44 +10,7 @@ import { PublicKey, Keypair, SystemProgram } from '@solana/web3.js';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-
-export interface WhitelistMintMode {
-  neverBurn: undefined | boolean;
-  burnEveryTime: undefined | boolean;
-}
-
-export interface CandyMachineData {
-  itemsAvailable: anchor.BN;
-  uuid: null | string;
-  symbol: string;
-  sellerFeeBasisPoints: number;
-  isMutable: boolean;
-  maxSupply: anchor.BN;
-  price: anchor.BN;
-  retainAuthority: boolean;
-  gatekeeper: null | {
-    expireOnUse: boolean;
-    gatekeeperNetwork: PublicKey;
-  };
-  goLiveDate: null | anchor.BN;
-  endSettings: null | [number, anchor.BN];
-  whitelistMintSettings: null | {
-    mode: WhitelistMintMode;
-    mint: anchor.web3.PublicKey;
-    presale: boolean;
-    discountPrice: null | anchor.BN;
-  };
-  hiddenSettings: null | {
-    name: string;
-    uri: string;
-    hash: Uint8Array;
-  };
-  creators: {
-    address: PublicKey;
-    verified: boolean;
-    share: number;
-  }[];
-}
+import {CandyMachineData} from "../types"
 
 export function parseDate(date: string) {
   if (date === 'now') {
@@ -167,4 +130,12 @@ export async function createCandyMachineV2Account(
 
 export const getUnixTs = () => {
   return new Date().getTime() / 1000;
+};
+
+export const getFileName = (fileName: string) => {
+  return fileName.split('.')[0];
+};
+
+export const getFileExtension = (fileName: string) => {
+  return fileName.split('.')[1];
 };

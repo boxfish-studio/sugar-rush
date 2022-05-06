@@ -4,52 +4,7 @@ import { CANDY_MACHINE_PROGRAM_V2_ID } from '../constants';
 import { PublicKey } from '@solana/web3.js';
 import { getMint, TOKEN_PROGRAM_ID, getAccount } from '@solana/spl-token';
 import { getAtaForMint, parseDate } from './helpers';
-
-export interface WhitelistMintMode {
-  neverBurn: undefined | boolean;
-  burnEveryTime: undefined | boolean;
-}
-
-export interface CandyMachineConfig {
-  price: number;
-  number: number;
-  gatekeeper: typeof Gatekeeper | null;
-  solTreasuryAccount: string;
-  splTokenAccount: null;
-  splToken: null;
-  goLiveDate: string;
-  endSettings: any;
-  whitelistMintSettings: whitelistMintSettings | null;
-  hiddenSettings: hiddenSettings | null;
-  storage: StorageType;
-  ipfsInfuraProjectId: null;
-  ipfsInfuraSecret: null;
-  nftStorageKey: null;
-  awsS3Bucket: null;
-  noRetainAuthority: boolean;
-  noMutable: boolean;
-  pinataJwt: null;
-  pinataGateway: null;
-  batchSize: null;
-  uuid: null;
-  arweaveJwk: null;
-}
-export const Gatekeeper = {
-  gatekeeperNetwork: 'ignREusXmGrscGNUesoU9mxfds9AiYTezUKex2PsZV6',
-  expireOnUse: true,
-} as const;
-
-interface whitelistMintSettings {
-  mode: any;
-  mint: PublicKey;
-  presale: boolean;
-  discountPrice: null | anchor.BN;
-}
-interface hiddenSettings {
-  name: string;
-  uri: string;
-  hash: Uint8Array;
-}
+import { WhitelistMintMode, CandyMachineConfig, StorageType } from '../types';
 
 export interface CandyMachineData {
   itemsAvailable: anchor.BN;
@@ -84,15 +39,7 @@ export interface CandyMachineData {
   }[];
 }
 
-export enum StorageType {
-  ArweaveBundle = 'arweave-bundle',
-  ArweaveSol = 'arweave-sol',
-  Arweave = 'arweave',
-  Ipfs = 'ipfs',
-  Aws = 'aws',
-  NftStorage = 'nft-storage',
-  Pinata = 'pinata',
-}
+
 
 export async function loadCandyProgramV2(
   provider: anchor.Provider,
@@ -349,7 +296,7 @@ export function verifyAssets(
   files: File[],
   storage: StorageType,
   number: number
-) {
+): { supportedFiles: File[]; elemCount: number } {
   let imageFileCount = 0;
   let animationFileCount = 0;
   let jsonFileCount = 0;
@@ -371,7 +318,6 @@ export function verifyAssets(
 
     return true;
   });
-  // .map((it) => it.name);
 
   if (animationFileCount !== 0 && storage === StorageType.Arweave) {
     throw new Error(

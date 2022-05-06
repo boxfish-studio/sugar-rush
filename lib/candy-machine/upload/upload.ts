@@ -13,8 +13,8 @@ import { arweaveUpload } from './arweave';
 // import { awsUpload } from '../helpers/upload/aws';
 // import { ipfsCreds, ipfsUpload } from '../helpers/upload/ipfs';
 
-import { StorageType } from './config';
-import { sleep } from './helpers';
+import { StorageType, Manifest } from '../types';
+import { sleep,getFileExtension, getFileName } from './helpers';
 // import { nftStorageUpload } from '../helpers/upload/nft-storage';
 // import { pinataUpload } from '../helpers/upload/pinata';
 // import { setCollection } from './set-collection';
@@ -186,7 +186,7 @@ export async function uploadV2({
         `initialized config for a candy machine with publickey: ${res.candyMachine.toBase58()}`
       );
 
-      saveCache(cacheName, env, cacheContent);
+      // saveCache(cacheName, env, cacheContent);
     } catch (exx) {
       console.error('Error deploying config to Solana network.', exx);
       throw exx;
@@ -232,12 +232,12 @@ export async function uploadV2({
         console.log('processing asset: ', asset);
         const jsonFile = files.find(
           (file) =>
-            file.name.split('.')[0] === asset.index &&
+            getFileName(file.name) === asset.index &&
             file.type === 'application/json'
         );
         const imageFile = files.find(
           (file) =>
-            file.name.split('.')[0] === asset.index &&
+            getFileName(file.name) === asset.index &&
             file.type.startsWith('image/')
         );
         if (!jsonFile) {
@@ -274,7 +274,7 @@ export async function uploadV2({
                   name: manifest.name,
                   onChain: false,
                 };
-                saveCache(cacheName, env, cacheContent);
+                // saveCache(cacheName, env, cacheContent);
               }
           }
         } catch (err) {
@@ -328,25 +328,7 @@ type Cache = {
   };
 };
 
-/**
- * The Manifest object for a given asset.
- * This object holds the contents of the asset's JSON file.
- * Represented here in its minimal form.
- */
-export type Manifest = {
-  image: string;
-  animation_url: string;
-  name: string;
-  symbol: string;
-  seller_fee_basis_points: number;
-  properties: {
-    files: Array<{ type: string; uri: string }>;
-    creators: Array<{
-      address: string;
-      share: number;
-    }>;
-  };
-};
+
 
 /**
  * From the Cache object & a list of file paths, return a list of asset keys
@@ -363,7 +345,8 @@ function getAssetKeysNeedingUpload(
   const assets = all
     .filter((k) => !k.includes('.json'))
     .reduce((acc: AssetKey[], assetKey) => {
-      const [key, ext] = assetKey.split('.');
+      const key = getFileName(assetKey)
+      const ext = getFileExtension(assetKey)
 
       if (!items[key]?.link && !keyMap[key]) {
         keyMap[key] = true;
@@ -482,7 +465,7 @@ async function writeIndices({
         verifyRun: false,
       };
     });
-    saveCache(cacheName, env, cacheContent);
+    // saveCache(cacheName, env, cacheContent);
 
     // progressBar.increment();
   };

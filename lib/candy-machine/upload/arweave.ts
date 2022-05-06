@@ -2,18 +2,31 @@ import * as anchor from '@project-serum/anchor';
 import { calculate } from '@metaplex/arweave-cost';
 import { ARWEAVE_PAYMENT_WALLET } from '../constants';
 import { sendTransactionWithRetryWithKeypair } from './transactions';
-import { Manifest } from './upload';
+import { Manifest } from '../types';
+import { getFileExtension } from './helpers';
 
 const ARWEAVE_UPLOAD_ENDPOINT =
   'https://us-central1-metaplex-studios.cloudfunctions.net/uploadFile';
 
-async function fetchAssetCostToStore(fileSizes: number[]) {
+/**
+ * @param fileSizes - array of file sizes
+ * @returns {Promise<number>} - estimated cost to store files in lamports
+ */
+async function fetchAssetCostToStore(fileSizes: number[]): Promise<number> {
   const result = await calculate(fileSizes);
   console.log('Arweave cost estimates:', result);
 
   return result.solana * anchor.web3.LAMPORTS_PER_SOL;
 }
 
+/**
+ * After doing a tx to the metaplex arweave wallet to store the NFTs and their metadata, this function calls a serverless function from metaplex
+ * in which the files to upload are attached to the http form.
+ * @param data - FormData object
+ * @param manifest json manifest containing metadata
+ * @param index index of the NFTs to upload
+ * @returns http response
+ */
 async function upload(data: FormData, manifest: Manifest, index: number) {
   console.log(`trying to upload image ${index}: ${manifest.name}`);
   console.log('data', data);
@@ -33,7 +46,7 @@ function estimateManifestSize(filenames: string[]) {
     console.log('name', name);
     paths[name] = {
       id: 'artestaC_testsEaEmAGFtestEGtestmMGmgMGAV438',
-      ext: name.split('.')[1],
+      ext: getFileExtension(name),
     };
   }
 
