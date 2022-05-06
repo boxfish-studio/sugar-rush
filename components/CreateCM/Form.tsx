@@ -1,10 +1,10 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState } from 'react';
 import {
   useWallet,
   useAnchorWallet,
   useConnection,
-} from "@solana/wallet-adapter-react";
-import { useForm } from "hooks/useForm";
+} from '@solana/wallet-adapter-react';
+import { useForm } from 'hooks/useForm';
 import {
   getCandyMachineV2Config,
   CandyMachineConfig,
@@ -12,10 +12,10 @@ import {
   StorageType,
   verifyAssets,
   loadCandyProgramV2,
-} from "lib/candy-machine/upload/config";
-import { UTCify } from "./utils";
-import { uploadV2 } from "lib/candy-machine/upload/upload";
-import {AnchorProvider} from "@project-serum/anchor";
+} from 'lib/candy-machine/upload/config';
+import { UTCify } from './utils';
+import { uploadV2 } from 'lib/candy-machine/upload/upload';
+import { AnchorProvider } from '@project-serum/anchor';
 
 const Form: FC = () => {
   const { publicKey } = useWallet();
@@ -26,10 +26,13 @@ const Form: FC = () => {
 
   function checkFormIsValid(): boolean {
     // TODO add more conditions
+    // TODO add custom message to show error message
     if (files.length == 0) return false;
-    if (!values["date-mint"] || !values["time-mint"]) return false;
+    if (files.length % 2 != 0) return false;
+    if (values['number-of-nfts'] * 2 != files.length) return false;
+    if (!values['date-mint'] || !values['time-mint']) return false;
     if (values.price == 0 || isNaN(values.price)) return false;
-    if (values["number-of-nfts"] == 0 || isNaN(values["number-of-nfts"]))
+    if (values['number-of-nfts'] == 0 || isNaN(values['number-of-nfts']))
       return false;
 
     return true;
@@ -37,7 +40,7 @@ const Form: FC = () => {
 
   function uploadAssets(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length == 0) {
-      window.alert("No files uploaded");
+      window.alert('No files uploaded');
       return;
     }
     const fileList = new Array<File>();
@@ -51,12 +54,12 @@ const Form: FC = () => {
     if (!checkFormIsValid()) return;
     const config: CandyMachineConfig = {
       price: values.price,
-      number: values["number-of-nfts"],
+      number: values['number-of-nfts'],
       gatekeeper: values.captcha ? Gatekeeper : null,
-      solTreasuryAccount: values["treasury-account"],
+      solTreasuryAccount: values['treasury-account'],
       splTokenAccount: null,
       splToken: null,
-      goLiveDate: UTCify(values["date-mint"], values["time-mint"]),
+      goLiveDate: UTCify(values['date-mint'], values['time-mint']),
       endSettings: null,
       whitelistMintSettings: null,
       hiddenSettings: null,
@@ -82,7 +85,7 @@ const Form: FC = () => {
       );
 
       const provider = new AnchorProvider(connection, anchorWallet, {
-        preflightCommitment: "recent",
+        preflightCommitment: 'recent',
       });
 
       const anchorProgram = await loadCandyProgramV2(provider);
@@ -113,12 +116,12 @@ const Form: FC = () => {
 
       const startMs = Date.now();
 
-      console.info("started at: " + startMs.toString());
+      console.info('started at: ' + startMs.toString());
       try {
         await uploadV2({
           files: supportedFiles,
-          cacheName: "example",
-          env: "devnet",
+          cacheName: 'example',
+          env: 'devnet',
           totalNFTs: elemCount,
           gatekeeper,
           storage,
@@ -141,13 +144,13 @@ const Form: FC = () => {
           goLiveDate,
           // uuid,
           // arweaveJwk,
-          rateLimit:null,
+          rateLimit: null,
           // collectionMintPubkey,
           // setCollectionMint,
           // rpcUrl,
         });
       } catch (err) {
-        console.error("upload was not successful, please re-run.", err);
+        console.error('upload was not successful, please re-run.', err);
       }
       const endMs = Date.now();
       console.log(endMs.toString());
@@ -156,13 +159,13 @@ const Form: FC = () => {
 
   const initialState = {
     price: 0,
-    "number-of-nfts": 0,
-    "treasury-account": "",
+    'number-of-nfts': 0,
+    'treasury-account': '',
     captcha: false,
     mutable: false,
-    "date-mint": "",
-    "time-mint": "",
-    storage: "",
+    'date-mint': '',
+    'time-mint': '',
+    storage: '',
     files: [],
   } as const;
 
@@ -171,83 +174,71 @@ const Form: FC = () => {
     initialState
   );
 
-  /*
-   
-  get options from CLI  👍️
-
-  loadCandyProgramV2 👍️
-
-  getCandyMachineV2Config 👍️
-
-  parseCollectionMintPubkey
-
-  uploadV2
-
-  */
-
   return (
     <form
-      className="flex flex-col items-center h-auto justify-center mt-8"
+      className='flex flex-col items-center h-auto justify-center mt-8'
       onSubmit={onSubmit}
     >
-      <div className="flex flex-col p-4 xxl-shadow rounded-2xl scale-90 bg-gray-200 min-w-max items-center justify-center">
+      <div className='flex flex-col p-4 xxl-shadow rounded-2xl scale-90 bg-gray-200 min-w-max items-center justify-center'>
         <FormInput
-          id="price"
-          text="Price of each NFT"
-          type="number"
+          id='price'
+          text='Price of each NFT'
+          type='number'
           onChange={onChange}
         />
         <FormInput
-          id="number-of-nfts"
-          text="Number of NFTs"
-          type="number"
+          id='number-of-nfts'
+          text='Number of NFTs'
+          type='number'
           onChange={onChange}
         />
         <FormInput
-          id="treasury-account"
-          text="Treasury Account"
-          type="text"
+          id='treasury-account'
+          text='Treasury Account'
+          type='text'
           onChange={onChange}
           defaultValue={publicKey?.toBase58()}
         />
         <FormInput
-          id="captcha"
-          text="Captcha?"
-          type="checkbox"
+          id='captcha'
+          text='Captcha?'
+          type='checkbox'
           onChange={onChange}
         />
         <FormInput
-          id="mutable"
-          text="Mutable?"
-          type="checkbox"
+          id='mutable'
+          text='Mutable?'
+          type='checkbox'
           onChange={onChange}
         />
         <FormInput
-          id="date-mint"
-          text="Date for mint"
-          type="date"
+          id='date-mint'
+          text='Date for mint'
+          type='date'
           onChange={onChange}
         />
         <FormInput
-          id="time-mint"
-          text="Time for mint"
-          type="time"
+          id='time-mint'
+          text='Time for mint'
+          type='time'
           onChange={onChange}
         />
-        <label htmlFor="storage">Storage</label>
-        <input list="storage" name="storage" className="w-[40rem]" />
-        <datalist id="storage" defaultValue="Arweave">
-          {Object.keys(StorageType).map((key) => (
-            <option key={key} value={key} />
-          ))}
+        <label htmlFor='storage'>Storage</label>
+        <input list='storage' name='storage' className='w-[40rem]' />
+        <datalist id='storage' defaultValue='Arweave'>
+          {Object.keys(StorageType)
+            .filter((key) => key === 'Arweave')
+            .map((key) => (
+              <option key={key} value={key} />
+            ))}
         </datalist>
 
-        <label htmlFor="files">Files</label>
+        <label htmlFor='files'>Files</label>
 
-        <input type="file" name="files" multiple onChange={uploadAssets} />
+        <input type='file' name='files' multiple onChange={uploadAssets} />
         <button
-          type="submit"
-          className="bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white"
+          type='submit'
+          className='bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white'
         >
           Create Candy Machine
         </button>
@@ -256,7 +247,7 @@ const Form: FC = () => {
   );
 };
 
-interface Props {
+interface InputProps {
   id: string;
   text: string;
   type: string;
@@ -265,7 +256,7 @@ interface Props {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const FormInput: FC<Props> = ({
+const FormInput: FC<InputProps> = ({
   id,
   text,
   type,
@@ -277,7 +268,7 @@ const FormInput: FC<Props> = ({
     <>
       <label htmlFor={id}>{text}</label>
       <input
-        className="w-[40rem]"
+        className='w-[40rem]'
         id={id}
         type={type}
         name={id}

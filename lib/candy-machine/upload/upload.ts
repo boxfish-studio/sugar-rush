@@ -1,11 +1,11 @@
-import { createCandyMachineV2 } from "./helpers";
-import { PublicKey } from "@solana/web3.js";
-import { BN, Program, web3 } from "@project-serum/anchor";
-import { AnchorWallet } from "@solana/wallet-adapter-react";
-import { PromisePool } from "@supercharge/promise-pool";
+import { createCandyMachineV2 } from './helpers';
+import { PublicKey } from '@solana/web3.js';
+import { BN, Program, web3 } from '@project-serum/anchor';
+import { AnchorWallet } from '@solana/wallet-adapter-react';
+import { PromisePool } from '@supercharge/promise-pool';
 
-import { saveCache } from "./cache";
-import { arweaveUpload } from "./arweave";
+import { saveCache } from './cache';
+import { arweaveUpload } from './arweave';
 // import {
 //   makeArweaveBundleUploadGenerator,
 //   withdrawBundlr,
@@ -13,8 +13,8 @@ import { arweaveUpload } from "./arweave";
 // import { awsUpload } from '../helpers/upload/aws';
 // import { ipfsCreds, ipfsUpload } from '../helpers/upload/ipfs';
 
-import { StorageType } from "./config";
-import { sleep } from "./helpers";
+import { StorageType } from './config';
+import { sleep } from './helpers';
 // import { nftStorageUpload } from '../helpers/upload/nft-storage';
 // import { pinataUpload } from '../helpers/upload/pinata';
 // import { setCollection } from './set-collection';
@@ -55,7 +55,7 @@ export async function uploadV2({
 {
   files: File[];
   cacheName: string;
-  env: "mainnet-beta" | "devnet";
+  env: 'mainnet-beta' | 'devnet';
   totalNFTs: number;
   storage: string;
   retainAuthority: boolean;
@@ -101,8 +101,8 @@ export async function uploadV2({
     //  ||
     {
       program: {
-        uuid: "",
-        candyMachine: "",
+        uuid: '',
+        candyMachine: '',
       },
       items: {},
     };
@@ -121,7 +121,7 @@ export async function uploadV2({
     [],
     filesNames
   );
-  console.log("dedupedAssetKeys", dedupedAssetKeys);
+  console.log('dedupedAssetKeys', dedupedAssetKeys);
 
   let candyMachine =
     // cacheContent.program.candyMachine
@@ -142,7 +142,7 @@ export async function uploadV2({
           (creator) => creator.address !== undefined
         )
       ) {
-        throw new Error("Creator address is missing");
+        throw new Error('Creator address is missing');
       }
 
       // initialize candy
@@ -175,7 +175,7 @@ export async function uploadV2({
           }),
         }
       );
-      console.log("res", res);
+      console.log('res', res);
       cacheContent.program.uuid = res.uuid;
       cacheContent.program.candyMachine = res.candyMachine.toBase58();
       candyMachine = res.candyMachine;
@@ -188,7 +188,7 @@ export async function uploadV2({
 
       saveCache(cacheName, env, cacheContent);
     } catch (exx) {
-      console.error("Error deploying config to Solana network.", exx);
+      console.error('Error deploying config to Solana network.', exx);
       throw exx;
     }
   } else {
@@ -229,16 +229,16 @@ export async function uploadV2({
       })
 
       .process(async (asset) => {
-        console.log("processing asset: ", asset);
+        console.log('processing asset: ', asset);
         const jsonFile = files.find(
           (file) =>
-            file.name.split(".")[0] === asset.index &&
-            file.type === "application/json"
+            file.name.split('.')[0] === asset.index &&
+            file.type === 'application/json'
         );
         const imageFile = files.find(
           (file) =>
-            file.name.split(".")[0] === asset.index &&
-            file.type.startsWith("image/")
+            file.name.split('.')[0] === asset.index &&
+            file.type.startsWith('image/')
         );
         if (!jsonFile) {
           throw new Error(`JSON file ${asset.index}.json is missing`);
@@ -286,7 +286,6 @@ export async function uploadV2({
   let uploadSuccessful = true;
   try {
     if (!hiddenSettings) {
-
       uploadSuccessful = await writeIndices({
         anchorProgram,
         cacheContent,
@@ -296,17 +295,17 @@ export async function uploadV2({
         walletKeyPair,
         rateLimit,
       });
-      console.log("cache content: ", cacheContent);
+      console.log('cache content: ', cacheContent);
       const uploadedItems = Object.values(cacheContent.items).filter(
         (f: any) => !!f.link
       ).length;
-      console.log("uploadedItems: ", uploadedItems);
-      console.log("totalNFTs: ", totalNFTs);
-      console.log("uploadSuccessful: ", uploadSuccessful);
+      console.log('uploadedItems: ', uploadedItems);
+      console.log('totalNFTs: ', totalNFTs);
+      console.log('uploadSuccessful: ', uploadSuccessful);
 
       uploadSuccessful = uploadSuccessful && uploadedItems == totalNFTs;
     } else {
-      console.log("Skipping upload to chain as this is a hidden Candy Machine");
+      console.log('Skipping upload to chain as this is a hidden Candy Machine');
     }
 
     console.log(`Done. Successful = ${uploadSuccessful}.`);
@@ -356,15 +355,15 @@ export type Manifest = {
  * or do not truthy value for the `link` property.
  */
 function getAssetKeysNeedingUpload(
-  items: Cache["items"],
+  items: Cache['items'],
   files: string[]
 ): AssetKey[] {
   const all = [...new Set([...Object.keys(items), ...files])];
   const keyMap: any = {};
   const assets = all
-    .filter((k) => !k.includes(".json"))
+    .filter((k) => !k.includes('.json'))
     .reduce((acc: AssetKey[], assetKey) => {
-      const [key, ext] = assetKey.split(".");
+      const [key, ext] = assetKey.split('.');
 
       if (!items[key]?.link && !keyMap[key]) {
         keyMap[key] = true;
@@ -388,11 +387,11 @@ export function getAssetManifest(
   assetIndex: string,
   manifest: Manifest
 ): Manifest {
-  manifest.image = manifest.image.replace("image", assetIndex);
+  manifest.image = manifest.image.replace('image', assetIndex);
 
-  if ("animation_url" in manifest) {
+  if ('animation_url' in manifest) {
     manifest.animation_url = manifest.animation_url.replace(
-      "animation_url",
+      'animation_url',
       assetIndex
     );
   }
@@ -472,8 +471,8 @@ async function writeIndices({
       .accounts({
         candyMachine,
         authority: walletKeyPair.publicKey,
-
-      }).        signers( [])
+      })
+      .signers([])
       .rpc();
     console.log(response);
     configLines.forEach((i) => {

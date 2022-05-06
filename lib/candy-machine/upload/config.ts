@@ -1,10 +1,9 @@
-import * as anchor from "@project-serum/anchor";
-import { CANDY_MACHINE_PROGRAM_V2_ID } from "../constants";
+import * as anchor from '@project-serum/anchor';
+import { CANDY_MACHINE_PROGRAM_V2_ID } from '../constants';
 
-import { PublicKey } from "@solana/web3.js";
-import { getMint, TOKEN_PROGRAM_ID, getAccount } from "@solana/spl-token";
-import { getAtaForMint, parseDate } from "./helpers";
-
+import { PublicKey } from '@solana/web3.js';
+import { getMint, TOKEN_PROGRAM_ID, getAccount } from '@solana/spl-token';
+import { getAtaForMint, parseDate } from './helpers';
 
 export interface WhitelistMintMode {
   neverBurn: undefined | boolean;
@@ -36,7 +35,7 @@ export interface CandyMachineConfig {
   arweaveJwk: null;
 }
 export const Gatekeeper = {
-  gatekeeperNetwork: "ignREusXmGrscGNUesoU9mxfds9AiYTezUKex2PsZV6",
+  gatekeeperNetwork: 'ignREusXmGrscGNUesoU9mxfds9AiYTezUKex2PsZV6',
   expireOnUse: true,
 } as const;
 
@@ -51,7 +50,6 @@ interface hiddenSettings {
   uri: string;
   hash: Uint8Array;
 }
-
 
 export interface CandyMachineData {
   itemsAvailable: anchor.BN;
@@ -87,17 +85,20 @@ export interface CandyMachineData {
 }
 
 export enum StorageType {
-  ArweaveBundle = "arweave-bundle",
-  ArweaveSol = "arweave-sol",
-  Arweave = "arweave",
-  Ipfs = "ipfs",
-  Aws = "aws",
-  NftStorage = "nft-storage",
-  Pinata = "pinata",
+  ArweaveBundle = 'arweave-bundle',
+  ArweaveSol = 'arweave-sol',
+  Arweave = 'arweave',
+  Ipfs = 'ipfs',
+  Aws = 'aws',
+  NftStorage = 'nft-storage',
+  Pinata = 'pinata',
 }
 
-export async function loadCandyProgramV2(provider:anchor.Provider,customRpcUrl?: string) {
-  if (customRpcUrl) console.log("USING CUSTOM URL", customRpcUrl);
+export async function loadCandyProgramV2(
+  provider: anchor.Provider,
+  customRpcUrl?: string
+) {
+  if (customRpcUrl) console.log('USING CUSTOM URL', customRpcUrl);
   const idl = (await anchor.Program.fetchIdl(
     CANDY_MACHINE_PROGRAM_V2_ID,
     provider
@@ -108,7 +109,7 @@ export async function loadCandyProgramV2(provider:anchor.Provider,customRpcUrl?:
     CANDY_MACHINE_PROGRAM_V2_ID,
     provider
   );
-  console.log("program id from anchor", program.programId.toBase58());
+  console.log('program id from anchor', program.programId.toBase58());
   return program;
 }
 
@@ -152,7 +153,7 @@ export async function getCandyMachineV2Config(
   arweaveJwk: string | null;
 }> {
   if (configForm === undefined) {
-    throw new Error("The configForm is undefined");
+    throw new Error('The configForm is undefined');
   }
 
   const config = configForm;
@@ -194,12 +195,12 @@ export async function getCandyMachineV2Config(
   if (splToken) {
     if (solTreasuryAccount) {
       throw new Error(
-        "If spl-token-account or spl-token is set then sol-treasury-account cannot be set"
+        'If spl-token-account or spl-token is set then sol-treasury-account cannot be set'
       );
     }
     if (!splToken) {
       throw new Error(
-        "If spl-token-account is set, spl-token must also be set"
+        'If spl-token-account is set, spl-token must also be set'
       );
     }
     const splTokenKey = new PublicKey(splToken);
@@ -208,11 +209,11 @@ export async function getCandyMachineV2Config(
     );
     if (!splTokenAccountFigured) {
       throw new Error(
-        "If spl-token is set, spl-token-account must also be set"
+        'If spl-token is set, spl-token-account must also be set'
       );
     }
 
-    console.log("anchor program loaded", anchorProgram);
+    console.log('anchor program loaded', anchorProgram);
 
     const mintInfo = await getMint(
       anchorProgram.provider.connection,
@@ -285,7 +286,7 @@ export async function getCandyMachineV2Config(
     const utf8Encode = new TextEncoder();
     hiddenSettings.hash = utf8Encode.encode(hiddenSettings.hash.toString());
   }
-  console.log("correct config");
+  console.log('correct config');
 
   return {
     storage,
@@ -317,22 +318,18 @@ export async function getCandyMachineV2Config(
   };
 }
 
-const supportedImageTypes = [
-  "image/png",
-  "image/gif",
-  "image/jpeg",
-]
+const supportedImageTypes = ['image/png', 'image/gif', 'image/jpeg'];
 
 const supportedAnimationTypes = [
-  "video/mp4",
-  "video/quicktime",
-  "audio/mpeg",
-  "audio/x-flac",
-  "audio/wav",
-  "model/gltf-binary",
-  "text/html",
-]
-const JSON_EXTENSION = "application/json";
+  'video/mp4',
+  'video/quicktime',
+  'audio/mpeg',
+  'audio/x-flac',
+  'audio/wav',
+  'model/gltf-binary',
+  'text/html',
+];
+const JSON_EXTENSION = 'application/json';
 
 /**
  * @typedef {Object} VerifiedAssets
@@ -341,14 +338,18 @@ const JSON_EXTENSION = "application/json";
  */
 
 /**
- * 
+ *
  * @param files : list of files to analuze (json+image)
  * @param storage : Storage to use
  * @param number :number of assets
  * @returns {VerifiedAssets} returns an array of verified assets and the number of assets
  */
 
-export function verifyAssets(files: File[], storage: StorageType, number: number) {
+export function verifyAssets(
+  files: File[],
+  storage: StorageType,
+  number: number
+) {
   let imageFileCount = 0;
   let animationFileCount = 0;
   let jsonFileCount = 0;
@@ -357,19 +358,19 @@ export function verifyAssets(files: File[], storage: StorageType, number: number
    * From the files list, check that the files are valid images and animations or json files.
    */
   const supportedFiles = files.filter((it) => {
-      if (supportedImageTypes.some(e => e === it.type)) {
-        imageFileCount++;
-      } else if (supportedAnimationTypes.some(e => e === it.type)) {
-        animationFileCount++;
-      } else if (it.type == JSON_EXTENSION) {
-        jsonFileCount++;
-      } else {
-        console.warn(`WARNING: Skipping unsupported file type ${it}`);
-        return false;
-      }
+    if (supportedImageTypes.some((e) => e === it.type)) {
+      imageFileCount++;
+    } else if (supportedAnimationTypes.some((e) => e === it.type)) {
+      animationFileCount++;
+    } else if (it.type == JSON_EXTENSION) {
+      jsonFileCount++;
+    } else {
+      console.warn(`WARNING: Skipping unsupported file type ${it}`);
+      return false;
+    }
 
     return true;
-  })
+  });
   // .map((it) => it.name);
 
   if (animationFileCount !== 0 && storage === StorageType.Arweave) {
@@ -402,9 +403,6 @@ export function verifyAssets(files: File[], storage: StorageType, number: number
       `Beginning the upload for ${elemCount} (img+animation+json) sets`
     );
   }
-  console.log("supportedFiles", supportedFiles);
-  return {supportedFiles, elemCount};
-  
+  console.log('supportedFiles', supportedFiles);
+  return { supportedFiles, elemCount };
 }
-
-

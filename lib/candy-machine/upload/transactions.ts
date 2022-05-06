@@ -111,6 +111,7 @@ export async function sendSignedTransaction({
     slot = confirmation?.slot || 0;
   } catch (err) {
     console.error("Timeout Error caught", err);
+    // @ts-ignore
     if (err.timeout) {
       throw new Error("Timed out awaiting confirmation on transaction");
     }

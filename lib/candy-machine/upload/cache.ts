@@ -1,5 +1,4 @@
-
-import fileDownloader from 'js-file-download'
+import fileDownloader from 'js-file-download';
 
 // export function cachePath(
 //   env: string,
@@ -32,10 +31,10 @@ import fileDownloader from 'js-file-download'
 export function saveCache(
   cacheName: string,
   env: string,
-  cacheContent:any,
-//   cPath: string = CACHE_PATH,
+  cacheContent: any
+  //   cPath: string = CACHE_PATH,
 ) {
   cacheContent.env = env;
   cacheContent.cacheName = cacheName;
- fileDownloader(JSON.stringify(cacheContent),cacheName)
+  fileDownloader(JSON.stringify(cacheContent), cacheName);
 }

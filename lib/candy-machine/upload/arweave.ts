@@ -1,26 +1,25 @@
-import * as anchor from "@project-serum/anchor";
-import { calculate } from "@metaplex/arweave-cost";
-import { ARWEAVE_PAYMENT_WALLET } from "../constants";
-import { sendTransactionWithRetryWithKeypair } from "./transactions";
-import { Manifest } from "./upload";
-
+import * as anchor from '@project-serum/anchor';
+import { calculate } from '@metaplex/arweave-cost';
+import { ARWEAVE_PAYMENT_WALLET } from '../constants';
+import { sendTransactionWithRetryWithKeypair } from './transactions';
+import { Manifest } from './upload';
 
 const ARWEAVE_UPLOAD_ENDPOINT =
-  "https://us-central1-metaplex-studios.cloudfunctions.net/uploadFile";
+  'https://us-central1-metaplex-studios.cloudfunctions.net/uploadFile';
 
 async function fetchAssetCostToStore(fileSizes: number[]) {
   const result = await calculate(fileSizes);
-  console.log("Arweave cost estimates:", result);
+  console.log('Arweave cost estimates:', result);
 
   return result.solana * anchor.web3.LAMPORTS_PER_SOL;
 }
 
 async function upload(data: FormData, manifest: Manifest, index: number) {
   console.log(`trying to upload image ${index}: ${manifest.name}`);
-  console.log("data", data);
-  const res =  await (
+  console.log('data', data);
+  const res = await (
     await fetch(ARWEAVE_UPLOAD_ENDPOINT, {
-      method: "POST",
+      method: 'POST',
       body: data,
     })
   ).json();
@@ -31,24 +30,24 @@ function estimateManifestSize(filenames: string[]) {
   const paths: { [key: string]: any } = {};
 
   for (const name of filenames) {
-    console.log("name", name);
+    console.log('name', name);
     paths[name] = {
-      id: "artestaC_testsEaEmAGFtestEGtestmMGmgMGAV438",
-      ext: name.split(".")[1],
+      id: 'artestaC_testsEaEmAGFtestEGtestmMGmgMGAV438',
+      ext: name.split('.')[1],
     };
   }
 
   const manifest = {
-    manifest: "arweave/paths",
-    version: "0.1.0",
+    manifest: 'arweave/paths',
+    version: '0.1.0',
     paths,
     index: {
-      path: "metadata.json",
+      path: 'metadata.json',
     },
   };
 
-  const data = Buffer.from(JSON.stringify(manifest), "utf8");
-  console.log("Estimated manifest size:", data.length);
+  const data = Buffer.from(JSON.stringify(manifest), 'utf8');
+  console.log('Estimated manifest size:', data.length);
   return data.length;
 }
 
@@ -64,7 +63,7 @@ export async function arweaveUpload(
   const imageExt = image.type;
   const estimatedManifestSize = estimateManifestSize([
     image.name,
-    "metadata.json",
+    'metadata.json',
   ]);
 
   const storageCost = await fetchAssetCostToStore([
@@ -87,34 +86,34 @@ export async function arweaveUpload(
     anchorProgram.provider.connection,
     walletKeyPair,
     instructions,
-    "confirmed"
+    'confirmed'
   );
   console.log(`solana transaction (${env}) for arweave payment:`, tx);
 
   const data = new FormData();
-  const manifestBlob = new Blob([manifestBuffer], { type: "application/json" });
+  const manifestBlob = new Blob([manifestBuffer], { type: 'application/json' });
 
-  data.append("transaction", tx["txid"]);
-  data.append("env", env);
-  data.append("file[]", image, image.name);
-  data.append("file[]", manifestBlob, "metadata.json");
-    
+  data.append('transaction', tx['txid']);
+  data.append('env', env);
+  data.append('file[]', image, image.name);
+  data.append('file[]', manifestBlob, 'metadata.json');
+
   const result = await upload(data, manifest, index);
 
-  console.log("result", result);
+  console.log('result', result);
 
   const metadataFile = result.messages?.find(
-    (m:any) => m.filename === "manifest.json"
+    (m: any) => m.filename === 'manifest.json'
   );
   const imageFile = result.messages?.find(
-    (m:any) => m.filename === image.name
+    (m: any) => m.filename === image.name
   );
-  
+
   if (metadataFile?.transactionId) {
     const link = `https://arweave.net/${metadataFile.transactionId}`;
     const imageLink = `https://arweave.net/${
       imageFile.transactionId
-    }?ext=${imageExt.replace(".", "")}`;
+    }?ext=${imageExt.replace('.', '')}`;
     console.log(`File uploaded: ${link}`);
     console.log(`imageLink uploaded: ${imageLink}`);
 
