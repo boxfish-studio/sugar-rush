@@ -13,7 +13,7 @@ import {
 } from "@solana/web3.js";
 import { getUnixTs, sleep } from "./helpers";
 import { DEFAULT_TIMEOUT } from "../constants";
-import * as anchor from "@project-serum/anchor";
+import { AnchorWallet } from "@solana/wallet-adapter-react";
 
 interface BlockhashAndFeeCalculator {
   blockhash: Blockhash;
@@ -22,7 +22,7 @@ interface BlockhashAndFeeCalculator {
 
 export const sendTransactionWithRetryWithKeypair = async (
   connection: Connection,
-  wallet: anchor.Wallet,
+  wallet: AnchorWallet,
   instructions: TransactionInstruction[],
   commitment: Commitment = "singleGossip",
   block?: BlockhashAndFeeCalculator,

@@ -274,10 +274,10 @@ export async function uploadV2({
                   name: manifest.name,
                   onChain: false,
                 };
-                // saveCache(cacheName, env, cacheContent);
               }
-          }
-        } catch (err) {
+            }
+          } catch (err) {
+          saveCache(cacheName, env, cacheContent);
           console.error(err);
         }
       });
@@ -285,7 +285,7 @@ export async function uploadV2({
 
   let uploadSuccessful = true;
   try {
-    if (!hiddenSettings) {
+    if (!hiddenSettings && candyMachine) {
       uploadSuccessful = await writeIndices({
         anchorProgram,
         cacheContent,
@@ -399,8 +399,8 @@ async function writeIndices({
   anchorProgram: Program;
   cacheContent: any;
   cacheName: string;
-  env: any;
-  candyMachine: any;
+  env: string;
+  candyMachine: PublicKey;
   walletKeyPair: AnchorWallet;
   rateLimit: number | null;
 }) {

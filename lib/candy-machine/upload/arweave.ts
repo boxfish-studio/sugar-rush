@@ -4,6 +4,7 @@ import { ARWEAVE_PAYMENT_WALLET } from '../constants';
 import { sendTransactionWithRetryWithKeypair } from './transactions';
 import { Manifest } from '../types';
 import { getFileExtension } from './helpers';
+import { AnchorWallet } from '@solana/wallet-adapter-react';
 
 const ARWEAVE_UPLOAD_ENDPOINT =
   'https://us-central1-metaplex-studios.cloudfunctions.net/uploadFile';
@@ -29,7 +30,6 @@ async function fetchAssetCostToStore(fileSizes: number[]): Promise<number> {
  */
 async function upload(data: FormData, manifest: Manifest, index: number) {
   console.log(`trying to upload image ${index}: ${manifest.name}`);
-  console.log('data', data);
   const res = await (
     await fetch(ARWEAVE_UPLOAD_ENDPOINT, {
       method: 'POST',
@@ -41,7 +41,6 @@ async function upload(data: FormData, manifest: Manifest, index: number) {
 
 function estimateManifestSize(filenames: string[]) {
   const paths: { [key: string]: any } = {};
-
   for (const name of filenames) {
     console.log('name', name);
     paths[name] = {
@@ -65,12 +64,12 @@ function estimateManifestSize(filenames: string[]) {
 }
 
 export async function arweaveUpload(
-  walletKeyPair: any,
+  walletKeyPair: AnchorWallet,
   anchorProgram: anchor.Program,
   env: string,
   image: File,
-  manifestBuffer: any, // TODO rename metadataBuffer
-  manifest: any, // TODO rename metadata
+  manifestBuffer: Buffer,
+  manifest: Manifest,
   index: number
 ) {
   const imageExt = image.type;
