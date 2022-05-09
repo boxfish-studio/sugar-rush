@@ -37,7 +37,6 @@ const Form: FC<{
   const { cache, uploadCache } = useUploadCache();
 
   const initialState = {
-    
     price: updateCandyMachine
       ? new BN(fetchedValues.price).toNumber() / LAMPORTS_PER_SOL
       : 0,
