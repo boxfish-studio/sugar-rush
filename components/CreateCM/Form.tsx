@@ -17,11 +17,11 @@ import {
   parseTimeFromDateBN,
   getCurrentDate,
   getCurrentTime,
-} from './utils';
+} from 'lib/candy-machine/utils';
 import { uploadV2 } from 'lib/candy-machine/upload/upload';
 import { AnchorProvider, BN } from '@project-serum/anchor';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { FetchedCandyMachineConfig } from 'pages/list-candy-machines/[id]';
+import { FetchedCandyMachineConfig } from 'lib/candy-machine/types';
 import { updateV2 } from 'lib/candy-machine/update/update';
 
 const Form: FC<{
@@ -40,7 +40,7 @@ const Form: FC<{
     price: updateCandyMachine
       ? new BN(fetchedValues.price).toNumber() / LAMPORTS_PER_SOL
       : 0,
-      
+
     'number-of-nfts': 0,
     'treasury-account': fetchedValues?.solTreasuryAccount ?? '',
     captcha: fetchedValues?.gatekeeper ?? false,

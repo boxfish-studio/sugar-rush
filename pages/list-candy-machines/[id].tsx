@@ -5,6 +5,7 @@ import { Program, AnchorProvider, BN } from '@project-serum/anchor';
 import { PublicKey, Connection } from '@solana/web3.js';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import { Spinner } from 'components/Layout';
+import {FetchedCandyMachineConfig} from "lib/candy-machine/types"
 import Form from 'components/CreateCM/Form';
 const CANDY_MACHINE_PROGRAM = new PublicKey(
   'cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ'
@@ -12,27 +13,7 @@ const CANDY_MACHINE_PROGRAM = new PublicKey(
 
 type Account = string | string[] | undefined;
 
-export interface FetchedCandyMachineConfig {
-  creators: {
-    address: PublicKey;
-    share: 100;
-    verified: true;
-  }[];
-  endSettings: null;
-  gatekeeper: null;
-  goLiveDate: BN;
-  hiddenSettings: null;
-  isMutable: true;
-  itemsAvailable: BN;
-  maxSupply: BN;
-  price: BN;
-  retainAuthority: boolean;
-  sellerFeeBasisPoints: number;
-  symbol: string;
-  uuid: string;
-  whitelistMintSettings: null;
-  solTreasuryAccount: PublicKey;
-}
+
 
 const CandyMachine: NextPage = () => {
   const router = useRouter();
