@@ -15,7 +15,7 @@ import {
   Gatekeeper,
   StorageType,
 } from 'lib/candy-machine/types';
-import { UTCify } from './utils';
+import { parseDateToUTC } from './utils';
 import { uploadV2 } from 'lib/candy-machine/upload/upload';
 import { AnchorProvider } from '@project-serum/anchor';
 
@@ -26,10 +26,10 @@ const Form: FC = () => {
 
   const [files, setFiles] = useState<File[]>([]);
 
-  function checkFormIsValid(): boolean {
+  function isFormValid(): boolean {
     // TODO add more conditions
     // TODO add custom message to show error message
-    if (files.length == 0) return false;
+    if (files.length === 0) return false;
     if (files.length % 2 != 0) return false;
     if (values['number-of-nfts'] * 2 != files.length) return false;
     if (!values['date-mint'] || !values['time-mint']) return false;
@@ -53,7 +53,7 @@ const Form: FC = () => {
   }
 
   async function createCandyMachineV2() {
-    if (!checkFormIsValid()) return;
+    if (!isFormValid()) return;
     const config: CandyMachineConfig = {
       price: values.price,
       number: values['number-of-nfts'],
@@ -61,7 +61,7 @@ const Form: FC = () => {
       solTreasuryAccount: values['treasury-account'],
       splTokenAccount: null,
       splToken: null,
-      goLiveDate: UTCify(values['date-mint'], values['time-mint']),
+      goLiveDate: parseDateToUTC(values['date-mint'], values['time-mint']),
       endSettings: null,
       whitelistMintSettings: null,
       hiddenSettings: null,
@@ -118,7 +118,7 @@ const Form: FC = () => {
 
       const startMs = Date.now();
 
-      console.info('started at: ' + startMs.toString());
+      console.log('started at: ' + startMs.toString());
       try {
         await uploadV2({
           files: supportedFiles,

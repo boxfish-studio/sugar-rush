@@ -4,7 +4,7 @@
  * @param time time to parse
  * @returns {string} time parsed to UCT
  */
-export function UTCify(dateTime: string, time: string): string {
+export function parseDateToUTC(dateTime: string, time: string): string {
     let UTCDate: string[] | string = new Date(dateTime)
       .toDateString()
       .slice(4)
