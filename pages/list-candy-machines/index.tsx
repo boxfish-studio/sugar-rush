@@ -26,7 +26,7 @@ const ListCandyMachines: NextPage = () => {
 
   async function fetchAccounts() {
     if (publicKey) {
-      const accounts = await rpcEndpoint.getParsedProgramAccounts(
+      const accounts = await rpcEndpoint.getProgramAccounts(
         CANDY_MACHINE_PROGRAM_V2_ID,
         {
           commitment: 'confirmed',

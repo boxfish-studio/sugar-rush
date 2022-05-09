@@ -1,3 +1,6 @@
+import {  BN } from '@project-serum/anchor';
+
+
 /**
  * 
  * @param dateTime date to parse
@@ -17,4 +20,32 @@ export function UTCify(dateTime: string, time: string): string {
     const UTCTime = `${time}:00 GMT`;
   
     return `${UTCDate} ${UTCTime}`;
+  }
+
+  export function getDateFromString(date:BN){
+    return `${new Date(
+      new BN(date).toNumber() * 1000
+    ).getFullYear()}-${
+      new Date(new BN(date).toNumber() * 1000)
+        .getMonth()
+        .toString().length == 1
+        ? '0'.concat(
+            new Date(new BN(date).toNumber() * 1000)
+              .getMonth()
+              .toString()
+          )
+        : new Date(new BN(date).toNumber() * 1000)
+            .getMonth()
+            .toString()
+    }-${new Date(
+      new BN(date).toNumber() * 1000
+    ).getDate()}`
+  }
+  
+  export function getTimeFromString(date:BN){
+    return `${new Date(
+      new BN(date).toNumber() * 1000
+    ).getUTCHours()}:${new Date(
+      new BN(date).toNumber() * 1000
+    ).getMinutes()}`
   }

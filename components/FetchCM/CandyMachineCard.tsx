@@ -2,6 +2,8 @@ import { FC } from 'react';
 import Link from 'next/link';
 
 const CandyMachineCard: FC<{ account: string }> = ({ account }) => {
+  
+
   return (
     <div className='bg-slate-300 items-center justify-center max-w-md p-2 h-28 flex flex-col relative rounded-xl'>
       {account}

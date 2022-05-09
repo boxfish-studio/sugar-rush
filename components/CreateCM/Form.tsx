@@ -15,11 +15,16 @@ import {
   Gatekeeper,
   StorageType,
 } from 'lib/candy-machine/types';
-import { UTCify } from './utils';
+import { UTCify, getDateFromString, getTimeFromString } from './utils';
 import { uploadV2 } from 'lib/candy-machine/upload/upload';
-import { AnchorProvider } from '@project-serum/anchor';
+import { AnchorProvider, BN } from '@project-serum/anchor';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { FetchedCandyMachineConfig } from 'pages/list-candy-machines/[id]';
 
-const Form: FC = () => {
+const Form: FC<{
+  fetchedValues: FetchedCandyMachineConfig;
+  updateCandyMachine?: boolean;
+}> = ({ fetchedValues, updateCandyMachine }) => {
   const { publicKey } = useWallet();
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
@@ -187,12 +192,22 @@ const Form: FC = () => {
           text='Price of each NFT'
           type='number'
           onChange={onChange}
+          defaultValue={
+            fetchedValues?.price
+              ? new BN(fetchedValues.price).toNumber() / LAMPORTS_PER_SOL
+              : undefined
+          }
         />
         <FormInput
           id='number-of-nfts'
           text='Number of NFTs'
           type='number'
           onChange={onChange}
+          defaultValue={
+            fetchedValues?.itemsAvailable
+              ? new BN(fetchedValues.itemsAvailable).toNumber()
+              : undefined
+          }
         />
         <FormInput
           id='treasury-account'
@@ -201,48 +216,61 @@ const Form: FC = () => {
           onChange={onChange}
           defaultValue={publicKey?.toBase58()}
         />
-        <FormInput
-          id='captcha'
-          text='Captcha?'
-          type='checkbox'
-          onChange={onChange}
-        />
+        {!updateCandyMachine && (
+          <>
+            <FormInput
+              id='captcha'
+              text='Captcha?'
+              type='checkbox'
+              onChange={onChange}
+            />
+          </>
+        )}
         <FormInput
           id='mutable'
           text='Mutable?'
           type='checkbox'
           onChange={onChange}
+          defaultChecked={fetchedValues?.isMutable}
         />
         <FormInput
           id='date-mint'
           text='Date for mint'
           type='date'
           onChange={onChange}
+          defaultValue={getDateFromString(fetchedValues?.goLiveDate)}
         />
         <FormInput
           id='time-mint'
           text='Time for mint'
           type='time'
           onChange={onChange}
+          defaultValue={getTimeFromString(fetchedValues?.goLiveDate)}
         />
-        <label htmlFor='storage'>Storage</label>
-        <input list='storage' name='storage' className='w-[40rem]' />
-        <datalist id='storage' defaultValue='Arweave'>
-          {Object.keys(StorageType)
-            .filter((key) => key === 'Arweave')
-            .map((key) => (
-              <option key={key} value={key} />
-            ))}
-        </datalist>
+        {!updateCandyMachine && (
+          <>
+            <label htmlFor='storage'>Storage</label>
+            <input list='storage' name='storage' className='w-[40rem]' />
+            <datalist id='storage' defaultValue='Arweave'>
+              {Object.keys(StorageType)
+                .filter((key) => key === 'Arweave')
+                .map((key) => (
+                  <option key={key} value={key} />
+                ))}
+            </datalist>
+        
 
-        <label htmlFor='files'>Files</label>
+        
+            <label htmlFor='files'>Files</label>
 
-        <input type='file' name='files' multiple onChange={uploadAssets} />
+            <input type='file' name='files' multiple onChange={uploadAssets} />
+          </>
+        )}
         <button
           type='submit'
           className='bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white'
         >
-          Create Candy Machine
+          {updateCandyMachine ? 'Update Candy Machine' : 'Create Candy Machine'}
         </button>
       </div>
     </form>
@@ -253,8 +281,9 @@ interface Input {
   id: string;
   text: string;
   type: string;
-  defaultValue?: string;
-  value?: string;
+  defaultValue?: string | number;
+  defaultChecked?: boolean;
+  value?: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -263,6 +292,7 @@ const FormInput: FC<Input> = ({
   text,
   type,
   defaultValue,
+  defaultChecked,
   value,
   onChange,
 }) => {
@@ -275,6 +305,7 @@ const FormInput: FC<Input> = ({
         type={type}
         name={id}
         defaultValue={defaultValue}
+        defaultChecked={defaultChecked}
         value={value}
         onChange={onChange}
       />
