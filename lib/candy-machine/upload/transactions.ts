@@ -3,17 +3,16 @@ import {
   Commitment,
   Connection,
   FeeCalculator,
-  Keypair,
   RpcResponseAndContext,
   SignatureStatus,
   SimulatedTransactionResponse,
   Transaction,
   TransactionInstruction,
   TransactionSignature,
-} from "@solana/web3.js";
-import { getUnixTs, sleep } from "./helpers";
-import { DEFAULT_TIMEOUT } from "../constants";
-import { AnchorWallet } from "@solana/wallet-adapter-react";
+} from '@solana/web3.js';
+import { getUnixTs, sleep } from './helpers';
+import { DEFAULT_TIMEOUT } from '../constants';
+import { AnchorWallet } from '@solana/wallet-adapter-react';
 
 interface BlockhashAndFeeCalculator {
   blockhash: Blockhash;
@@ -24,24 +23,24 @@ export const sendTransactionWithRetryWithKeypair = async (
   connection: Connection,
   wallet: AnchorWallet,
   instructions: TransactionInstruction[],
-  commitment: Commitment = "singleGossip",
+  commitment: Commitment = 'singleGossip',
   block?: BlockhashAndFeeCalculator,
   beforeSend?: () => void
 ) => {
-  console.log("sendTransactionWithRetryWithKeypair");
+  console.log('sendTransactionWithRetryWithKeypair');
   const transaction = new Transaction();
 
   instructions.forEach((instruction) => transaction.add(instruction));
-  
+
   transaction.recentBlockhash = (
     block || (await connection.getLatestBlockhash(commitment))
   ).blockhash;
 
   transaction.feePayer = wallet.publicKey;
-  console.log("await signTransaction");
+  console.log('await signTransaction');
 
   await wallet.signTransaction(transaction);
-  console.log("signTransaction");
+  console.log('signTransaction');
 
   if (beforeSend) {
     beforeSend();
@@ -51,7 +50,6 @@ export const sendTransactionWithRetryWithKeypair = async (
     connection,
     signedTransaction: transaction,
   });
-  console.log(89);
 
   return { txid, slot };
 };
@@ -79,7 +77,7 @@ export async function sendSignedTransaction({
     }
   );
 
-  console.log("Started awaiting confirmation for", txid);
+  console.log('Started awaiting confirmation for', txid);
 
   let done = false;
   (async () => {
@@ -96,53 +94,53 @@ export async function sendSignedTransaction({
       txid,
       timeout,
       connection,
-      "confirmed",
+      'confirmed',
       true
     );
 
     if (!confirmation)
-      throw new Error("Timed out awaiting confirmation on transaction");
+      throw new Error('Timed out awaiting confirmation on transaction');
 
     if (confirmation.err) {
       console.error(confirmation.err);
-      throw new Error("Transaction failed: Custom instruction error");
+      throw new Error('Transaction failed: Custom instruction error');
     }
 
     slot = confirmation?.slot || 0;
   } catch (err) {
-    console.error("Timeout Error caught", err);
+    console.error('Timeout Error caught', err);
     // @ts-ignore
     if (err.timeout) {
-      throw new Error("Timed out awaiting confirmation on transaction");
+      throw new Error('Timed out awaiting confirmation on transaction');
     }
     let simulateResult: SimulatedTransactionResponse | null = null;
     try {
       simulateResult = (
-        await simulateTransaction(connection, signedTransaction, "single")
+        await simulateTransaction(connection, signedTransaction, 'single')
       ).value;
     } catch (e) {
-      console.error("Simulate Transaction error", e);
+      console.error('Simulate Transaction error', e);
     }
     if (simulateResult && simulateResult.err) {
       if (simulateResult.logs) {
         for (let i = simulateResult.logs.length - 1; i >= 0; --i) {
           const line = simulateResult.logs[i];
-          if (line.startsWith("Program log: ")) {
+          if (line.startsWith('Program log: ')) {
             throw new Error(
-              "Transaction failed: " + line.slice("Program log: ".length)
+              'Transaction failed: ' + line.slice('Program log: '.length)
             );
           }
         }
       }
       throw new Error(JSON.stringify(simulateResult.err));
     }
-    console.error("Got this far.");
+    console.error('Got this far.');
     // throw new Error('Transaction failed');
   } finally {
     done = true;
   }
 
-  console.log("Latency (ms)", txid, getUnixTs() - startTime);
+  console.log('Latency (ms)', txid, getUnixTs() - startTime);
   return { txid, slot };
 }
 
@@ -156,14 +154,14 @@ async function simulateTransaction(
   ).blockhash;
 
   const signData = transaction.serializeMessage();
-  const encodedTransaction = signData.toString("base64");
-  const config: any = { encoding: "base64", commitment };
+  const encodedTransaction = signData.toString('base64');
+  const config: any = { encoding: 'base64', commitment };
   const args = [encodedTransaction, config];
 
   // @ts-ignore
-  const res = await connection._rpcRequest("simulateTransaction", args);
+  const res = await connection._rpcRequest('simulateTransaction', args);
   if (res.error) {
-    throw new Error("failed to simulate transaction: " + res.error.message);
+    throw new Error('failed to simulate transaction: ' + res.error.message);
   }
   return res.result;
 }
@@ -172,7 +170,7 @@ async function awaitTransactionSignatureConfirmation(
   txid: TransactionSignature,
   timeout: number,
   connection: Connection,
-  commitment: Commitment = "recent",
+  commitment: Commitment = 'recent',
   queryStatus = false
 ): Promise<SignatureStatus | null | void> {
   let done = false;
@@ -189,7 +187,7 @@ async function awaitTransactionSignatureConfirmation(
         return;
       }
       done = true;
-      console.warn("Rejecting for timeout...");
+      console.warn('Rejecting for timeout...');
       reject({ timeout: true });
     }, timeout);
     try {
@@ -203,10 +201,10 @@ async function awaitTransactionSignatureConfirmation(
             confirmations: 0,
           };
           if (result.err) {
-            console.warn("Rejected via websocket", result.err);
+            console.warn('Rejected via websocket', result.err);
             reject(status);
           } else {
-            console.log("Resolved via websocket", result);
+            console.log('Resolved via websocket', result);
             resolve(status);
           }
         },
@@ -214,7 +212,7 @@ async function awaitTransactionSignatureConfirmation(
       );
     } catch (e) {
       done = true;
-      console.error("WS error in setup", txid, e);
+      console.error('WS error in setup', txid, e);
     }
     while (!done && queryStatus) {
       // eslint-disable-next-line no-loop-func
@@ -226,22 +224,22 @@ async function awaitTransactionSignatureConfirmation(
           status = signatureStatuses && signatureStatuses.value[0];
           if (!done) {
             if (!status) {
-              console.log("REST null result for", txid, status);
+              console.log('REST null result for', txid, status);
             } else if (status.err) {
-              console.error("REST error for", txid, status);
+              console.error('REST error for', txid, status);
               done = true;
               reject(status.err);
             } else if (!status.confirmations) {
-              console.log("REST no confirmations for", txid, status);
+              console.log('REST no confirmations for', txid, status);
             } else {
-              console.log("REST confirmation for", txid, status);
+              console.log('REST confirmation for', txid, status);
               done = true;
               resolve(status);
             }
           }
         } catch (e) {
           if (!done) {
-            console.error("REST connection error: txid", txid, e);
+            console.error('REST connection error: txid', txid, e);
           }
         }
       })();
@@ -253,6 +251,6 @@ async function awaitTransactionSignatureConfirmation(
   //   if (connection._signatureSubscriptions[subId])
   connection.removeSignatureListener(subId);
   done = true;
-  console.log("Returning status", status);
+  console.log('Returning status', status);
   return status;
 }

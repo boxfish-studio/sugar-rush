@@ -136,3 +136,16 @@ export const CLUSTERS: Cluster[] = [
   },
 ];
 export const DEFAULT_CLUSTER = CLUSTERS[2];
+
+export const supportedImageTypes = ['image/png', 'image/gif', 'image/jpeg'];
+
+export const supportedAnimationTypes = [
+  'video/mp4',
+  'video/quicktime',
+  'audio/mpeg',
+  'audio/x-flac',
+  'audio/wav',
+  'model/gltf-binary',
+  'text/html',
+];
+export const JSON_EXTENSION = 'application/json';

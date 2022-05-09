@@ -1,5 +1,10 @@
 import * as anchor from '@project-serum/anchor';
-import { CANDY_MACHINE_PROGRAM_V2_ID } from '../constants';
+import {
+  CANDY_MACHINE_PROGRAM_V2_ID,
+  supportedImageTypes,
+  supportedAnimationTypes,
+  JSON_EXTENSION,
+} from '../constants';
 
 import { PublicKey } from '@solana/web3.js';
 import { getMint, TOKEN_PROGRAM_ID, getAccount } from '@solana/spl-token';
@@ -38,8 +43,6 @@ export interface CandyMachineData {
     share: number;
   }[];
 }
-
-
 
 export async function loadCandyProgramV2(
   provider: anchor.Provider,
@@ -264,19 +267,6 @@ export async function getCandyMachineV2Config(
     arweaveJwk,
   };
 }
-
-const supportedImageTypes = ['image/png', 'image/gif', 'image/jpeg'];
-
-const supportedAnimationTypes = [
-  'video/mp4',
-  'video/quicktime',
-  'audio/mpeg',
-  'audio/x-flac',
-  'audio/wav',
-  'model/gltf-binary',
-  'text/html',
-];
-const JSON_EXTENSION = 'application/json';
 
 /**
  * @typedef {Object} VerifiedAssets
