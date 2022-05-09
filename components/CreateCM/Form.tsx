@@ -4,7 +4,7 @@ import {
   useAnchorWallet,
   useConnection,
 } from '@solana/wallet-adapter-react';
-import { useForm } from 'hooks';
+import { useForm, useUploadFiles } from 'hooks';
 import {
   getCandyMachineV2Config,
   verifyAssets,
@@ -15,21 +15,22 @@ import {
   Gatekeeper,
   StorageType,
 } from 'lib/candy-machine/types';
-import { UTCify, getDateFromString, getTimeFromString } from './utils';
+import { UTCify, parseDateFromDateBN, parseTimeFromDateBN } from './utils';
 import { uploadV2 } from 'lib/candy-machine/upload/upload';
 import { AnchorProvider, BN } from '@project-serum/anchor';
-import { LAMPORTS_PER_SOL } from '@solana/web3.js';
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { FetchedCandyMachineConfig } from 'pages/list-candy-machines/[id]';
 
 const Form: FC<{
   fetchedValues: FetchedCandyMachineConfig;
   updateCandyMachine?: boolean;
-}> = ({ fetchedValues, updateCandyMachine }) => {
+  candyMachinePubkey?: string | string[];
+}> = ({ fetchedValues, updateCandyMachine, candyMachinePubkey }) => {
   const { publicKey } = useWallet();
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
 
-  const [files, setFiles] = useState<File[]>([]);
+  const { files, uploadAssets } = useUploadFiles();
 
   function checkFormIsValid(): boolean {
     // TODO add more conditions
@@ -45,17 +46,10 @@ const Form: FC<{
     return true;
   }
 
-  function uploadAssets(e: React.ChangeEvent<HTMLInputElement>) {
-    if (!e.target.files || e.target.files.length == 0) {
-      window.alert('No files uploaded');
-      return;
-    }
-    const fileList = new Array<File>();
-    Array.from(e.target.files).forEach((file) => {
-      fileList.push(file);
-    });
-    setFiles(fileList);
-  }
+  const { onChange, onSubmit, values } = useForm(
+    updateCandyMachine ? updateCandyMachineV2 : createCandyMachineV2,
+    files
+  );
 
   async function createCandyMachineV2() {
     if (!checkFormIsValid()) return;
@@ -164,23 +158,126 @@ const Form: FC<{
     }
   }
 
-  const initialState = {
-    price: 0,
-    'number-of-nfts': 0,
-    'treasury-account': '',
-    captcha: false,
-    mutable: false,
-    'date-mint': '',
-    'time-mint': '',
-    storage: '',
-    files: [],
-  } as const;
+  function checkFormUpdateIsValid(): boolean {
+    // TODO add more conditions
+    // TODO add custom message to show error message
+    if (!values['date-mint'] || !values['time-mint']) return false;
+    if (values.price == 0 || isNaN(values.price)) return false;
 
-  const { onChange, onSubmit, values } = useForm(
-    createCandyMachineV2,
-    initialState
-  );
+    return true;
+  }
 
+  async function updateCandyMachineV2() {
+    console.log('UPDATING');
+    if (!checkFormUpdateIsValid()) return;
+
+    const config: CandyMachineConfig = {
+      price: values.price,
+      number: values['number-of-nfts'],
+      gatekeeper: values.captcha ? Gatekeeper : null,
+      solTreasuryAccount: values['treasury-account'],
+      splTokenAccount: null,
+      splToken: null,
+      goLiveDate: UTCify(values['date-mint'], values['time-mint']),
+      endSettings: null,
+      whitelistMintSettings: null,
+      hiddenSettings: null,
+      storage: values.storage.toLowerCase() as StorageType,
+      ipfsInfuraProjectId: null,
+      ipfsInfuraSecret: null,
+      nftStorageKey: null,
+      awsS3Bucket: null,
+      noRetainAuthority: false,
+      noMutable: values.mutable,
+      arweaveJwk: null,
+      batchSize: null,
+      pinataGateway: null,
+      pinataJwt: null,
+      uuid: null,
+    };
+
+    if (publicKey && anchorWallet && candyMachinePubkey) {
+      const provider = new AnchorProvider(connection, anchorWallet, {
+        preflightCommitment: 'recent',
+      });
+
+      const anchorProgram = await loadCandyProgramV2(provider);
+
+      const candyMachineObj: any =
+        await anchorProgram.account.candyMachine.fetch(
+          new PublicKey(candyMachinePubkey)
+        );
+
+      const {
+        number,
+        retainAuthority,
+        mutable,
+        price,
+        splToken,
+        treasuryWallet,
+        gatekeeper,
+        endSettings,
+        hiddenSettings,
+        whitelistMintSettings,
+        goLiveDate,
+        uuid,
+      } = await getCandyMachineV2Config(publicKey, config, anchorProgram);
+
+      const newSettings = {
+        itemsAvailable: number
+          ? new BN(number)
+          : candyMachineObj.data.itemsAvailable,
+        uuid: uuid || candyMachineObj.data.uuid,
+        symbol: candyMachineObj.data.symbol,
+        sellerFeeBasisPoints: candyMachineObj.data.sellerFeeBasisPoints,
+        isMutable: mutable,
+        maxSupply: new BN(0),
+        retainAuthority: retainAuthority,
+        gatekeeper,
+        goLiveDate,
+        endSettings,
+        price,
+        whitelistMintSettings,
+        hiddenSettings,
+        creators: candyMachineObj.data.creators.map((creator: any) => {
+          return {
+            address: new PublicKey(creator.address),
+            verified: true,
+            share: creator.share,
+          };
+        }),
+      };
+      const tx = await anchorProgram.methods
+        .updateCandyMachine(newSettings)
+        .accounts({
+          candyMachine: new PublicKey(candyMachinePubkey),
+          authority: publicKey,
+          wallet: treasuryWallet,
+        })
+        .rpc();
+
+
+      // remainingAccounts: cacheContent.startDate = goLiveDate;
+
+      console.log('update_candy_machine finished', tx);
+
+      // if (newAuthorityKey) {
+      //   const tx = await anchorProgram.rpc.updateAuthority(newAuthorityKey, {
+      //     accounts: {
+      //       candyMachine,
+      //       authority: walletKeyPair.publicKey,
+      //       wallet: treasuryWallet,
+      //     },
+      //   });
+
+      //   cacheContent.authority = newAuthorityKey.toBase58();
+      //   log.info(` - updated authority: ${newAuthorityKey.toBase58()}`);
+      //   log.info('update_authority finished', tx);
+      // }
+
+      // saveCache(cacheName, env, cacheContent);
+    }
+  }
   return (
     <form
       className='flex flex-col items-center h-auto justify-center mt-8'
@@ -189,7 +286,7 @@ const Form: FC<{
       <div className='flex flex-col p-4 xxl-shadow rounded-2xl scale-90 bg-gray-200 min-w-max items-center justify-center'>
         <FormInput
           id='price'
-          text='Price of each NFT'
+          text='Price of each NFT (SOL)'
           type='number'
           onChange={onChange}
           defaultValue={
@@ -198,33 +295,39 @@ const Form: FC<{
               : undefined
           }
         />
-        <FormInput
-          id='number-of-nfts'
-          text='Number of NFTs'
-          type='number'
-          onChange={onChange}
-          defaultValue={
-            fetchedValues?.itemsAvailable
-              ? new BN(fetchedValues.itemsAvailable).toNumber()
-              : undefined
-          }
-        />
-        <FormInput
-          id='treasury-account'
-          text='Treasury Account'
-          type='text'
-          onChange={onChange}
-          defaultValue={publicKey?.toBase58()}
-        />
         {!updateCandyMachine && (
-          <>
-            <FormInput
-              id='captcha'
-              text='Captcha?'
-              type='checkbox'
-              onChange={onChange}
-            />
-          </>
+          <FormInput
+            id='number-of-nfts'
+            text='Number of NFTs'
+            type='number'
+            onChange={onChange}
+            defaultValue={
+              fetchedValues?.itemsAvailable
+                ? new BN(fetchedValues.itemsAvailable).toNumber()
+                : undefined
+            }
+          />
+        )}
+        {updateCandyMachine && (
+          <FormInput
+            id='treasury-account'
+            text='Treasury Account'
+            type='text'
+            onChange={onChange}
+            defaultValue={
+              updateCandyMachine
+                ? fetchedValues.solTreasuryAccount?.toBase58()
+                : publicKey?.toBase58()
+            }
+          />
+        )}
+        {!updateCandyMachine && (
+          <FormInput
+            id='captcha'
+            text='Captcha?'
+            type='checkbox'
+            onChange={onChange}
+          />
         )}
         <FormInput
           id='mutable'
@@ -238,14 +341,14 @@ const Form: FC<{
           text='Date for mint'
           type='date'
           onChange={onChange}
-          defaultValue={getDateFromString(fetchedValues?.goLiveDate)}
+          defaultValue={parseDateFromDateBN(fetchedValues?.goLiveDate)}
         />
         <FormInput
           id='time-mint'
-          text='Time for mint'
+          text='Time for mint (GMT)'
           type='time'
           onChange={onChange}
-          defaultValue={getTimeFromString(fetchedValues?.goLiveDate)}
+          defaultValue={parseTimeFromDateBN(fetchedValues?.goLiveDate)}
         />
         {!updateCandyMachine && (
           <>
@@ -258,9 +361,7 @@ const Form: FC<{
                   <option key={key} value={key} />
                 ))}
             </datalist>
-        
 
-        
             <label htmlFor='files'>Files</label>
 
             <input type='file' name='files' multiple onChange={uploadAssets} />

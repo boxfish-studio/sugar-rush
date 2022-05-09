@@ -1,6 +1,19 @@
 import { useState } from "react";
 
-const useForm = <T,>(cb: () => any, initialState: T) => {
+const useForm = (cb: () => any, files:File[]) => {
+
+  const initialState = {
+    price: 0,
+    'number-of-nfts': 0,
+    'treasury-account': '',
+    captcha: false,
+    mutable: false,
+    'date-mint': '',
+    'time-mint': '',
+    storage: '',
+    files: [],
+  } as const;
+  
   const [values, setValues] = useState(initialState);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,10 +26,15 @@ const useForm = <T,>(cb: () => any, initialState: T) => {
     await cb();
   };
 
+  
+
+ 
+
   return {
     onChange,
     onSubmit,
     values,
+    
   };
 };
 

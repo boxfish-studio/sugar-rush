@@ -31,6 +31,7 @@ export interface FetchedCandyMachineConfig {
   symbol: string;
   uuid: string;
   whitelistMintSettings: null;
+  solTreasuryAccount: PublicKey;
 }
 
 const CandyMachine: NextPage = () => {
@@ -61,10 +62,8 @@ const CandyMachine: NextPage = () => {
       const state: any = await program.account.candyMachine.fetch(
         new PublicKey(account)
       );
-      console.log(new PublicKey(state.data.creators[0].address).toBase58());
-        
-     
-      console.log('candyMachineConfig', state.data);
+      state.data.solTreasuryAccount = state.wallet;
+      console.log('candyMachineConfig', state);
       return state.data;
     }
   }
@@ -79,7 +78,7 @@ const CandyMachine: NextPage = () => {
       <Suspense fallback={<Spinner />}>
         <div>
           {account}
-          <Form fetchedValues={candyMachineConfig} updateCandyMachine />
+          <Form fetchedValues={candyMachineConfig} updateCandyMachine  candyMachinePubkey={account}/>
         </div>
       </Suspense>
     );

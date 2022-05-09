@@ -25,10 +25,12 @@ const ListCandyMachines: NextPage = () => {
       : connection;
 
   async function fetchAccounts() {
-    if (publicKey) {
-      const accounts = await rpcEndpoint.getProgramAccounts(
-        CANDY_MACHINE_PROGRAM_V2_ID,
-        {
+    try{
+
+      if (publicKey) {
+        const accounts = await rpcEndpoint.getProgramAccounts(
+          CANDY_MACHINE_PROGRAM_V2_ID,
+          {
           commitment: 'confirmed',
 
           filters: [
@@ -40,11 +42,14 @@ const ListCandyMachines: NextPage = () => {
             },
           ],
         }
-      );
-      const accountsPubkeys = accounts.map((account) =>
+        );
+        const accountsPubkeys = accounts.map((account) =>
         account.pubkey.toBase58()
-      );
-      setAccounts(accountsPubkeys);
+        );
+        setAccounts(accountsPubkeys);
+      }
+    }catch(err){
+      console.error(err)
     }
   }
 
@@ -60,7 +65,7 @@ const ListCandyMachines: NextPage = () => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       List Candy Machine
-      <div className='grid lg:grid-cols-2 gap-y-3 mt-6 grid-flow-row grid-cols-1'>
+      <div className='grid lg:grid-cols-2 gap-y-7 mt-6 grid-flow-row grid-cols-1'>
         {accounts.length > 0 ? (
           accounts.map((account) => (
             <CandyMachineCard key={account} account={account} />
