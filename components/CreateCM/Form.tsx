@@ -15,6 +15,8 @@ import {
   parseDateToUTC,
   parseDateFromDateBN,
   parseTimeFromDateBN,
+  getCurrentDate,
+  getCurrentTime,
 } from './utils';
 import { uploadV2 } from 'lib/candy-machine/upload/upload';
 import { AnchorProvider, BN } from '@project-serum/anchor';
@@ -39,15 +41,16 @@ const Form: FC<{
       ? new BN(fetchedValues.price).toNumber() / LAMPORTS_PER_SOL
       : 0,
     'number-of-nfts': 0,
-    'treasury-account': fetchedValues.solTreasuryAccount ?? '',
-    captcha: fetchedValues.gatekeeper ?? false,
-    mutable: fetchedValues.isMutable ?? false,
+    'treasury-account': fetchedValues?.solTreasuryAccount ?? '',
+    captcha: fetchedValues?.gatekeeper ?? false,
+    mutable: fetchedValues?.isMutable ?? false,
     'date-mint': updateCandyMachine
       ? parseDateFromDateBN(fetchedValues?.goLiveDate)
-      : '',
+      : getCurrentDate(),
     'time-mint': updateCandyMachine
       ? parseTimeFromDateBN(fetchedValues?.goLiveDate)
-      : '',
+      : getCurrentTime(),
+
     storage: '',
     files: [],
     cache: null,
@@ -269,8 +272,6 @@ const Form: FC<{
         }),
       };
 
-      console.log('new', newSettings);
-
       await updateV2({
         newSettings,
         candyMachinePubkey,
@@ -278,7 +279,7 @@ const Form: FC<{
         treasuryWallet,
         anchorProgram,
         cache: await cache.text(),
-        newAuthority: values["new-authority"],
+        newAuthority: values['new-authority'],
       });
     }
   }
@@ -346,17 +347,25 @@ const Form: FC<{
           text='Date for mint'
           type='date'
           onChange={onChange}
-          defaultValue={parseDateFromDateBN(fetchedValues?.goLiveDate)}
+          defaultValue={
+            updateCandyMachine
+              ? parseDateFromDateBN(fetchedValues?.goLiveDate)
+              : getCurrentDate()
+          }
         />
         <FormInput
           id='time-mint'
           text='Time for mint (GMT)'
           type='time'
           onChange={onChange}
-          defaultValue={parseTimeFromDateBN(fetchedValues?.goLiveDate)}
+          defaultValue={
+            updateCandyMachine
+              ? parseTimeFromDateBN(fetchedValues?.goLiveDate)
+              : getCurrentTime()
+          }
         />
         {updateCandyMachine && (
-        // No default value since it is dangerous to transfer the authority of the CM to another account.
+          // No default value since it is dangerous to transfer the authority of the CM to another account.
           <FormInput
             id='new-authority'
             text='New Authority'

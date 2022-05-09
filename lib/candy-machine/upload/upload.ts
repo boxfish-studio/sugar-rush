@@ -178,6 +178,8 @@ export async function uploadV2({
       console.log('res', res);
       cacheContent.program.uuid = res.uuid;
       cacheContent.program.candyMachine = res.candyMachine.toBase58();
+      cacheContent.startDate = goLiveDate;
+
       candyMachine = res.candyMachine;
 
       // TODO - set collection mint

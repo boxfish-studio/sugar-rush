@@ -11,6 +11,7 @@ const useForm = (cb: () => any, initialState: any) => {
           ? event.target.checked
           : event.target.value,
     });
+    console.log(values);
   };
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

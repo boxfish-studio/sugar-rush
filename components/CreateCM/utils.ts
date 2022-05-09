@@ -52,3 +52,33 @@ export function parseTimeFromDateBN(date: BN) {
 
   return `${hours}:${minutes}`;
 }
+
+export function getCurrentTime() {
+  let hours = new Date().getUTCHours().toString();
+  let minutes = new Date().getMinutes().toString();
+
+  if (hours.length === 1) {
+    hours = `0${hours}`;
+  }
+
+  if (minutes.length === 1) {
+    minutes = `0${minutes}`;
+  }
+  return `${hours}:${minutes}`;
+}
+
+export function getCurrentDate() {
+  const year = new Date().getFullYear().toString();
+  let month = new Date().getMonth().toString();
+  let day = new Date().getDate().toString();
+
+  if (month.length === 1) {
+    month = `0${month}`;
+  }
+
+  if (day.length === 1) {
+    day = `0${day}`;
+  }
+
+  return `${year}-${month}-${day}`;
+}
