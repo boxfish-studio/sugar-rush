@@ -1,13 +1,10 @@
 import * as anchor from '@project-serum/anchor';
 import { calculate } from '@metaplex/arweave-cost';
-import { ARWEAVE_PAYMENT_WALLET } from '../constants';
+import { ARWEAVE_PAYMENT_WALLET, ARWEAVE_UPLOAD_ENDPOINT } from '../constants';
 import { sendTransactionWithRetryWithKeypair } from './transactions';
 import { Manifest } from '../types';
 import { getFileExtension } from './helpers';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-
-const ARWEAVE_UPLOAD_ENDPOINT =
-  'https://us-central1-metaplex-studios.cloudfunctions.net/uploadFile';
 
 /**
  * @param fileSizes - array of file sizes
