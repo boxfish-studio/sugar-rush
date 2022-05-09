@@ -40,6 +40,7 @@ const Form: FC<{
     price: updateCandyMachine
       ? new BN(fetchedValues.price).toNumber() / LAMPORTS_PER_SOL
       : 0,
+      
     'number-of-nfts': 0,
     'treasury-account': fetchedValues?.solTreasuryAccount ?? '',
     captcha: fetchedValues?.gatekeeper ?? false,
