@@ -1,18 +1,18 @@
-import { PropsWithChildren, FC } from "react";
+import { FC } from "react";
 
 import Link from "next/link";
 
-const Navbar: FC = ({}: PropsWithChildren<any>) => {
+const Navbar: FC = () => {
   return (
     <div className="fixed top-0 left-0 z-10 flex flex-col w-28 h-screen m-0 text-white shadow-lg bg-slate-400">
-      <SideBarIcon tooltip="Home" href="/" text="Home" />
-      <SideBarIcon tooltip="List of Candy machines" href="/list-candy-machines" text="List CM" />
-      <SideBarIcon tooltip="Create candy machine" href="/create-candy-machine" text="Create CM" />
+      <SideBarElement tooltip="Home" href="/" text="Home" />
+      <SideBarElement tooltip="List of Candy Machines" href="/list-candy-machines" text="List CMs" />
+      <SideBarElement tooltip="Create Candy Machine" href="/create-candy-machine" text="Create CM" />
     </div>
   );
 };
 
-const SideBarIcon = ({
+const SideBarElement = ({
   text,
   tooltip,
   href,
