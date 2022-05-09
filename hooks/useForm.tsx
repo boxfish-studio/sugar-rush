@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useForm = (cb: () => any, files:File[]) => {
+const useForm = (cb: () => any) => {
 
   const initialState = {
     price: 0,

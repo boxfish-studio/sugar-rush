@@ -48,7 +48,7 @@ const Form: FC<{
 
   const { onChange, onSubmit, values } = useForm(
     updateCandyMachine ? updateCandyMachineV2 : createCandyMachineV2,
-    files
+    
   );
 
   async function createCandyMachineV2() {
