@@ -63,7 +63,9 @@ const CandyMachine: NextPage = () => {
         new PublicKey(account)
       );
       state.data.solTreasuryAccount = state.wallet;
-      console.log('candyMachineConfig', state);
+      console.log('candyMachineConfig: ', state);
+      console.log('x', new PublicKey( state.authority).toBase58());
+
       return state.data;
     }
   }

@@ -4,7 +4,7 @@ import { BN, Program, web3 } from '@project-serum/anchor';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { PromisePool } from '@supercharge/promise-pool';
 
-import { saveCache } from './cache';
+import { saveCache } from '../cache';
 import { arweaveUpload } from './arweave';
 // import {
 //   makeArweaveBundleUploadGenerator,

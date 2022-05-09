@@ -32,7 +32,6 @@ export function saveCache(
   cacheName: string,
   env: string,
   cacheContent: any
-  //   cPath: string = CACHE_PATH,
 ) {
   cacheContent.env = env;
   cacheContent.cacheName = cacheName;

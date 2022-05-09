@@ -22,7 +22,7 @@ export function parseDateToUTC(dateTime: string, time: string): string {
 }
 
 export function parseDateFromDateBN(date: BN) {
-  let year = new Date(new BN(date).toNumber() * 1000).getFullYear();
+  let year = new Date(new BN(date).toNumber() * 1000).getFullYear().toString();
   let month = new Date(new BN(date).toNumber() * 1000).getMonth().toString();
   let day = new Date(new BN(date).toNumber() * 1000).getDate().toString();
 
@@ -38,14 +38,13 @@ export function parseDateFromDateBN(date: BN) {
 
 export function parseTimeFromDateBN(date: BN) {
   let hours = new Date(new BN(date).toNumber() * 1000).getUTCHours().toString();
+  let minutes = new Date(new BN(date).toNumber() * 1000)
+    .getMinutes()
+    .toString();
 
   if (hours.length === 1) {
     hours = `0${hours}`;
   }
-
-  let minutes = new Date(new BN(date).toNumber() * 1000)
-    .getMinutes()
-    .toString();
 
   if (minutes.length === 1) {
     minutes = `0${minutes}`;
