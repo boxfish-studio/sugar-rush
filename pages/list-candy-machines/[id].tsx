@@ -45,6 +45,7 @@ const CandyMachine: NextPage = () => {
         const state: any = await program.account.candyMachine.fetch(
           new PublicKey(account)
         );
+        
         state.data.solTreasuryAccount = state.wallet;
         state.data.itemsRedeemed = state.itemsRedeemed;
         console.log('candyMachineConfig: ', state);

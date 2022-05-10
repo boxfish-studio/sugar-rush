@@ -26,6 +26,11 @@ const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
                 Inspect
               </a>
             </Link>
+            <Link href={`/verify-candy-machine/${account}`}>
+              <a className='text-white absolute right-6 bottom-2 bg-slate-800 w-fit p-1 rounded-xl px-4'>
+                Verify Candy Machine
+              </a>
+            </Link>
           </div>
         ))}
       </div>
