@@ -18,8 +18,8 @@ export function parseDate(date: string) {
   }
   return Date.parse(date) / 1000;
 }
-export function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+export function sleep(milliseconds: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 export const getAtaForMint = async (
   mint: anchor.web3.PublicKey,
