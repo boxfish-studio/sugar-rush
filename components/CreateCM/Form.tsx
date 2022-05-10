@@ -116,9 +116,9 @@ const Form: FC = () => {
         uuid,
       } = await getCandyMachineV2Config(publicKey, config, anchorProgram);
 
-      const startMs = Date.now();
+      const startMilliseconds = Date.now();
 
-      console.log('started at: ' + startMs.toString());
+      console.log('started at: ' + startMilliseconds.toString());
       try {
         await uploadV2({
           files: supportedFiles,
@@ -154,8 +154,8 @@ const Form: FC = () => {
       } catch (err) {
         console.error('upload was not successful, please re-run.', err);
       }
-      const endMs = Date.now();
-      console.log(endMs.toString());
+      const endMilliseconds = Date.now();
+      console.log(endMilliseconds.toString());
     }
   }
 
