@@ -46,7 +46,10 @@ const CandyMachine: NextPage = () => {
           new PublicKey(account)
         );
         state.data.solTreasuryAccount = state.wallet;
+        state.data.itemsRedeemed = state.itemsRedeemed;
         console.log('candyMachineConfig: ', state);
+        console.log('x: ', new BN(state.data.itemsAvailable).toNumber());
+
         setLoading({ loading: false, error: false });
 
         return state.data;
@@ -86,11 +89,19 @@ const CandyMachine: NextPage = () => {
         )}
 
         {!loading.error && candyMachineConfig?.uuid && (
+          <>
+          <span className='mt-5'>
+            There are {new BN(candyMachineConfig.itemsAvailable).toNumber()} unminted NFT.
+          </span>
+          <span className='mt-5'>
+            {new BN(candyMachineConfig.itemsRedeemed).toNumber()} redeemed NFT.
+          </span>
           <Form
             fetchedValues={candyMachineConfig}
             updateCandyMachine
             candyMachinePubkey={account}
-          />
+            />
+            </>
         )}
       </div>
     </>

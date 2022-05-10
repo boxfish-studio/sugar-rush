@@ -26,6 +26,7 @@ export interface FetchedCandyMachineConfig {
   uuid: string;
   whitelistMintSettings: null;
   solTreasuryAccount: PublicKey;
+  itemsRedeemed: BN;
 }
 
 export interface CandyMachineConfig {
