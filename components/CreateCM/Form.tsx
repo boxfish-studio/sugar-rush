@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import {
   useWallet,
   useAnchorWallet,
-  useConnection,
+  useConnection
 } from '@solana/wallet-adapter-react';
 import { useForm } from 'hooks';
 import {
@@ -20,7 +20,7 @@ import { uploadV2 } from 'lib/candy-machine/upload/upload';
 import { AnchorProvider } from '@project-serum/anchor';
 
 const Form: FC = () => {
-  const { publicKey } = useWallet();
+  const { publicKey, connected } = useWallet();
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
 
@@ -174,7 +174,15 @@ const Form: FC = () => {
   const { onChange, onSubmit, values } = useForm(
     createCandyMachineV2,
     initialState
-  );
+  );  
+
+  if (!connected) {
+    return (
+      <h1 className='text-red-600 flex flex-col items-center h-auto justify-center mt-8'>
+      Connect your wallet to create a Candy Machine
+      </h1>
+    )
+  }
 
   return (
     <form
