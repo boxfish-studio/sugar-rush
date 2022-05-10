@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react';
 import { useForm, useUploadFiles, useRPC, useUploadCache } from 'hooks';
 import {
@@ -35,13 +35,14 @@ const Form: FC<{
 
   const { files, uploadAssets } = useUploadFiles();
   const { cache, uploadCache } = useUploadCache();
+  const [interactingWithCM, setInteractingWithCM] = useState(false);
 
   const initialState = {
     price: fetchedValues?.price
       ? new BN(fetchedValues?.price).toNumber() / LAMPORTS_PER_SOL
       : 0,
     'number-of-nfts': 0,
-    'treasury-account': fetchedValues?.solTreasuryAccount ?? '',
+    'treasury-account': fetchedValues?.solTreasuryAccount?.toBase58() ?? '',
     captcha: fetchedValues?.gatekeeper ?? false,
     mutable: fetchedValues?.isMutable ?? false,
     'date-mint': fetchedValues?.goLiveDate
@@ -54,7 +55,7 @@ const Form: FC<{
     storage: '',
     files: [],
     cache: null,
-    'new-authority': null,
+    'new-authority': '',
   } as const;
 
   const { onChange, onSubmit, values } = useForm(
@@ -192,95 +193,100 @@ const Form: FC<{
   }
 
   async function updateCandyMachineV2() {
-    console.log(JSON.parse(await cache.text()));
-    if (!isFormUpdateIsValid()) return;
+    try {
+      setInteractingWithCM(true);
+      if (!isFormUpdateIsValid()) return;
 
-    const config: CandyMachineConfig = {
-      price: values.price,
-      number: values['number-of-nfts'],
-      gatekeeper: values.captcha ? Gatekeeper : null,
-      solTreasuryAccount: values['treasury-account'],
-      splTokenAccount: null,
-      splToken: null,
-      goLiveDate: parseDateToUTC(values['date-mint'], values['time-mint']),
-      endSettings: null,
-      whitelistMintSettings: null,
-      hiddenSettings: null,
-      storage: values.storage.toLowerCase() as StorageType,
-      ipfsInfuraProjectId: null,
-      ipfsInfuraSecret: null,
-      nftStorageKey: null,
-      awsS3Bucket: null,
-      noRetainAuthority: false,
-      noMutable: !values.mutable,
-      arweaveJwk: null,
-      batchSize: null,
-      pinataGateway: null,
-      pinataJwt: null,
-      uuid: null,
-    };
-
-    if (publicKey && anchorWallet && candyMachinePubkey) {
-      const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
-        preflightCommitment: 'recent',
-      });
-
-      const anchorProgram = await loadCandyProgramV2(provider);
-
-      const candyMachineObj: any =
-        await anchorProgram.account.candyMachine.fetch(
-          new PublicKey(candyMachinePubkey)
-        );
-
-      const {
-        number,
-        retainAuthority,
-        mutable,
-        price,
-        splToken,
-        treasuryWallet,
-        gatekeeper,
-        endSettings,
-        hiddenSettings,
-        whitelistMintSettings,
-        goLiveDate,
-        uuid,
-      } = await getCandyMachineV2Config(publicKey, config, anchorProgram);
-
-      const newSettings = {
-        itemsAvailable: number
-          ? new BN(number)
-          : candyMachineObj.data.itemsAvailable,
-        uuid: uuid || candyMachineObj.data.uuid,
-        symbol: candyMachineObj.data.symbol,
-        sellerFeeBasisPoints: candyMachineObj.data.sellerFeeBasisPoints,
-        isMutable: mutable,
-        maxSupply: new BN(0),
-        retainAuthority: retainAuthority,
-        gatekeeper,
-        goLiveDate,
-        endSettings,
-        price,
-        whitelistMintSettings,
-        hiddenSettings,
-        creators: candyMachineObj.data.creators.map((creator: any) => {
-          return {
-            address: new PublicKey(creator.address),
-            verified: true,
-            share: creator.share,
-          };
-        }),
+      const config: CandyMachineConfig = {
+        price: values.price,
+        number: values['number-of-nfts'],
+        gatekeeper: values.captcha ? Gatekeeper : null,
+        solTreasuryAccount: values['treasury-account'],
+        splTokenAccount: null,
+        splToken: null,
+        goLiveDate: parseDateToUTC(values['date-mint'], values['time-mint']),
+        endSettings: null,
+        whitelistMintSettings: null,
+        hiddenSettings: null,
+        storage: values.storage.toLowerCase() as StorageType,
+        ipfsInfuraProjectId: null,
+        ipfsInfuraSecret: null,
+        nftStorageKey: null,
+        awsS3Bucket: null,
+        noRetainAuthority: false,
+        noMutable: !values.mutable,
+        arweaveJwk: null,
+        batchSize: null,
+        pinataGateway: null,
+        pinataJwt: null,
+        uuid: null,
       };
 
-      await updateV2({
-        newSettings,
-        candyMachinePubkey,
-        publicKey,
-        treasuryWallet,
-        anchorProgram,
-        cache: await cache.text(),
-        newAuthority: values['new-authority'],
-      });
+      if (publicKey && anchorWallet && candyMachinePubkey) {
+        const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+          preflightCommitment: 'recent',
+        });
+
+        const anchorProgram = await loadCandyProgramV2(provider);
+
+        const candyMachineObj: any =
+          await anchorProgram.account.candyMachine.fetch(
+            new PublicKey(candyMachinePubkey)
+          );
+
+        const {
+          number,
+          retainAuthority,
+          mutable,
+          price,
+          splToken,
+          treasuryWallet,
+          gatekeeper,
+          endSettings,
+          hiddenSettings,
+          whitelistMintSettings,
+          goLiveDate,
+          uuid,
+        } = await getCandyMachineV2Config(publicKey, config, anchorProgram);
+
+        const newSettings = {
+          itemsAvailable: number
+            ? new BN(number)
+            : candyMachineObj.data.itemsAvailable,
+          uuid: uuid || candyMachineObj.data.uuid,
+          symbol: candyMachineObj.data.symbol,
+          sellerFeeBasisPoints: candyMachineObj.data.sellerFeeBasisPoints,
+          isMutable: mutable,
+          maxSupply: new BN(0),
+          retainAuthority: retainAuthority,
+          gatekeeper,
+          goLiveDate,
+          endSettings,
+          price,
+          whitelistMintSettings,
+          hiddenSettings,
+          creators: candyMachineObj.data.creators.map((creator: any) => {
+            return {
+              address: new PublicKey(creator.address),
+              verified: true,
+              share: creator.share,
+            };
+          }),
+        };
+
+        await updateV2({
+          newSettings,
+          candyMachinePubkey,
+          publicKey,
+          treasuryWallet,
+          anchorProgram,
+          cache: await cache.text(),
+          newAuthority: values['new-authority'],
+        });
+        setInteractingWithCM(false);
+      }
+    } catch (err) {
+      setInteractingWithCM(false);
     }
   }
   return (
@@ -401,7 +407,10 @@ const Form: FC<{
           type='submit'
           className='bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white'
         >
-          {updateCandyMachine ? 'Update Candy Machine' : 'Create Candy Machine'}
+          {updateCandyMachine && !interactingWithCM && 'Update Candy Machine'}
+          {!updateCandyMachine && !interactingWithCM && 'Create Candy Machine'}
+
+          {interactingWithCM && <span>...</span>}
         </button>
       </div>
     </form>
