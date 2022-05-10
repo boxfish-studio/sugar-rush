@@ -25,7 +25,7 @@ import { FetchedCandyMachineConfig } from 'lib/candy-machine/types';
 import { updateV2 } from 'lib/candy-machine/update/update';
 
 const Form: FC<{
-  fetchedValues: FetchedCandyMachineConfig;
+  fetchedValues?: FetchedCandyMachineConfig;
   updateCandyMachine?: boolean;
   candyMachinePubkey?: string | string[];
 }> = ({ fetchedValues, updateCandyMachine, candyMachinePubkey }) => {
@@ -37,18 +37,17 @@ const Form: FC<{
   const { cache, uploadCache } = useUploadCache();
 
   const initialState = {
-    price: updateCandyMachine
-      ? new BN(fetchedValues.price).toNumber() / LAMPORTS_PER_SOL
+    price: fetchedValues?.price
+      ? new BN(fetchedValues?.price).toNumber() / LAMPORTS_PER_SOL
       : 0,
-
     'number-of-nfts': 0,
     'treasury-account': fetchedValues?.solTreasuryAccount ?? '',
     captcha: fetchedValues?.gatekeeper ?? false,
     mutable: fetchedValues?.isMutable ?? false,
-    'date-mint': updateCandyMachine
+    'date-mint': fetchedValues?.goLiveDate
       ? parseDateFromDateBN(fetchedValues?.goLiveDate)
       : getCurrentDate(),
-    'time-mint': updateCandyMachine
+    'time-mint': fetchedValues?.goLiveDate
       ? parseTimeFromDateBN(fetchedValues?.goLiveDate)
       : getCurrentTime(),
 
@@ -322,7 +321,7 @@ const Form: FC<{
             onChange={onChange}
             defaultValue={
               updateCandyMachine
-                ? fetchedValues.solTreasuryAccount?.toBase58()
+                ? fetchedValues?.solTreasuryAccount?.toBase58()
                 : publicKey?.toBase58()
             }
           />
@@ -349,7 +348,7 @@ const Form: FC<{
           type='date'
           onChange={onChange}
           defaultValue={
-            updateCandyMachine
+            fetchedValues?.goLiveDate
               ? parseDateFromDateBN(fetchedValues?.goLiveDate)
               : getCurrentDate()
           }
@@ -360,7 +359,7 @@ const Form: FC<{
           type='time'
           onChange={onChange}
           defaultValue={
-            updateCandyMachine
+            fetchedValues?.goLiveDate
               ? parseTimeFromDateBN(fetchedValues?.goLiveDate)
               : getCurrentTime()
           }
