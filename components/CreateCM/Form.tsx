@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import {
   useWallet,
   useAnchorWallet,
@@ -25,6 +25,15 @@ const Form: FC = () => {
   const { connection } = useConnection();
 
   const [files, setFiles] = useState<File[]>([]);
+  const [key, setKey] = useState<string>(publicKey ? publicKey.toBase58(): "");
+  
+  useEffect(() => {
+    if (publicKey) {
+      setKey(publicKey.toBase58())
+    } else {
+      setKey("")
+    }
+  }, [publicKey])
 
   function isFormValid(): boolean {
     // TODO add more conditions
@@ -176,12 +185,9 @@ const Form: FC = () => {
     initialState
   );  
 
-  if (!connected) {
-    return (
-      <h1 className='text-red-600 flex flex-col items-center h-auto justify-center mt-8'>
-      Connect your wallet to create a Candy Machine
-      </h1>
-    )
+  function changeTreasuryAccountValue(event: React.ChangeEvent<HTMLInputElement>): void {
+    setKey(event.target.value)
+    onChange(event)
   }
 
   return (
@@ -206,8 +212,8 @@ const Form: FC = () => {
           id='treasury-account'
           text='Treasury Account'
           type='text'
-          onChange={onChange}
-          defaultValue={publicKey?.toBase58()}
+          value={key}
+          onChange={changeTreasuryAccountValue}
         />
         <FormInput
           id='captcha'
@@ -246,12 +252,15 @@ const Form: FC = () => {
         <label htmlFor='files'>Files</label>
 
         <input type='file' name='files' multiple onChange={uploadAssets} />
-        <button
-          type='submit'
-          className='bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white'
-        >
-          Create Candy Machine
-        </button>
+        {connected ?
+          <button type='submit' className='bg-blue-500 w-fit p-4 rounded-2xl mt-6 text-white'>
+            Create Candy Machine
+          </button>
+          :
+          <h1 className='text-red-600 flex flex-col items-center h-auto justify-center mt-8'>
+            Connect your wallet to create a Candy Machine
+          </h1>
+        }
       </div>
     </form>
   );
