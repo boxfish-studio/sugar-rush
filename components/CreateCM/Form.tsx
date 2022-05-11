@@ -1,10 +1,10 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import {
-  useWallet,
+  useConnection,
   useAnchorWallet,
-  useConnection
+  useWallet,
 } from '@solana/wallet-adapter-react';
-import { useForm } from 'hooks';
+import { useForm, usePublicKey } from 'hooks';
 import {
   getCandyMachineV2Config,
   verifyAssets,
@@ -20,20 +20,12 @@ import { uploadV2 } from 'lib/candy-machine/upload/upload';
 import { AnchorProvider } from '@project-serum/anchor';
 
 const Form: FC = () => {
-  const { publicKey, connected } = useWallet();
-  const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
+  const anchorWallet = useAnchorWallet();
+  const { publicKey } = useWallet();
+  const { key, setKey, isConnectedWallet } = usePublicKey();  
 
   const [files, setFiles] = useState<File[]>([]);
-  const [key, setKey] = useState<string>(publicKey ? publicKey.toBase58(): "");
-  
-  useEffect(() => {
-    if (publicKey) {
-      setKey(publicKey.toBase58())
-    } else {
-      setKey("")
-    }
-  }, [publicKey])
 
   function isFormValid(): boolean {
     // TODO add more conditions
@@ -183,7 +175,7 @@ const Form: FC = () => {
   const { onChange, onSubmit, values } = useForm(
     createCandyMachineV2,
     initialState
-  );  
+  ); 
 
   function changeTreasuryAccountValue(event: React.ChangeEvent<HTMLInputElement>): void {
     setKey(event.target.value)
@@ -252,7 +244,7 @@ const Form: FC = () => {
         <label htmlFor='files'>Files</label>
 
         <input type='file' name='files' multiple onChange={uploadAssets} />
-        {connected ?
+        {isConnectedWallet ?
           <button type='submit' className='bg-blue-500 w-fit p-4 rounded-2xl mt-6 text-white'>
             Create Candy Machine
           </button>
