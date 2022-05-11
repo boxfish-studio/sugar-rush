@@ -18,6 +18,7 @@ import {
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import {Wallet,Navbar} from "components/Layout";
 import { clusterApiUrl } from "@solana/web3.js";
+import { RecoilRoot } from 'recoil';
 
 require("@solana/wallet-adapter-react-ui/styles.css");
 
@@ -41,17 +42,19 @@ function MyApp({ Component, pageProps }: AppProps) {
 );
 
   return (
-    <ConnectionProvider endpoint={endpoint} >
-      <WalletProvider wallets={wallets}  >
-        <Navbar />
-        <WalletModalProvider >
-          <Wallet />
-          <div style={{ marginLeft: "10rem" }}>
-            <Component {...pageProps} />
-          </div>
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <RecoilRoot>
+      <ConnectionProvider endpoint={endpoint} >
+        <WalletProvider wallets={wallets}  >
+          <Navbar />
+          <WalletModalProvider >
+            <Wallet />
+            <div style={{ marginLeft: "10rem" }}>
+              <Component {...pageProps} />
+            </div>
+          </WalletModalProvider>
+        </WalletProvider>
+      </ConnectionProvider>
+    </RecoilRoot>
   );
 }
 
