@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Program, AnchorProvider, BN } from '@project-serum/anchor';
 import { PublicKey, Connection } from '@solana/web3.js';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
@@ -12,6 +12,7 @@ import {
   CONFIG_ARRAY_START_V2,
   CONFIG_LINE_SIZE_V2,
 } from 'lib/candy-machine/constants';
+import { chunks, fromUTF8Array } from 'lib/candy-machine/verify/helpers';
 
 const CANDY_MACHINE_PROGRAM = new PublicKey(
   'cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ'
@@ -19,71 +20,32 @@ const CANDY_MACHINE_PROGRAM = new PublicKey(
 
 type Account = string | string[] | undefined;
 
-export function chunks(array: any, size: number) {
-  return Array.apply(0, new Array(Math.ceil(array.length / size))).map(
-    (_, index) => array.slice(index * size, (index + 1) * size)
-  );
-}
-
-export function fromUTF8Array(data: number[]) {
-  // array of bytes
-  let str = '',
-    i;
-
-  for (i = 0; i < data.length; i++) {
-    const value = data[i];
-
-    if (value < 0x80) {
-      str += String.fromCharCode(value);
-    } else if (value > 0xbf && value < 0xe0) {
-      str += String.fromCharCode(((value & 0x1f) << 6) | (data[i + 1] & 0x3f));
-      i += 1;
-    } else if (value > 0xdf && value < 0xf0) {
-      str += String.fromCharCode(
-        ((value & 0x0f) << 12) |
-          ((data[i + 1] & 0x3f) << 6) |
-          (data[i + 2] & 0x3f)
-      );
-      i += 2;
-    } else {
-      // surrogate pair
-      const charCode =
-        (((value & 0x07) << 18) |
-          ((data[i + 1] & 0x3f) << 12) |
-          ((data[i + 2] & 0x3f) << 6) |
-          (data[i + 3] & 0x3f)) -
-        0x010000;
-
-      str += String.fromCharCode(
-        (charCode >> 10) | 0xd800,
-        (charCode & 0x03ff) | 0xdc00
-      );
-      i += 3;
-    }
-  }
-
-  return str;
-}
-
-const CandyMachine: NextPage = () => {
+const VerifyCandyMachine: NextPage = () => {
   const router = useRouter();
   const account = router.query.id;
   const { cache, uploadCache } = useUploadCache();
-
+  const { connection } = useConnection();
+  const [error, setError] = useState({ error: false, message: '' });
   const anchorWallet = useAnchorWallet();
+  const [message, setMessage] = useState('');
 
-  const [loading, setLoading] = useState({ loading: false, error: false });
+  const [loading, setLoading] = useState(false);
 
-  async function fetchCandyMachine({
+  async function verifyCandyMachine({
     account,
     connection,
   }: {
     account: Account;
     connection: Connection;
   }) {
-    if (account && anchorWallet) {
+    if (account && anchorWallet && cache) {
+      const cacheContent = JSON.parse(await cache.text());
+      const cacheName = cacheContent.cacheName;
+      const env = cacheContent.env;
+
       try {
-        setLoading({ loading: true, error: false });
+        setLoading(true);
+
         const provider = new AnchorProvider(connection, anchorWallet, {
           preflightCommitment: 'processed',
         });
@@ -101,14 +63,12 @@ const CandyMachine: NextPage = () => {
         );
         let allGood = true;
 
-        const cacheContent = JSON.parse(await cache.text());
-
         const keys = Object.keys(cacheContent.items)
           .filter((k) => !cacheContent.items[k].verifyRun)
           .sort((a, b) => Number(a) - Number(b));
 
         if (keys.length > 0) {
-          console.log(
+          setMessage(
             `Checking ${keys.length} items that have yet to be checked...`
           );
         }
@@ -120,7 +80,7 @@ const CandyMachine: NextPage = () => {
               if (i % 100 == 0) saveCache(cacheName, env, cacheContent);
 
               const key = allIndexesInSlice[i];
-              console.log('Looking at key ', key);
+              setMessage(`Looking at key ${key}`);
 
               const thisSlice = candyMachine!.data.slice(
                 CONFIG_ARRAY_START_V2 + 4 + CONFIG_LINE_SIZE_V2 * key,
@@ -136,11 +96,12 @@ const CandyMachine: NextPage = () => {
               const cacheItem = cacheContent.items[key];
 
               if (name != cacheItem.name || uri != cacheItem.link) {
-                console.log(
-                  `Name (${name}) or uri (${uri}) didnt match cache values of (${cacheItem.name})` +
-                    `and (${cacheItem.link}). marking to rerun for image`,
-                  key
-                );
+                setError({
+                  error: true,
+                  message:
+                    `Name (${name}) or uri (${uri}) didnt match cache values of (${cacheItem.name})` +
+                    `and (${cacheItem.link}). marking to rerun for image ${key}`,
+                });
                 cacheItem.onChain = false;
                 allGood = false;
               } else {
@@ -154,7 +115,7 @@ const CandyMachine: NextPage = () => {
           saveCache(cacheName, env, cacheContent);
 
           throw new Error(
-            `not all NFTs checked out. check out logs above for details`
+            `not all NFTs checked out. check out logs below for details`
           );
         }
 
@@ -165,6 +126,11 @@ const CandyMachine: NextPage = () => {
           ),
           undefined,
           'le'
+        );
+        setMessage(
+          `uploaded (${lineCount.toNumber()}) out of (${
+            candyMachineObj.data.itemsAvailable
+          })`
         );
 
         console.log(
@@ -183,18 +149,16 @@ const CandyMachine: NextPage = () => {
         }
 
         saveCache(cacheName, env, cacheContent);
-        setLoading({ loading: false, error: false });
+        setLoading(false);
       } catch (err) {
         console.error(err);
-        setLoading({ loading: false, error: true });
+        saveCache(cacheName, env, cacheContent);
+
+        setLoading(false);
+        setError({ error: true, message: (err as Error).message });
       }
     }
   }
-
-  //   useEffect(() => {
-  //     fetchCandyMachine({ account, connection }).then(setCandyMachineConfig);
-  //     // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   }, [account, connection, anchorWallet]);
 
   return (
     <>
@@ -219,9 +183,28 @@ const CandyMachine: NextPage = () => {
 
           <input type='file' name='cache' onChange={uploadCache} />
         </>
+        <button
+          className='bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white'
+          onClick={() => verifyCandyMachine({ account, connection })}
+        >
+          {loading && !error.error && <span>...</span>}
+          {!loading && !error.error && <span>Verify CM</span>}
+          {!loading && error.error && <span>{message}</span>}
+        </button>
+        {loading && !error.error && (
+          <div className='border border-cyan-500 mx-36 mt-10 p-5 rounded-xl text-black'>
+            {message}
+          </div>
+        )}
+
+        {!loading && error.error && (
+          <div className='border border-red-500 mx-36 mt-10 p-5 rounded-xl'>
+            {error.message}
+          </div>
+        )}
       </div>
     </>
   );
 };
 
-export default CandyMachine;
+export default VerifyCandyMachine;
