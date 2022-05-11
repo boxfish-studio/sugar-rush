@@ -183,7 +183,7 @@ const Form: FC<{
     }
   }
 
-  function isFormUpdateIsValid(): boolean {
+  function isFormUpdateValid(): boolean {
     // TODO add more conditions
     // TODO add custom message to show error message
     if (!values['date-mint'] || !values['time-mint']) return false;
@@ -195,7 +195,7 @@ const Form: FC<{
   async function updateCandyMachineV2() {
     try {
       setInteractingWithCM(true);
-      if (!isFormUpdateIsValid()) return;
+      if (!isFormUpdateValid()) return;
 
       const config: CandyMachineConfig = {
         price: values.price,
