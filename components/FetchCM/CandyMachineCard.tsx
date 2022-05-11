@@ -7,7 +7,7 @@ const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
   return (
     <>
       <input
-        className='border border-gray-500 p-2 rounded-lg mt-6 w-[30rem]'
+        className='border border-gray-500 p-2 rounded-lg mt-6 md:min-w-[30rem] min-w-fit'
         ref={searchRef}
         type='search'
         placeholder='Search candy machine...'

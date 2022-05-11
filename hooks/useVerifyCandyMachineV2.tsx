@@ -28,9 +28,9 @@ const useVerifyCandyMachineV2 = (cache: File) => {
       setMessage('');
       setError({ error: false, message: '' });
       setLoading(false);
+      let errorMessage = '';
       try {
         setLoading(true);
-
         const provider = new AnchorProvider(connection, anchorWallet, {
           preflightCommitment: 'processed',
         });
@@ -85,13 +85,10 @@ const useVerifyCandyMachineV2 = (cache: File) => {
               const cacheItem = cacheContent.items[key];
 
               if (name != cacheItem.name || uri != cacheItem.link) {
-                setError({
-                  error: true,
-                  message:
-                    `Name (${name}) or uri (${uri}) didnt match cache values of (${cacheItem.name})` +
-                    `and (${cacheItem.link}). marking to rerun for image ${key}`,
-                });
-                cacheItem.onChain = false;
+                (errorMessage =
+                  `Name (${name}) or uri (${uri}) didnt match cache values of (${cacheItem.name})` +
+                  `and (${cacheItem.link}). marking to rerun for image ${key}`),
+                  (cacheItem.onChain = false);
                 allGood = false;
               } else {
                 cacheItem.verifyRun = true;
@@ -134,9 +131,11 @@ const useVerifyCandyMachineV2 = (cache: File) => {
       } catch (err) {
         console.error(err);
         saveCache(cacheName, env, cacheContent);
-
         setLoading(false);
-        setError({ error: true, message: (err as Error).message });
+        setError({
+          error: true,
+          message: errorMessage || (err as Error).message,
+        });
       }
     }
   }
