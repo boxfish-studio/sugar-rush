@@ -6,13 +6,10 @@ import { PublicKey, Connection } from '@solana/web3.js';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import { Spinner, Title } from 'components/Layout';
 import { FetchedCandyMachineConfig } from 'lib/candy-machine/types';
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants';
 import Form from 'components/CreateCM/Form';
 import Head from 'next/head';
-const CANDY_MACHINE_PROGRAM = new PublicKey(
-  'cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ'
-);
-
-type Account = string | string[] | undefined;
+import { Account } from 'lib/candy-machine/types';
 
 const CandyMachine: NextPage = () => {
   const router = useRouter();
@@ -22,7 +19,10 @@ const CandyMachine: NextPage = () => {
   const { connection } = useConnection();
   const [candyMachineConfig, setCandyMachineConfig] =
     useState<FetchedCandyMachineConfig>();
-  const [loading, setLoading] = useState({ loading: false, error: false });
+  const [error, setError] = useState({ error: false, message: '' });
+  const [message, setMessage] = useState('');
+
+  const [loading, setLoading] = useState(false);
 
   async function fetchCandyMachine({
     account,
@@ -33,29 +33,36 @@ const CandyMachine: NextPage = () => {
   }): Promise<FetchedCandyMachineConfig | undefined> {
     if (account && anchorWallet) {
       try {
-        setLoading({ loading: true, error: false });
+        setLoading(true);
         const provider = new AnchorProvider(connection, anchorWallet, {
           preflightCommitment: 'processed',
         });
 
-        const idl = await Program.fetchIdl(CANDY_MACHINE_PROGRAM, provider);
+        const idl = await Program.fetchIdl(
+          CANDY_MACHINE_PROGRAM_V2_ID,
+          provider
+        );
 
-        const program = new Program(idl!, CANDY_MACHINE_PROGRAM, provider);
+        const program = new Program(
+          idl!,
+          CANDY_MACHINE_PROGRAM_V2_ID,
+          provider
+        );
 
         const state: any = await program.account.candyMachine.fetch(
           new PublicKey(account)
         );
-        
+
         state.data.solTreasuryAccount = state.wallet;
         state.data.itemsRedeemed = state.itemsRedeemed;
         console.log('candyMachineConfig: ', state);
-
-        setLoading({ loading: false, error: false });
+        setLoading(false);
 
         return state.data;
       } catch (err) {
         console.error(err);
-        setLoading({ loading: false, error: true });
+        setLoading(false);
+        setError({ error: true, message: (err as Error).message });
       }
     }
   }
@@ -74,9 +81,17 @@ const CandyMachine: NextPage = () => {
       </Head>
       <div className='flex justify-center items-center flex-col'>
         <Title text='Update Candy Machine' />
-        <span className='mt-8'>{account}{" "}<a className='text-blue-700' href={`https://solscan.io/account/${account}?cluster=devnet`}>View in Solscan</a></span>
-        {loading.loading && <Spinner />}
-        {loading.error && (
+        <span className='mt-8'>
+          {account}{' '}
+          <a
+            className='text-blue-700'
+            href={`https://solscan.io/account/${account}?cluster=devnet`}
+          >
+            View in Solscan
+          </a>
+        </span>
+        {loading && <Spinner />}
+        {error.error && (
           <div className='flex flex-col items-center justify-center mt-11'>
             Error fetching candy machine config
             <button
@@ -88,20 +103,22 @@ const CandyMachine: NextPage = () => {
           </div>
         )}
 
-        {!loading.error && candyMachineConfig?.uuid && (
+        {!error.error && candyMachineConfig?.uuid && (
           <>
-          <span className='mt-5'>
-            There are {new BN(candyMachineConfig.itemsAvailable).toNumber()} unminted NFT.
-          </span>
-          <span className='mt-5'>
-            {new BN(candyMachineConfig.itemsRedeemed).toNumber()} redeemed NFT.
-          </span>
-          <Form
-            fetchedValues={candyMachineConfig}
-            updateCandyMachine
-            candyMachinePubkey={account}
+            <span className='mt-5'>
+              There are {new BN(candyMachineConfig.itemsAvailable).toNumber()}{' '}
+              unminted NFT.
+            </span>
+            <span className='mt-5'>
+              {new BN(candyMachineConfig.itemsRedeemed).toNumber()} redeemed
+              NFT.
+            </span>
+            <Form
+              fetchedValues={candyMachineConfig}
+              updateCandyMachine
+              candyMachinePubkey={account}
             />
-            </>
+          </>
         )}
       </div>
     </>
