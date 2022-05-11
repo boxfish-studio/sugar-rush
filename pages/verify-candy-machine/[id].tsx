@@ -11,7 +11,6 @@ const VerifyCandyMachine: NextPage = () => {
 
   const { error, loading, verifyCandyMachine, message, connection } =
     useVerifyCandyMachineV2(cache);
-  console.log(connection.rpcEndpoint);
   return (
     <>
       <Head>
@@ -45,7 +44,7 @@ const VerifyCandyMachine: NextPage = () => {
           {!loading && !error.error && <span>Verify CM</span>}
           {!loading && error.error && <span>Verify CM</span>}
         </button>
-        {!error.error && message &&(
+        {!error.error && message && (
           <div className='border border-cyan-500 mx-36 mt-10 p-5 rounded-xl text-black'>
             {message}
           </div>
