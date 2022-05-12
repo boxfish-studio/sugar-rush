@@ -176,7 +176,6 @@ const Form: FC = () => {
     initialState
   );
 
-<<<<<<< HEAD
   if (!connected) {
     return (
       <h1 className='text-red-600 text-xl flex flex-col items-center h-auto justify-center mt-8'>
@@ -185,8 +184,6 @@ const Form: FC = () => {
     )
   }
 
-=======
->>>>>>> c981720684e84e7d647a4ea010ed71311f751685
   return (
     <form
       className='flex flex-col items-center h-auto justify-center mt-8'
@@ -249,18 +246,12 @@ const Form: FC = () => {
         <label htmlFor='files'>Files</label>
 
         <input type='file' name='files' multiple onChange={uploadAssets} />
-<<<<<<< HEAD
-          <button type='submit' className='bg-blue-500 w-fit p-4 rounded-2xl mt-6 text-white'>
-            Create Candy Machine
-          </button>
-=======
         <button
           type='submit'
           className='bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white'
         >
           Create Candy Machine
         </button>
->>>>>>> c981720684e84e7d647a4ea010ed71311f751685
       </div>
     </form>
   );
