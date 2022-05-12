@@ -129,10 +129,12 @@ export async function uploadV2({
     //   :
     undefined;
 
-  if (!cacheContent?.program?.uuid) {
-    const firstAssetManifest = JSON.parse(
-      await files[0].text()
-    ) as unknown as Manifest;
+    if (!cacheContent?.program?.uuid) {
+      const firstManifestFile = files.find((file) => file.name === "0.json");
+      if (!firstManifestFile) throw new Error("0.json must be present")
+      const firstAssetManifest = JSON.parse(
+        await firstManifestFile.text()
+      ) as unknown as Manifest;
 
     try {
       // TODO - SPL TOKEN PAYMENT
