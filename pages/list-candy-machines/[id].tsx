@@ -20,9 +20,8 @@ const CandyMachine: NextPage = () => {
   const [candyMachineConfig, setCandyMachineConfig] =
     useState<FetchedCandyMachineConfig>();
   const [error, setError] = useState({ error: false, message: '' });
-  const [message, setMessage] = useState('');
 
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function fetchCandyMachine({
     account,
@@ -33,7 +32,7 @@ const CandyMachine: NextPage = () => {
   }): Promise<FetchedCandyMachineConfig | undefined> {
     if (account && anchorWallet) {
       try {
-        setLoading(true);
+        setIsLoading(true);
         const provider = new AnchorProvider(connection, anchorWallet, {
           preflightCommitment: 'processed',
         });
@@ -56,12 +55,12 @@ const CandyMachine: NextPage = () => {
         state.data.solTreasuryAccount = state.wallet;
         state.data.itemsRedeemed = state.itemsRedeemed;
         console.log('candyMachineConfig: ', state);
-        setLoading(false);
+        setIsLoading(false);
 
         return state.data;
       } catch (err) {
         console.error(err);
-        setLoading(false);
+        setIsLoading(false);
         setError({ error: true, message: (err as Error).message });
       }
     }
@@ -90,7 +89,7 @@ const CandyMachine: NextPage = () => {
             View in Solscan
           </a>
         </span>
-        {loading && <Spinner />}
+        {isLoading && <Spinner />}
         {error.error && (
           <div className='flex flex-col items-center justify-center mt-11'>
             Error fetching candy machine config
