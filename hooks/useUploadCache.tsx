@@ -8,16 +8,13 @@ const useUploadCache = () => {
       window.alert('No files uploaded');
       return;
     }
-    const fileList = new Array<File>();
-    Array.from(e.target.files).forEach((file) => {
-      fileList.push(file);
-    });
-    setCache(fileList[0]);
+
+    setCache(e.target.files[0]);
   }
 
   return {
     uploadCache,
-    cache:cache!,
+    cache: cache!,
   };
 };
 

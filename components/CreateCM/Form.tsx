@@ -35,7 +35,7 @@ const Form: FC<{
 
   const { files, uploadAssets } = useUploadFiles();
   const { cache, uploadCache } = useUploadCache();
-  const [interactingWithCM, setInteractingWithCM] = useState(false);
+  const [isInteractingWithCM, setIsInteractingWithCM] = useState(false);
 
   const initialState = {
     price: fetchedValues?.price
@@ -183,7 +183,7 @@ const Form: FC<{
     }
   }
 
-  function isFormUpdateIsValid(): boolean {
+  function isFormUpdateValid(): boolean {
     // TODO add more conditions
     // TODO add custom message to show error message
     if (!values['date-mint'] || !values['time-mint']) return false;
@@ -194,8 +194,8 @@ const Form: FC<{
 
   async function updateCandyMachineV2() {
     try {
-      setInteractingWithCM(true);
-      if (!isFormUpdateIsValid()) return;
+      setIsInteractingWithCM(true);
+      if (!isFormUpdateValid()) return;
 
       const config: CandyMachineConfig = {
         price: values.price,
@@ -283,10 +283,10 @@ const Form: FC<{
           cache: await cache.text(),
           newAuthority: values['new-authority'],
         });
-        setInteractingWithCM(false);
+        setIsInteractingWithCM(false);
       }
     } catch (err) {
-      setInteractingWithCM(false);
+      setIsInteractingWithCM(false);
     }
   }
   return (
@@ -407,10 +407,10 @@ const Form: FC<{
           type='submit'
           className='bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white'
         >
-          {updateCandyMachine && !interactingWithCM && 'Update Candy Machine'}
-          {!updateCandyMachine && !interactingWithCM && 'Create Candy Machine'}
+          {updateCandyMachine && !isInteractingWithCM && 'Update Candy Machine'}
+          {!updateCandyMachine && !isInteractingWithCM && 'Create Candy Machine'}
 
-          {interactingWithCM && <span>...</span>}
+          {isInteractingWithCM && <span>...</span>}
         </button>
       </div>
     </form>
