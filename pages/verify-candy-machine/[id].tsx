@@ -10,7 +10,7 @@ const VerifyCandyMachine: NextPage = () => {
   const account = router.query.id;
   const { cache, uploadCache } = useUploadCache();
   const { connected } = useWallet();
-  const { error, loading, verifyCandyMachine, message, connection } =
+  const { error, isLoading, verifyCandyMachine, message, connection } =
     useVerifyCandyMachineV2(cache);
   return (
     <>
@@ -45,9 +45,9 @@ const VerifyCandyMachine: NextPage = () => {
             className='bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white'
             onClick={() => verifyCandyMachine({ account })}
           >
-            {loading && <span>...</span>}
-            {!loading && !error.error && <span>Verify CM</span>}
-            {!loading && error.error && <span>Verify CM</span>}
+            {isLoading && <span>...</span>}
+            {!isLoading && !error.error && <span>Verify CM</span>}
+            {!isLoading && error.error && <span>Verify CM</span>}
           </button>
           {!error.error && message && (
             <div className='border border-cyan-500 mx-36 mt-10 p-5 rounded-xl text-black'>
@@ -55,7 +55,7 @@ const VerifyCandyMachine: NextPage = () => {
             </div>
           )}
 
-          {!loading && error.error && (
+          {!isLoading && error.error && (
             <div className='border border-red-500 mx-36 mt-10 p-5 rounded-xl'>
               {error.message}
             </div>

@@ -17,7 +17,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
   const anchorWallet = useAnchorWallet();
   const [error, setError] = useState({ error: false, message: '' });
   const [message, setMessage] = useState('');
-  const [loading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function verifyCandyMachine({ account }: { account: Account }) {
     if (!cache) {
@@ -74,8 +74,12 @@ const useVerifyCandyMachineV2 = (cache: File) => {
               const key = allIndexesInSlice[i];
               setMessage(`Looking at key ${key}`);
               const thisSlice = candyMachine!.data.slice(
-                CONFIG_ARRAY_START_V2 + 4 + CONFIG_LINE_SIZE_V2 * (key as unknown as number),
-                CONFIG_ARRAY_START_V2 + 4 + CONFIG_LINE_SIZE_V2 * (key as unknown as number + 1)
+                CONFIG_ARRAY_START_V2 +
+                  4 +
+                  CONFIG_LINE_SIZE_V2 * (key as unknown as number),
+                CONFIG_ARRAY_START_V2 +
+                  4 +
+                  CONFIG_LINE_SIZE_V2 * ((key as unknown as number) + 1)
               );
 
               const name = fromUTF8Array([
@@ -143,7 +147,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
   }
 
   return {
-    loading,
+    isLoading,
     error,
     verifyCandyMachine,
     message,
