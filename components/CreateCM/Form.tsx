@@ -4,7 +4,7 @@ import {
   useAnchorWallet,
   useWallet,
 } from '@solana/wallet-adapter-react';
-import { useForm, usePublicKey } from 'hooks';
+import { useForm } from 'hooks';
 import {
   getCandyMachineV2Config,
   verifyAssets,
@@ -22,8 +22,7 @@ import { AnchorProvider } from '@project-serum/anchor';
 const Form: FC = () => {
   const { connection } = useConnection();
   const anchorWallet = useAnchorWallet();
-  const { publicKey } = useWallet();
-  const { key, setKey, isConnectedWallet } = usePublicKey();  
+  const { publicKey, connected } = useWallet(); 
 
   const [files, setFiles] = useState<File[]>([]);
 
@@ -175,11 +174,14 @@ const Form: FC = () => {
   const { onChange, onSubmit, values } = useForm(
     createCandyMachineV2,
     initialState
-  ); 
+  );
 
-  function changeTreasuryAccountValue(event: React.ChangeEvent<HTMLInputElement>): void {
-    setKey(event.target.value)
-    onChange(event)
+  if (!connected) {
+    return (
+      <h1 className='text-red-600 text-xl flex flex-col items-center h-auto justify-center mt-8'>
+      Connect your wallet to create a Candy Machine
+      </h1>
+    )
   }
 
   return (
@@ -204,8 +206,8 @@ const Form: FC = () => {
           id='treasury-account'
           text='Treasury Account'
           type='text'
-          value={key}
-          onChange={changeTreasuryAccountValue}
+          onChange={onChange}
+          defaultValue={publicKey?.toBase58()}
         />
         <FormInput
           id='captcha'
@@ -244,15 +246,9 @@ const Form: FC = () => {
         <label htmlFor='files'>Files</label>
 
         <input type='file' name='files' multiple onChange={uploadAssets} />
-        {isConnectedWallet ?
           <button type='submit' className='bg-blue-500 w-fit p-4 rounded-2xl mt-6 text-white'>
             Create Candy Machine
           </button>
-          :
-          <h1 className='text-red-600 flex flex-col items-center h-auto justify-center mt-8'>
-            Connect your wallet to create a Candy Machine
-          </h1>
-        }
       </div>
     </form>
   );
