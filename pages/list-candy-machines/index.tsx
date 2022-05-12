@@ -2,14 +2,11 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
 import CandyMachineCard from 'components/FetchCM/CandyMachineCard';
 import React, { useEffect, useState } from 'react';
 import { useRPC } from 'hooks';
 import { Spinner, Title } from 'components/Layout';
-import {CANDY_MACHINE_PROGRAM_V2_ID} from 'lib/candy-machine/constants';
-
-
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants';
 
 const ListCandyMachines: NextPage = () => {
   const { publicKey } = useWallet();
@@ -26,7 +23,6 @@ const ListCandyMachines: NextPage = () => {
           CANDY_MACHINE_PROGRAM_V2_ID,
           {
             commitment: 'confirmed',
-
             filters: [
               {
                 memcmp: {
