@@ -73,7 +73,17 @@ const CandyMachine: NextPage = () => {
       </Head>
       <div className='flex justify-center items-center flex-col'>
         <Title text='Update Candy Machine' />
-        <span className='mt-8'>{account}{" "}<a className='text-blue-700' href={`https://solscan.io/account/${account}?cluster=devnet`}>View in Solscan</a></span>
+        <span className='mt-8'>
+          {account}{' '}
+          <a
+            className='text-blue-700'
+            href={'https://solscan.io/account/${account}?cluster=devnet'}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            View in Solscan
+          </a>
+        </span>
         {loading.loading && <Spinner />}
         {loading.error && (
           <div className='flex flex-col items-center justify-center mt-11'>
@@ -89,18 +99,20 @@ const CandyMachine: NextPage = () => {
 
         {!loading.error && candyMachineConfig?.uuid && (
           <>
-          <span className='mt-5'>
-            There are {new BN(candyMachineConfig.itemsAvailable).toNumber()} unminted NFT.
-          </span>
-          <span className='mt-5'>
-            {new BN(candyMachineConfig.itemsRedeemed).toNumber()} redeemed NFT.
-          </span>
-          <Form
-            fetchedValues={candyMachineConfig}
-            updateCandyMachine
-            candyMachinePubkey={account}
+            <span className='mt-5'>
+              There are {new BN(candyMachineConfig.itemsAvailable).toNumber()}{' '}
+              unminted NFT.
+            </span>
+            <span className='mt-5'>
+              {new BN(candyMachineConfig.itemsRedeemed).toNumber()} redeemed
+              NFT.
+            </span>
+            <Form
+              fetchedValues={candyMachineConfig}
+              updateCandyMachine
+              candyMachinePubkey={account}
             />
-            </>
+          </>
         )}
       </div>
     </>
