@@ -27,7 +27,6 @@ const ListCandyMachines: NextPage = () => {
           CANDY_MACHINE_PROGRAM_V2_ID,
           {
             commitment: 'confirmed',
-
             filters: [
               {
                 memcmp: {
