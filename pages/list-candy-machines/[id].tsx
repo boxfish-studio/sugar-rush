@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState } from 'react';
 import { Program, AnchorProvider, BN } from '@project-serum/anchor';
 import { PublicKey, Connection } from '@solana/web3.js';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
