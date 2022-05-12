@@ -17,20 +17,23 @@ const useVerifyCandyMachineV2 = (cache: File) => {
   const anchorWallet = useAnchorWallet();
   const [error, setError] = useState({ error: false, message: '' });
   const [message, setMessage] = useState('');
-
-  const [loading, setLoading] = useState(false);
+  const [loading, setIsLoading] = useState(false);
 
   async function verifyCandyMachine({ account }: { account: Account }) {
+    if (!cache) {
+      setError({ error: true, message: 'Upload a cache file.' });
+      return;
+    }
     if (account && anchorWallet && cache) {
       const cacheContent = JSON.parse(await cache.text());
       const cacheName = cacheContent.cacheName;
       const env = cacheContent.env;
       setMessage('');
       setError({ error: false, message: '' });
-      setLoading(false);
+      setIsLoading(false);
       let errorMessage = '';
       try {
-        setLoading(true);
+        setIsLoading(true);
         const provider = new AnchorProvider(connection, anchorWallet, {
           preflightCommitment: 'processed',
         });
@@ -70,10 +73,9 @@ const useVerifyCandyMachineV2 = (cache: File) => {
             for (let i = 0; i < allIndexesInSlice.length; i++) {
               const key = allIndexesInSlice[i];
               setMessage(`Looking at key ${key}`);
-
               const thisSlice = candyMachine!.data.slice(
-                CONFIG_ARRAY_START_V2 + 4 + CONFIG_LINE_SIZE_V2 * key,
-                CONFIG_ARRAY_START_V2 + 4 + CONFIG_LINE_SIZE_V2 * (key + 1)
+                CONFIG_ARRAY_START_V2 + 4 + CONFIG_LINE_SIZE_V2 * (key as unknown as number),
+                CONFIG_ARRAY_START_V2 + 4 + CONFIG_LINE_SIZE_V2 * (key as unknown as number + 1)
               );
 
               const name = fromUTF8Array([
@@ -127,11 +129,11 @@ const useVerifyCandyMachineV2 = (cache: File) => {
           setMessage('All assets are verified. Ready to deploy!');
         }
         saveCache(cacheName, env, cacheContent);
-        setLoading(false);
+        setIsLoading(false);
       } catch (err) {
         console.error(err);
         saveCache(cacheName, env, cacheContent);
-        setLoading(false);
+        setIsLoading(false);
         setError({
           error: true,
           message: errorMessage || (err as Error).message,

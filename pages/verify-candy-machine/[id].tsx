@@ -31,6 +31,7 @@ const VerifyCandyMachine: NextPage = () => {
                   ? '?cluster=devnet'
                   : ''
               }`}
+              target="_blank" rel="noopener noreferrer"
             >
               View in Solscan
             </a>
