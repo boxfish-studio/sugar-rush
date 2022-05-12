@@ -20,15 +20,9 @@ import { uploadV2 } from 'lib/candy-machine/upload/upload';
 import { AnchorProvider } from '@project-serum/anchor';
 
 const Form: FC = () => {
-<<<<<<< HEAD
   const { connection } = useConnection();
   const anchorWallet = useAnchorWallet();
   const { publicKey, connected } = useWallet(); 
-=======
-  const { publicKey } = useWallet();
-  const anchorWallet = useAnchorWallet();
-  const { connection } = useConnection();
->>>>>>> c981720684e84e7d647a4ea010ed71311f751685
 
   const [files, setFiles] = useState<File[]>([]);
 
