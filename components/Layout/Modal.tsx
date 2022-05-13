@@ -43,7 +43,7 @@ const Modal: FC<{
           className={`flex fixed pt-8 left-20 top-0 w-full h-full overflow-auto z-10 bg-slate-400/50 scale-0 ${styles.modal}`}
           onClick={handleModal}
         >
-          <span className='p-8 pt-16 bg-[#fefefe] m-auto overflow-hidden flex relative flex-col w-[40rem] rounded-2xl h-[22rem] shadow-xl'>
+          <span className='p-8 pt-16 bg-[hsl(0,0%,100%)] m-auto overflow-hidden flex relative flex-col w-[40rem] rounded-2xl h-[22rem] shadow-xl'>
             <button className={styles.hamb} onClick={closeModal}>
               <span className={styles.line} />
               <span className={styles.line} />
