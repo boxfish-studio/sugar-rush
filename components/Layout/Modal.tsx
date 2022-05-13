@@ -28,7 +28,6 @@ const Modal: FC<{
   async function runCallback() {
     try {
       setIsLoading(true);
-
       const tx = await callback(account);
       setIsLoading(false);
       if (!tx) return setError('Error: No transaction returned');
@@ -44,7 +43,7 @@ const Modal: FC<{
           className={`flex fixed pt-8 left-20 top-0 w-full h-full overflow-auto z-10 bg-slate-400/50 scale-0 ${styles.modal}`}
           onClick={handleModal}
         >
-          <span className='p-8 pt-16 bg-[#fefefe] m-auto overflow-hidden flex relative flex-col w-[40rem] rounded-2xl h-[21rem] shadow-xl'>
+          <span className='p-8 pt-16 bg-[#fefefe] m-auto overflow-hidden flex relative flex-col w-[40rem] rounded-2xl h-[22rem] shadow-xl'>
             <button className={styles.hamb} onClick={closeModal}>
               <span className={styles.line} />
               <span className={styles.line} />
@@ -63,8 +62,8 @@ const Modal: FC<{
                 {account} - View in Solscan
               </a>
               <h1 className='text-red-500 text-xl'>
-                WARNING! You are attempting to remove an account from the Candy
-                Machine. This means all the unminted NFTs will be gone forever.
+                <span className='font-bold'>WARNING!</span> You are attempting to remove an account from the Candy
+                Machine. This means all the unminted NFTs will be gone forever. This will refund the SOL locked from the account to your wallet.
               </h1>
 
               <span className='flex flex-col  justify-center items-center mt-6'>
