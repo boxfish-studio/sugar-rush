@@ -1,3 +1,6 @@
+.modal {
+  animation: fade-in 300ms ease-in-out forwards;
+}
 
 .hamb {
   position: absolute;
@@ -36,9 +39,9 @@
   transform: rotate(0deg) translateY(-0px) translateX(-10px) scaleX(0.8);
 }
 
-
 .text {
   animation: slide-left 300ms ease-in-out;
+  animation-delay: 100ms;
 }
 
 @keyframes slide-left {
@@ -51,9 +54,19 @@
   }
 }
 
+@keyframes fade-in {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
 @keyframes slide-right {
   from {
     transform: translateX(50%);
+    opacity: 0;
   }
   to {
     transform: translateX(0%);
