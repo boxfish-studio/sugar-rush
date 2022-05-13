@@ -1,8 +1,15 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import Link from 'next/link';
-import { useSearchBar } from 'hooks';
+import { useSearchBar, useRemoveCandyMachineAccount } from 'hooks';
+
+import { Modal } from 'components/Layout';
+
 const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
   const { searchResults, searchRef, setSearch } = useSearchBar(accounts);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState('');
+
+  const { removeAccount } = useRemoveCandyMachineAccount();
 
   return (
     <>
@@ -13,7 +20,12 @@ const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
         placeholder='Search candy machine...'
         onChange={(event) => setSearch(event.target.value)}
       />
-
+      <Modal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        account={selectedAccount}
+        callback={removeAccount}
+      />
       <div className='grid lg:grid-cols-2 gap-7 mt-6 grid-flow-row grid-cols-1'>
         {searchResults.map((account) => (
           <div
@@ -21,11 +33,21 @@ const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
             className='bg-slate-300 items-center justify-center min-w-max p-2 h-28 flex flex-col relative rounded-xl shadow-xl'
           >
             {account}
+
             <Link href={`/list-candy-machines/${account}`}>
               <a className='text-white absolute left-6 bottom-2 bg-slate-800 w-fit p-1 rounded-xl px-6'>
                 Inspect
               </a>
             </Link>
+            <button
+              className='text-white absolute left-36 bottom-2 bg-red-500 w-fit p-1 rounded-xl px-4'
+              onClick={() => {
+                setSelectedAccount(account);
+                setIsOpen(true);
+              }}
+            >
+              Delete
+            </button>
             <Link href={`/verify-candy-machine/${account}`}>
               <a className='text-white absolute right-6 bottom-2 bg-slate-800 w-fit p-1 rounded-xl px-4'>
                 Verify Candy Machine

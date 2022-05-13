@@ -70,7 +70,7 @@ export async function sendSignedTransaction({
   const startTime = getUnixTs();
   let slot = 0;
 
-  const txid: TransactionSignature = await connection.sendRawTransaction(
+  let txid: TransactionSignature = await connection.sendRawTransaction(
     rawTransaction,
     {
       skipPreflight: true,
@@ -105,7 +105,6 @@ export async function sendSignedTransaction({
       console.error(confirmation.err);
       throw new Error('Transaction failed: Custom instruction error');
     }
-
     slot = confirmation?.slot || 0;
   } catch (err) {
     console.error('Timeout Error caught', err);
@@ -135,6 +134,7 @@ export async function sendSignedTransaction({
       throw new Error(JSON.stringify(simulateResult.err));
     }
     console.error('Got this far.');
+    txid = simulateResult?.err as string;
     // throw new Error('Transaction failed');
   } finally {
     done = true;
@@ -161,6 +161,7 @@ async function simulateTransaction(
   // @ts-ignore
   const res = await connection._rpcRequest('simulateTransaction', args);
   if (res.error) {
+
     throw new Error('failed to simulate transaction: ' + res.error.message);
   }
   return res.result;
