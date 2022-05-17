@@ -24,7 +24,7 @@ const Modal: FC<{
   function closeModal() {
     setIsOpen(false);
     setIsLoading(false);
-    setTx({ txid: '', balanceChange: 0 });
+    setTx(undefined);
     setError('');
   }
 

@@ -78,9 +78,8 @@ const Form: FC<{
     return true;
   }
   async function createCandyMachineV2() {
-    setIsInteractingWithCM(true);
-
     if (!isFormValid()) return;
+    setIsInteractingWithCM(true);
     const config: CandyMachineConfig = {
       price: values.price,
       number: values['number-of-nfts'],
@@ -180,13 +179,11 @@ const Form: FC<{
         });
       } catch (err) {
         console.error('upload was not successful, please re-run.', err);
-      setIsInteractingWithCM(false);
-
+        setIsInteractingWithCM(false);
       }
       const endMilliseconds = Date.now();
       console.log(endMilliseconds.toString());
       setIsInteractingWithCM(false);
-
     }
   }
 
@@ -201,8 +198,8 @@ const Form: FC<{
 
   async function updateCandyMachineV2() {
     try {
-      setIsInteractingWithCM(true);
       if (!isFormUpdateValid()) return;
+      setIsInteractingWithCM(true);
 
       const config: CandyMachineConfig = {
         price: values.price,
