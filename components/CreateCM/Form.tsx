@@ -23,6 +23,7 @@ import { AnchorProvider, BN } from '@project-serum/anchor';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 import { FetchedCandyMachineConfig } from 'lib/candy-machine/types';
 import { updateV2 } from 'lib/candy-machine/update/update';
+import { ActionButton } from 'components/Layout';
 
 const Form: FC<{
   fetchedValues?: FetchedCandyMachineConfig;
@@ -77,6 +78,8 @@ const Form: FC<{
     return true;
   }
   async function createCandyMachineV2() {
+    setIsInteractingWithCM(true);
+
     if (!isFormValid()) return;
     const config: CandyMachineConfig = {
       price: values.price,
@@ -177,9 +180,13 @@ const Form: FC<{
         });
       } catch (err) {
         console.error('upload was not successful, please re-run.', err);
+      setIsInteractingWithCM(false);
+
       }
       const endMilliseconds = Date.now();
       console.log(endMilliseconds.toString());
+      setIsInteractingWithCM(false);
+
     }
   }
 
@@ -403,15 +410,20 @@ const Form: FC<{
             <input type='file' name='cache' onChange={uploadCache} />
           </>
         )}
-        <button
-          type='submit'
-          className='bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white'
-        >
-          {updateCandyMachine && !isInteractingWithCM && 'Update Candy Machine'}
-          {!updateCandyMachine && !isInteractingWithCM && 'Create Candy Machine'}
 
-          {isInteractingWithCM && <span>...</span>}
-        </button>
+        {updateCandyMachine && !isInteractingWithCM && (
+          <ActionButton text='Update Candy Machine' type='submit' />
+        )}
+        {!updateCandyMachine && !isInteractingWithCM && (
+          <ActionButton text='Create Candy Machine' type='submit' />
+        )}
+
+        {updateCandyMachine && isInteractingWithCM && (
+          <ActionButton text='Updating Candy Machine...' isLoading />
+        )}
+        {!updateCandyMachine && isInteractingWithCM && (
+          <ActionButton text='Creating Candy Machine...' isLoading />
+        )}
       </div>
     </form>
   );
