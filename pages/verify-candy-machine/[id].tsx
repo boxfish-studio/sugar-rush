@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Title, ConnectWallet } from 'components/Layout';
+import { Title, ConnectWallet, ActionButton } from 'components/Layout';
 import Head from 'next/head';
 import { useUploadCache, useVerifyCandyMachineV2 } from 'hooks';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -31,7 +31,8 @@ const VerifyCandyMachine: NextPage = () => {
                   ? '?cluster=devnet'
                   : ''
               }`}
-              target="_blank" rel="noopener noreferrer"
+              target='_blank'
+              rel='noopener noreferrer'
             >
               View in Solscan
             </a>
@@ -41,14 +42,17 @@ const VerifyCandyMachine: NextPage = () => {
 
             <input type='file' name='cache' onChange={uploadCache} />
           </div>
-          <button
-            className='bg-slate-500 w-fit p-4 rounded-2xl mt-6 text-white'
-            onClick={() => verifyCandyMachine({ account })}
-          >
-            {isLoading && <span>...</span>}
-            {!isLoading && !error.error && <span>Verify CM</span>}
-            {!isLoading && error.error && <span>Verify CM</span>}
-          </button>
+
+          {isLoading && (
+            <ActionButton text='Verifying Candy Machine...' isLoading />
+          )}
+
+          {!isLoading && (
+            <ActionButton
+              text='Verify Candy Machine'
+              onClick={() => verifyCandyMachine({ account })}
+            />
+          )}
           {!error.error && message && (
             <div className='border border-cyan-500 mx-36 mt-10 p-5 rounded-xl text-black'>
               {message}

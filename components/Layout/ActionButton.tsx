@@ -4,7 +4,8 @@ const ActionButton: FC<{
   text: string;
   isLoading?: boolean;
   type?: 'button' | 'submit' | 'reset';
-}> = ({ text, isLoading = false, type = 'button' }) => {
+  onClick?: () => void;
+}> = ({ text, isLoading = false, type = 'button', onClick }) => {
   return (
     <button
       type={type}
@@ -13,6 +14,7 @@ const ActionButton: FC<{
                       isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
                     }`}
       disabled={isLoading}
+      onClick={onClick}
     >
       {isLoading && (
         <svg
