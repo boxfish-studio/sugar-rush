@@ -40,7 +40,6 @@ const ListCandyMachines: NextPage = () => {
         const accountsPubkeys = accounts.map((account) =>
           account.pubkey.toBase58()
         );
-        console.log('error', error);
         setAccounts(accountsPubkeys);
         setError(false);
       } catch (err) {
