@@ -1,26 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
-import CandyMachineCard from 'components/FetchCM/CandyMachineCard';
-import React, { useEffect, useState } from 'react';
-import { useRPC } from 'hooks';
-import { Spinner, Title } from 'components/Layout';
+import type { NextPage } from 'next'
+import Head from 'next/head'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { PublicKey } from '@solana/web3.js'
+import CandyMachineCard from 'components/FetchCM/CandyMachineCard'
+import React, { useEffect, useState } from 'react'
+import { useRPC } from 'hooks'
+import { Spinner, Title } from 'components/Layout'
 
 const CANDY_MACHINE_PROGRAM_V2_ID = new PublicKey(
   'cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ'
-);
+)
 
 const ListCandyMachines: NextPage = () => {
-  const { publicKey } = useWallet();
+  const { publicKey, connected } = useWallet()
 
-  const [accounts, setAccounts] = useState<string[]>([]);
-  const [loading, setLoading] = useState({ loading: false, error: false });
-  const { rpcEndpoint } = useRPC();
+  const [accounts, setAccounts] = useState<string[]>([])
+  const [loading, setLoading] = useState({ loading: false, error: false })
+  const { rpcEndpoint } = useRPC()
 
   async function fetchAccounts() {
-    setLoading({ loading: true, error: false });
+    setLoading({ loading: true, error: false })
     try {
       if (publicKey) {
         const accounts = await rpcEndpoint.getProgramAccounts(
@@ -36,22 +36,32 @@ const ListCandyMachines: NextPage = () => {
               },
             ],
           }
-        );
+        )
         const accountsPubkeys = accounts.map((account) =>
           account.pubkey.toBase58()
-        );
-        setAccounts(accountsPubkeys);
-        setLoading({ loading: false, error: false });
+        )
+        setAccounts(accountsPubkeys)
+        setLoading({ loading: false, error: false })
       }
     } catch (err) {
-      console.error(err);
-      setLoading({ loading: false, error: true });
+      console.error(err)
+      setLoading({ loading: false, error: true })
     }
   }
 
   useEffect(() => {
-    fetchAccounts();
-  }, [publicKey]);
+    fetchAccounts()
+  }, [publicKey])
+
+  if (!connected) {
+    return (
+      <div className='flex justify-center items-center flex-col'>
+        <h1 className='text-red-600 text-xl flex flex-col items-center h-auto justify-center mt-8'>
+          Connect your wallet to create a Candy Machine
+        </h1>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -80,7 +90,7 @@ const ListCandyMachines: NextPage = () => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ListCandyMachines;
+export default ListCandyMachines
