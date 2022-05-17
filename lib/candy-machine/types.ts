@@ -6,6 +6,29 @@ export interface WhitelistMintMode {
   burnEveryTime: undefined | boolean;
 }
 
+export interface FetchedCandyMachineConfig {
+  creators: {
+    address: PublicKey;
+    share: 100;
+    verified: true;
+  }[];
+  endSettings: null;
+  gatekeeper: null;
+  goLiveDate: BN;
+  hiddenSettings: null;
+  isMutable: true;
+  itemsAvailable: BN;
+  maxSupply: BN;
+  price: BN;
+  retainAuthority: boolean;
+  sellerFeeBasisPoints: number;
+  symbol: string;
+  uuid: string;
+  whitelistMintSettings: null;
+  solTreasuryAccount: PublicKey;
+  itemsRedeemed: BN;
+}
+
 export interface CandyMachineConfig {
   price: number;
   number: number;
