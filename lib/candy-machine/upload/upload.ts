@@ -14,7 +14,7 @@ import { arweaveUpload } from './arweave';
 // import { ipfsCreds, ipfsUpload } from '../helpers/upload/ipfs';
 
 import { StorageType, Manifest } from '../types';
-import { sleep,getFileExtension, getFileName } from './helpers';
+import { sleep, getFileExtension, getFileName } from './helpers';
 // import { nftStorageUpload } from '../helpers/upload/nft-storage';
 // import { pinataUpload } from '../helpers/upload/pinata';
 // import { setCollection } from './set-collection';
@@ -130,8 +130,10 @@ export async function uploadV2({
     undefined;
 
   if (!cacheContent?.program?.uuid) {
+    const firstManifestFile = files.find((file) => file.name === '0.json');
+    if (!firstManifestFile) throw new Error('0.json must be present');
     const firstAssetManifest = JSON.parse(
-      await files[0].text()
+      await firstManifestFile.text()
     ) as unknown as Manifest;
 
     try {
@@ -275,8 +277,8 @@ export async function uploadV2({
                   onChain: false,
                 };
               }
-            }
-          } catch (err) {
+          }
+        } catch (err) {
           saveCache(cacheName, env, cacheContent);
           console.error(err);
         }
@@ -328,8 +330,6 @@ type Cache = {
   };
 };
 
-
-
 /**
  * From the Cache object & a list of file paths, return a list of asset keys
  * (filenames without extension nor path) that should be uploaded, sorted numerically in ascending order.
@@ -345,8 +345,8 @@ function getAssetKeysNeedingUpload(
   const assets = all
     .filter((k) => !k.includes('.json'))
     .reduce((acc: AssetKey[], assetKey) => {
-      const key = getFileName(assetKey)
-      const ext = getFileExtension(assetKey)
+      const key = getFileName(assetKey);
+      const ext = getFileExtension(assetKey);
 
       if (!items[key]?.link && !keyMap[key]) {
         keyMap[key] = true;
