@@ -6,12 +6,14 @@ const Modal: FC<{
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   account: string;
-  callback: (account: string) => Promise<string | undefined>;
+  callback: (
+    account: string
+  ) => Promise<{ txid: string; balanceChange: number } | undefined>;
 }> = ({ isOpen, setIsOpen, callback, account }) => {
   const { connection } = useConnection();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [tx, setTx] = useState('');
+  const [tx, setTx] = useState<{ txid: string; balanceChange: number }>();
   const [error, setError] = useState('');
 
   function handleModal(e: any) {
@@ -21,7 +23,7 @@ const Modal: FC<{
   function closeModal() {
     setIsOpen(false);
     setIsLoading(false);
-    setTx('');
+    setTx({ txid: '', balanceChange: 0 });
     setError('');
   }
 
@@ -62,18 +64,21 @@ const Modal: FC<{
                 {account} - View in Solscan
               </a>
               <h1 className='text-red-500 text-xl'>
-                <span className='font-bold'>WARNING!</span> You are attempting to remove an account from the Candy
-                Machine. This means all the unminted NFTs will be gone forever. This will refund the SOL locked from the account to your wallet.
+                <span className='font-bold'>WARNING!</span> You are attempting
+                to remove an account from the Candy Machine. This means all the
+                unminted NFTs will be gone forever. This will refund the SOL
+                locked from the account to your wallet.
               </h1>
 
               <span className='flex flex-col  justify-center items-center mt-6'>
                 {!isLoading && tx && !error && (
                   <>
                     <span className='flex flex-col justify-center items-center mt-6'>
-                      Successfully closed account
+                      Successfully closed account - Reedemed{' '}
+                      {tx.balanceChange.toFixed(4)} SOL
                       <a
                         className='text-blue-700 hover:underline my-3'
-                        href={`https://solscan.io/tx/${tx}${
+                        href={`https://solscan.io/tx/${tx.txid}${
                           connection.rpcEndpoint.includes('devnet')
                             ? '?cluster=devnet'
                             : ''

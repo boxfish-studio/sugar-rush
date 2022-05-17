@@ -2,7 +2,11 @@ import { useAnchorWallet, AnchorWallet } from '@solana/wallet-adapter-react';
 import { AnchorProvider, Program } from '@project-serum/anchor';
 import { useRPC } from 'hooks';
 import { loadCandyProgramV2 } from 'lib/candy-machine/upload/config';
-import { PublicKey, TransactionInstruction } from '@solana/web3.js';
+import {
+  PublicKey,
+  TransactionInstruction,
+  LAMPORTS_PER_SOL,
+} from '@solana/web3.js';
 import { sendTransactionWithRetryWithKeypair } from 'lib/candy-machine/upload/transactions';
 
 const useRemoveCandyMachineAccount = () => {
@@ -21,7 +25,7 @@ const useRemoveCandyMachineAccount = () => {
       anchorProgram: Program,
       keypair: AnchorWallet,
       candyAddress: PublicKey
-    ): Promise<string> {
+    ): Promise<{ txid: string; balanceChange: number }> {
       const instructions: TransactionInstruction[] = [
         await anchorProgram.methods
           .withdrawFunds()
@@ -31,14 +35,26 @@ const useRemoveCandyMachineAccount = () => {
           })
           .instruction(),
       ];
-      return (
-        await sendTransactionWithRetryWithKeypair(
-          anchorProgram.provider.connection,
-          anchorWallet!,
-          instructions,
-          'confirmed'
-        )
-      ).txid;
+
+      const preBalance = await provider.connection.getBalance(
+        keypair.publicKey
+      );
+      const { txid } = await sendTransactionWithRetryWithKeypair(
+        anchorProgram.provider.connection,
+        anchorWallet!,
+        instructions,
+        'confirmed'
+      );
+      await provider.connection.confirmTransaction(txid);
+      const postBalance = await provider.connection.getBalance(
+        keypair.publicKey
+      );
+
+      const balanceChange = (postBalance - preBalance) / LAMPORTS_PER_SOL;
+      return {
+        txid,
+        balanceChange,
+      };
     }
 
     return await withdrawV2(
