@@ -41,17 +41,17 @@ function MyApp({ Component, pageProps }: AppProps) {
 );
 
   return (
-      <ConnectionProvider endpoint={endpoint} >
-        <WalletProvider wallets={wallets}  >
-          <Navbar />
-          <WalletModalProvider >
-            <Wallet />
-            <div style={{ marginLeft: "10rem" }}>
-              <Component {...pageProps} />
-            </div>
-          </WalletModalProvider>
-        </WalletProvider>
-      </ConnectionProvider>
+    <ConnectionProvider endpoint={endpoint} >
+      <WalletProvider wallets={wallets}  >
+        <Navbar />
+        <WalletModalProvider >
+          <Wallet />
+          <div style={{ marginLeft: "10rem" }}>
+            <Component {...pageProps} />
+          </div>
+        </WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
   );
 }
 
