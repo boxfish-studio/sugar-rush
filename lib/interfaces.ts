@@ -103,3 +103,27 @@ export interface CandyMachineData {
     share: number
   }[]
 }
+
+type NumberToString<T extends number | string> = `${T}`
+
+export interface Cache {
+  authority?: string
+  program: {
+    uuid: string
+    candyMachine: string
+  }
+  items: Record<
+    NumberToString<number | string>,
+    {
+      link: string
+      imageLink: string
+      name: string
+      onChain: boolean
+      verifyRun?: boolean
+    }
+  >
+
+  startDate: BN | null,
+  env: string
+  cacheName: string
+}

@@ -15,6 +15,7 @@ import { arweaveUpload } from './arweave'
 
 import { Manifest } from '../types'
 import { StorageType } from '../enums'
+import { Cache } from '../interfaces'
 import { sleep, getFileExtension, getFileName } from './helpers'
 // import { nftStorageUpload } from '../helpers/upload/nft-storage';
 // import { pinataUpload } from '../helpers/upload/pinata';
@@ -97,16 +98,13 @@ export async function uploadV2({
   // rpcUrl: null | string;
 }): Promise<boolean | string> {
   // const savedContent = loadCache(cacheName, env);
-  let cacheContent: any =
-    //  savedContent
-    //  ||
-    {
-      program: {
-        uuid: '',
-        candyMachine: '',
-      },
-      items: {},
-    }
+  let cacheContent: Partial<Cache> = {
+    program: {
+      uuid: '',
+      candyMachine: '',
+    },
+    items: {},
+  }
   const filesNames = files.map((file) => file.name)
 
   // if (!cacheContent.program) {
@@ -118,8 +116,7 @@ export async function uploadV2({
   // }
 
   const dedupedAssetKeys = getAssetKeysNeedingUpload(
-    // cacheContent.items,
-    [],
+    cacheContent.items as Cache['items'],
     filesNames
   )
   console.log('dedupedAssetKeys', dedupedAssetKeys)
@@ -179,8 +176,8 @@ export async function uploadV2({
         }
       )
       console.log('res', res)
-      cacheContent.program.uuid = res.uuid
-      cacheContent.program.candyMachine = res.candyMachine.toBase58()
+      cacheContent.program!.uuid = res.uuid
+      cacheContent.program!.candyMachine = res.candyMachine.toBase58()
       cacheContent.startDate = goLiveDate
 
       candyMachine = res.candyMachine
@@ -203,7 +200,7 @@ export async function uploadV2({
   }
 
   // TODO CHANGE ANY
-  const uploadedItems = Object.values(cacheContent.items).filter(
+  const uploadedItems = Object.values(cacheContent.items!).filter(
     (f: any) => !!f.link
   ).length
 
@@ -273,7 +270,7 @@ export async function uploadV2({
               )
 
               if (link && imageLink) {
-                cacheContent.items[asset.index] = {
+                cacheContent.items![asset.index] = {
                   link,
                   imageLink,
                   name: manifest.name,
@@ -282,7 +279,7 @@ export async function uploadV2({
               }
           }
         } catch (err) {
-          saveCache(cacheName, env, cacheContent)
+          saveCache(cacheName, env, cacheContent as Cache)
           console.error(err)
         }
       })
@@ -301,7 +298,7 @@ export async function uploadV2({
         rateLimit,
       })
       console.log('cache content: ', cacheContent)
-      const uploadedItems = Object.values(cacheContent.items).filter(
+      const uploadedItems = Object.values(cacheContent.items!).filter(
         (f: any) => !!f.link
       ).length
       console.log('uploadedItems: ', uploadedItems)
@@ -314,22 +311,10 @@ export async function uploadV2({
     }
 
     console.log(`Done. Successful = ${uploadSuccessful}.`)
-    return cacheContent.program.candyMachine
+    return cacheContent.program!.candyMachine
   } catch (err) {
     console.error(err)
     return false
-  }
-}
-
-/**
- * The Cache object, represented in its minimal form.
- */
-type Cache = {
-  program: {
-    config?: string
-  }
-  items: {
-    [key: string]: any
   }
 }
 

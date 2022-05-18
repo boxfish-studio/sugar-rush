@@ -1,6 +1,7 @@
 import { PublicKey } from '@solana/web3.js'
 import { Program } from '@project-serum/anchor'
 import { saveCache } from '../cache'
+import { Cache } from 'lib/interfaces'
 
 export async function updateV2({
   newSettings,
@@ -20,7 +21,7 @@ export async function updateV2({
   newAuthority: string
 }) {
   try {
-    const cacheContent = JSON.parse(cache)
+    const cacheContent: Cache = JSON.parse(cache)
     const env = cacheContent.env
     const cacheName = cacheContent.cacheName
 

@@ -8,6 +8,7 @@ import { shardArray, getTextFromUTF8Array } from 'lib/verify/helpers'
 import { saveCache } from 'lib/cache'
 
 import { CONFIG_ARRAY_START_V2, CONFIG_LINE_SIZE_V2 } from 'lib/constants'
+import { Cache } from 'lib/interfaces'
 
 const useVerifyCandyMachineV2 = (cache: File) => {
   const { connection } = useConnection()
@@ -22,7 +23,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
       return
     }
     if (account && anchorWallet && cache) {
-      const cacheContent = JSON.parse(await cache.text())
+      const cacheContent: Cache = JSON.parse(await cache.text())
       const cacheName = cacheContent.cacheName
       const env = cacheContent.env
       setMessage('')

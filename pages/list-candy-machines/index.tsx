@@ -38,6 +38,7 @@ const ListCandyMachines: NextPage = () => {
             ],
           }
         )
+
         if (accounts.length === 0) return setAccounts([''])
 
         const accountsPubkeys = accounts
