@@ -36,7 +36,7 @@ const ListCandyMachines: NextPage = () => {
               },
             ],
           }
-        );
+        )
         const accountsPubkeys = accounts.map((account) =>
           account.pubkey.toBase58()
         );
@@ -97,7 +97,7 @@ const ListCandyMachines: NextPage = () => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ListCandyMachines;
+export default ListCandyMachines

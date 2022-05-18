@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { Title } from 'components/Layout';
 
-const ConnectWallet: FC = () => {
+const CheckConnectedWallet: FC = () => {
   return (
     <div className='flex justify-center items-center flex-col gap-4'>
       <div className='mt-28 flex justify-center items-center flex-col gap-4'>
@@ -11,4 +11,4 @@ const ConnectWallet: FC = () => {
   );
 };
 
-export default ConnectWallet;
+export default CheckConnectedWallet;

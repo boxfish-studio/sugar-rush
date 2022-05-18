@@ -9,7 +9,8 @@ import {
 import { PublicKey } from '@solana/web3.js';
 import { getMint, TOKEN_PROGRAM_ID, getAccount } from '@solana/spl-token';
 import { getAtaForMint, parseDate } from './helpers';
-import { WhitelistMintMode, CandyMachineConfig, StorageType } from '../types';
+import { WhitelistMintMode, CandyMachineConfig } from '../interfaces';
+import { StorageType } from '../enums';
 
 export interface CandyMachineData {
   itemsAvailable: anchor.BN;

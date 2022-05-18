@@ -5,24 +5,24 @@ import {
   getCandyMachineV2Config,
   verifyAssets,
   loadCandyProgramV2,
-} from 'lib/candy-machine/upload/config';
+} from 'lib/upload/config';
 import {
   CandyMachineConfig,
   Gatekeeper,
-  StorageType,
-} from 'lib/candy-machine/types';
+  FetchedCandyMachineConfig
+} from 'lib/interfaces';
+import { StorageType } from 'lib/enums';
 import {
   parseDateToUTC,
   parseDateFromDateBN,
   parseTimeFromDateBN,
   getCurrentDate,
   getCurrentTime,
-} from 'lib/candy-machine/utils';
-import { uploadV2 } from 'lib/candy-machine/upload/upload';
+} from 'lib/utils';
+import { uploadV2 } from 'lib/upload/upload';
 import { AnchorProvider, BN } from '@project-serum/anchor';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { FetchedCandyMachineConfig } from 'lib/candy-machine/types';
-import { updateV2 } from 'lib/candy-machine/update/update';
+import { updateV2 } from 'lib/update/update';
 import { ActionButton } from 'components/Layout';
 
 const Form: FC<{
@@ -30,7 +30,7 @@ const Form: FC<{
   updateCandyMachine?: boolean;
   candyMachinePubkey?: string | string[];
 }> = ({ fetchedValues, updateCandyMachine, candyMachinePubkey }) => {
-  const { publicKey } = useWallet();
+  const { publicKey, connected } = useWallet();
   const anchorWallet = useAnchorWallet();
   const { rpcEndpoint } = useRPC();
 
@@ -292,6 +292,13 @@ const Form: FC<{
     } catch (err) {
       setIsInteractingWithCM(false);
     }
+  }
+  if (!connected) {
+    return (
+      <h1 className='text-red-600 text-xl flex flex-col items-center h-auto justify-center mt-8'>
+      Connect your wallet to create a Candy Machine
+      </h1>
+    )
   }
   return (
     <form
