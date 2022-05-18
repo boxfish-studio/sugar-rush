@@ -53,7 +53,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
           new PublicKey(account)
         );
 
-        const candyMachineObject: any = await program.account.candyMachineInfo.fetch(
+        const candyMachineObject: any = await program.account.candyMachine.fetch(
           new PublicKey(account)
         );
         let isGood = true;
