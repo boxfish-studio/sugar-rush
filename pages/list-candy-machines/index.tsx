@@ -7,6 +7,7 @@ import CandyMachineCard from 'components/FetchCM/CandyMachineCard'
 import React, { useEffect, useState } from 'react'
 import { useRPC } from 'hooks'
 import { Spinner, Title } from 'components/Layout'
+import Link from 'next/link'
 
 const CANDY_MACHINE_PROGRAM_V2_ID = new PublicKey(
   'cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ'
@@ -37,6 +38,8 @@ const ListCandyMachines: NextPage = () => {
             ],
           }
         )
+        if (accounts.length === 0) return setAccounts([''])
+
         const accountsPubkeys = accounts
           .map((account) => account.pubkey.toBase58())
           .sort()
@@ -92,8 +95,16 @@ const ListCandyMachines: NextPage = () => {
           </div>
         )}
 
-        {!isLoading && !error && accounts.length > 0 && (
+        {!isLoading && !error && accounts.length > 0 && accounts[0] !== '' && (
           <CandyMachineCard accounts={accounts} />
+        )}
+        {!isLoading && !error && accounts[0] === '' && (
+          <span className='mt-5'>
+            You have no candy machine accounts.{' '}
+            <Link href='/create-candy-machine'>
+              <a className='text-blue-600 hover:underline'>Create one?</a>
+            </Link>
+          </span>
         )}
       </div>
     </>

@@ -422,7 +422,17 @@ const Form: FC<{
           <ActionButton text='Updating Candy Machine...' isLoading />
         )}
         {!updateCandyMachine && isInteractingWithCM && (
-          <ActionButton text='Creating Candy Machine...' isLoading />
+          <>
+            <ActionButton text='Creating Candy Machine...' isLoading />
+            <span
+              className='w-[30rem] font-bold
+            text-red-500 my-3'
+            >
+              IMPORTANT! Make sure to save the Cache file that will be
+              downloaded at the end! Without it, you will not be able to update
+              your Candy Machine.
+            </span>
+          </>
         )}
       </div>
     </form>
