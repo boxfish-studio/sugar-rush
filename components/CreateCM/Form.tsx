@@ -1,42 +1,42 @@
-import React, { FC, useState } from 'react';
-import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react';
-import { useForm, useUploadFiles, useRPC, useUploadCache } from 'hooks';
+import React, { FC, useState } from 'react'
+import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
+import { useForm, useUploadFiles, useRPC, useUploadCache } from 'hooks'
 import {
   getCandyMachineV2Config,
   verifyAssets,
   loadCandyProgramV2,
-} from 'lib/upload/config';
+} from 'lib/upload/config'
 import {
   CandyMachineConfig,
   Gatekeeper,
-  FetchedCandyMachineConfig
-} from 'lib/interfaces';
-import { StorageType } from 'lib/enums';
+  FetchedCandyMachineConfig,
+} from 'lib/interfaces'
+import { StorageType } from 'lib/enums'
 import {
   parseDateToUTC,
   parseDateFromDateBN,
   parseTimeFromDateBN,
   getCurrentDate,
   getCurrentTime,
-} from 'lib/utils';
-import { uploadV2 } from 'lib/upload/upload';
-import { AnchorProvider, BN } from '@project-serum/anchor';
-import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { updateV2 } from 'lib/update/update';
-import { ActionButton } from 'components/Layout';
+} from 'lib/utils'
+import { uploadV2 } from 'lib/upload/upload'
+import { AnchorProvider, BN } from '@project-serum/anchor'
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
+import { updateV2 } from 'lib/update/update'
+import { ActionButton, CheckConnectedWallet } from 'components/Layout'
 
 const Form: FC<{
-  fetchedValues?: FetchedCandyMachineConfig;
-  updateCandyMachine?: boolean;
-  candyMachinePubkey?: string | string[];
+  fetchedValues?: FetchedCandyMachineConfig
+  updateCandyMachine?: boolean
+  candyMachinePubkey?: string | string[]
 }> = ({ fetchedValues, updateCandyMachine, candyMachinePubkey }) => {
-  const { publicKey, connected } = useWallet();
-  const anchorWallet = useAnchorWallet();
-  const { rpcEndpoint } = useRPC();
+  const { publicKey, connected } = useWallet()
+  const anchorWallet = useAnchorWallet()
+  const { rpcEndpoint } = useRPC()
 
-  const { files, uploadAssets } = useUploadFiles();
-  const { cache, uploadCache } = useUploadCache();
-  const [isInteractingWithCM, setIsInteractingWithCM] = useState(false);
+  const { files, uploadAssets } = useUploadFiles()
+  const { cache, uploadCache } = useUploadCache()
+  const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
 
   const initialState = {
     price: fetchedValues?.price
@@ -57,29 +57,29 @@ const Form: FC<{
     files: [],
     cache: null,
     'new-authority': '',
-  } as const;
+  } as const
 
   const { onChange, onSubmit, values } = useForm(
     updateCandyMachine ? updateCandyMachineV2 : createCandyMachineV2,
     initialState
-  );
+  )
 
   function isFormValid(): boolean {
     // TODO add more conditions
     // TODO add custom message to show error message
-    if (files.length === 0) return false;
-    if (files.length % 2 != 0) return false;
-    if (values['number-of-nfts'] * 2 != files.length) return false;
-    if (!values['date-mint'] || !values['time-mint']) return false;
-    if (values.price == 0 || isNaN(values.price)) return false;
+    if (files.length === 0) return false
+    if (files.length % 2 != 0) return false
+    if (values['number-of-nfts'] * 2 != files.length) return false
+    if (!values['date-mint'] || !values['time-mint']) return false
+    if (values.price == 0 || isNaN(values.price)) return false
     if (values['number-of-nfts'] == 0 || isNaN(values['number-of-nfts']))
-      return false;
+      return false
 
-    return true;
+    return true
   }
   async function createCandyMachineV2() {
-    if (!isFormValid()) return;
-    setIsInteractingWithCM(true);
+    if (!isFormValid()) return
+    setIsInteractingWithCM(true)
     const config: CandyMachineConfig = {
       price: values.price,
       number: values['number-of-nfts'],
@@ -103,20 +103,20 @@ const Form: FC<{
       pinataGateway: null,
       pinataJwt: null,
       uuid: null,
-    };
+    }
 
     if (publicKey && anchorWallet) {
       const { supportedFiles, elemCount } = verifyAssets(
         files,
         config.storage,
         config.number
-      );
+      )
 
       const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
         preflightCommitment: 'recent',
-      });
+      })
 
-      const anchorProgram = await loadCandyProgramV2(provider);
+      const anchorProgram = await loadCandyProgramV2(provider)
 
       const {
         storage,
@@ -140,11 +140,11 @@ const Form: FC<{
         whitelistMintSettings,
         goLiveDate,
         uuid,
-      } = await getCandyMachineV2Config(publicKey, config, anchorProgram);
+      } = await getCandyMachineV2Config(publicKey, config, anchorProgram)
 
-      const startMilliseconds = Date.now();
+      const startMilliseconds = Date.now()
 
-      console.log('started at: ' + startMilliseconds.toString());
+      console.log('started at: ' + startMilliseconds.toString())
       try {
         await uploadV2({
           files: supportedFiles,
@@ -176,30 +176,30 @@ const Form: FC<{
           // collectionMintPubkey,
           // setCollectionMint,
           // rpcUrl,
-        });
+        })
       } catch (err) {
-        console.error('upload was not successful, please re-run.', err);
-        setIsInteractingWithCM(false);
+        console.error('upload was not successful, please re-run.', err)
+        setIsInteractingWithCM(false)
       }
-      const endMilliseconds = Date.now();
-      console.log(endMilliseconds.toString());
-      setIsInteractingWithCM(false);
+      const endMilliseconds = Date.now()
+      console.log(endMilliseconds.toString())
+      setIsInteractingWithCM(false)
     }
   }
 
   function isFormUpdateValid(): boolean {
     // TODO add more conditions
     // TODO add custom message to show error message
-    if (!values['date-mint'] || !values['time-mint']) return false;
-    if (values.price === 0 || isNaN(values.price)) return false;
+    if (!values['date-mint'] || !values['time-mint']) return false
+    if (values.price === 0 || isNaN(values.price)) return false
 
-    return true;
+    return true
   }
 
   async function updateCandyMachineV2() {
     try {
-      if (!isFormUpdateValid()) return;
-      setIsInteractingWithCM(true);
+      if (!isFormUpdateValid()) return
+      setIsInteractingWithCM(true)
 
       const config: CandyMachineConfig = {
         price: values.price,
@@ -224,19 +224,19 @@ const Form: FC<{
         pinataGateway: null,
         pinataJwt: null,
         uuid: null,
-      };
+      }
 
       if (publicKey && anchorWallet && candyMachinePubkey) {
         const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
           preflightCommitment: 'recent',
-        });
+        })
 
-        const anchorProgram = await loadCandyProgramV2(provider);
+        const anchorProgram = await loadCandyProgramV2(provider)
 
         const candyMachineObj: any =
           await anchorProgram.account.candyMachine.fetch(
             new PublicKey(candyMachinePubkey)
-          );
+          )
 
         const {
           number,
@@ -251,7 +251,7 @@ const Form: FC<{
           whitelistMintSettings,
           goLiveDate,
           uuid,
-        } = await getCandyMachineV2Config(publicKey, config, anchorProgram);
+        } = await getCandyMachineV2Config(publicKey, config, anchorProgram)
 
         const newSettings = {
           itemsAvailable: number
@@ -274,9 +274,9 @@ const Form: FC<{
               address: new PublicKey(creator.address),
               verified: true,
               share: creator.share,
-            };
+            }
           }),
-        };
+        }
 
         await updateV2({
           newSettings,
@@ -286,19 +286,15 @@ const Form: FC<{
           anchorProgram,
           cache: await cache.text(),
           newAuthority: values['new-authority'],
-        });
-        setIsInteractingWithCM(false);
+        })
+        setIsInteractingWithCM(false)
       }
     } catch (err) {
-      setIsInteractingWithCM(false);
+      setIsInteractingWithCM(false)
     }
   }
   if (!connected) {
-    return (
-      <h1 className='text-red-600 text-xl flex flex-col items-center h-auto justify-center mt-8'>
-      Connect your wallet to create a Candy Machine
-      </h1>
-    )
+    return <CheckConnectedWallet />
   }
   return (
     <form
@@ -430,17 +426,17 @@ const Form: FC<{
         )}
       </div>
     </form>
-  );
-};
+  )
+}
 
 interface Input {
-  id: string;
-  text: string;
-  type: string;
-  defaultValue?: string | number;
-  defaultChecked?: boolean;
-  value?: string | number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  id: string
+  text: string
+  type: string
+  defaultValue?: string | number
+  defaultChecked?: boolean
+  value?: string | number
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const FormInput: FC<Input> = ({
@@ -467,7 +463,7 @@ const FormInput: FC<Input> = ({
         onChange={onChange}
       />
     </>
-  );
-};
+  )
+}
 
-export default Form;
+export default Form

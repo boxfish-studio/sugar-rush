@@ -1,15 +1,15 @@
-import { FC, useState } from 'react';
-import Link from 'next/link';
-import { useSearchBar, useRemoveCandyMachineAccount } from 'hooks';
+import { FC, useState } from 'react'
+import Link from 'next/link'
+import { useSearchBar, useRemoveCandyMachineAccount } from 'hooks'
 
-import { Modal } from 'components/Layout';
+import { Modal } from 'components/Layout'
 
 const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
-  const { searchResults, searchRef, setSearch } = useSearchBar(accounts);
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState('');
+  const { searchResults, searchRef, setSearch } = useSearchBar(accounts)
+  const [isOpen, setIsOpen] = useState(false)
+  const [selectedAccount, setSelectedAccount] = useState('')
 
-  const { removeAccount } = useRemoveCandyMachineAccount();
+  const { removeAccount } = useRemoveCandyMachineAccount()
 
   return (
     <>
@@ -42,8 +42,8 @@ const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
             <button
               className='text-white absolute left-36 bottom-2 bg-red-500 p-1 rounded-xl px-4'
               onClick={() => {
-                setSelectedAccount(account);
-                setIsOpen(true);
+                setSelectedAccount(account)
+                setIsOpen(true)
               }}
             >
               Delete
@@ -57,7 +57,7 @@ const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
         ))}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default CandyMachineCard;
+export default CandyMachineCard

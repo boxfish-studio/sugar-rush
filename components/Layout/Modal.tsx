@@ -1,42 +1,42 @@
-import { useConnection } from '@solana/wallet-adapter-react';
-import { Dispatch, FC, SetStateAction, useState } from 'react';
-import styles from 'styles/Modal.module.css';
-import { ActionButton } from 'components/Layout';
+import { useConnection } from '@solana/wallet-adapter-react'
+import { Dispatch, FC, SetStateAction, useState } from 'react'
+import styles from 'styles/Modal.module.css'
+import { ActionButton } from 'components/Layout'
 
 const Modal: FC<{
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  account: string;
+  isOpen: boolean
+  setIsOpen: Dispatch<SetStateAction<boolean>>
+  account: string
   callback: (
     account: string
-  ) => Promise<{ txid: string; balanceChange: number } | undefined>;
+  ) => Promise<{ txid: string; balanceChange: number } | undefined>
 }> = ({ isOpen, setIsOpen, callback, account }) => {
-  const { connection } = useConnection();
+  const { connection } = useConnection()
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [tx, setTx] = useState<{ txid: string; balanceChange: number }>();
-  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
+  const [tx, setTx] = useState<{ txid: string; balanceChange: number }>()
+  const [error, setError] = useState('')
 
   function handleModal(e: any) {
-    const target = e.target as HTMLDivElement;
-    if (target.nodeName === 'DIV') closeModal();
+    const target = e.target as HTMLDivElement
+    if (target.nodeName === 'DIV') closeModal()
   }
   function closeModal() {
-    setIsOpen(false);
-    setIsLoading(false);
-    setTx(undefined);
-    setError('');
+    setIsOpen(false)
+    setIsLoading(false)
+    setTx(undefined)
+    setError('')
   }
 
   async function runCallback() {
     try {
-      setIsLoading(true);
-      const tx = await callback(account);
-      setIsLoading(false);
-      if (!tx) return setError('Error: No transaction returned');
-      setTx(tx);
+      setIsLoading(true)
+      const tx = await callback(account)
+      setIsLoading(false)
+      if (!tx) return setError('Error: No transaction returned')
+      setTx(tx)
     } catch (e) {
-      closeModal();
+      closeModal()
     }
   }
   return (
@@ -127,7 +127,7 @@ const Modal: FC<{
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Modal;
+export default Modal

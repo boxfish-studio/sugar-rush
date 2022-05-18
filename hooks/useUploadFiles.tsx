@@ -1,24 +1,24 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
 const useUploadFiles = () => {
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([])
 
   function uploadAssets(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length == 0) {
-      window.alert('No files uploaded');
-      return;
+      window.alert('No files uploaded')
+      return
     }
-    const fileList = new Array<File>();
+    const fileList = new Array<File>()
     Array.from(e.target.files).forEach((file) => {
-      fileList.push(file);
-    });
-    setFiles(fileList);
+      fileList.push(file)
+    })
+    setFiles(fileList)
   }
 
   return {
     uploadAssets,
     files,
-  };
-};
+  }
+}
 
-export default useUploadFiles;
+export default useUploadFiles

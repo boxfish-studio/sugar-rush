@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Title } from 'components/Layout';
+import { FC } from 'react'
+import { Title } from 'components/Layout'
 
 const CheckConnectedWallet: FC = () => {
   return (
@@ -8,7 +8,7 @@ const CheckConnectedWallet: FC = () => {
         <Title text='Please connect your wallet' />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CheckConnectedWallet;
+export default CheckConnectedWallet

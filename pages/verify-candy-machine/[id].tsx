@@ -1,17 +1,17 @@
-import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { Title, CheckConnectedWallet, ActionButton } from 'components/Layout';
-import Head from 'next/head';
-import { useUploadCache, useVerifyCandyMachineV2 } from 'hooks';
-import { useWallet } from '@solana/wallet-adapter-react';
+import type { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import { Title, CheckConnectedWallet, ActionButton } from 'components/Layout'
+import Head from 'next/head'
+import { useUploadCache, useVerifyCandyMachineV2 } from 'hooks'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 const VerifyCandyMachine: NextPage = () => {
-  const router = useRouter();
-  const account = router.query.id;
-  const { cache, uploadCache } = useUploadCache();
-  const { connected } = useWallet();
+  const router = useRouter()
+  const account = router.query.id
+  const { cache, uploadCache } = useUploadCache()
+  const { connected } = useWallet()
   const { error, isLoading, verifyCandyMachine, message, connection } =
-    useVerifyCandyMachineV2(cache);
+    useVerifyCandyMachineV2(cache)
   return (
     <>
       <Head>
@@ -69,7 +69,7 @@ const VerifyCandyMachine: NextPage = () => {
         <CheckConnectedWallet />
       )}
     </>
-  );
-};
+  )
+}
 
-export default VerifyCandyMachine;
+export default VerifyCandyMachine

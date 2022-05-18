@@ -1,24 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import { useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
-import CandyMachineCard from 'components/FetchCM/CandyMachineCard';
-import React, { useEffect, useState } from 'react';
-import { useRPC } from 'hooks';
-import { Spinner, Title } from 'components/Layout';
+import type { NextPage } from 'next'
+import Head from 'next/head'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { PublicKey } from '@solana/web3.js'
+import CandyMachineCard from 'components/FetchCM/CandyMachineCard'
+import React, { useEffect, useState } from 'react'
+import { useRPC } from 'hooks'
+import { Spinner, Title } from 'components/Layout'
 
 const CANDY_MACHINE_PROGRAM_V2_ID = new PublicKey(
   'cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ'
-);
+)
 
 const ListCandyMachines: NextPage = () => {
-  const { publicKey, connected } = useWallet();
+  const { publicKey, connected } = useWallet()
 
-  const [accounts, setAccounts] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const { rpcEndpoint } = useRPC();
+  const [accounts, setAccounts] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(false)
+  const { rpcEndpoint } = useRPC()
 
   async function fetchAccounts() {
     if (publicKey && connected) {
@@ -37,27 +37,27 @@ const ListCandyMachines: NextPage = () => {
             ],
           }
         )
-        const accountsPubkeys = accounts.map((account) =>
-          account.pubkey.toBase58()
-        ).sort();
-        setAccounts(accountsPubkeys);
-        setError(false);
+        const accountsPubkeys = accounts
+          .map((account) => account.pubkey.toBase58())
+          .sort()
+        setAccounts(accountsPubkeys)
+        setError(false)
       } catch (err) {
-        console.error(err);
+        console.error(err)
       }
     }
   }
 
   useEffect(() => {
-    setError(false);
-    setIsLoading(true);
+    setError(false)
+    setIsLoading(true)
 
     fetchAccounts()
       .catch(() => setError(true))
       .finally(() => {
-        setIsLoading(false);
-      });
-  }, [connected]);
+        setIsLoading(false)
+      })
+  }, [connected])
 
   if (!connected) {
     return (
@@ -66,7 +66,7 @@ const ListCandyMachines: NextPage = () => {
           Connect your wallet to create a Candy Machine
         </h1>
       </div>
-    );
+    )
   }
 
   return (

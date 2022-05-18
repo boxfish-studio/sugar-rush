@@ -1,9 +1,9 @@
-import { Title } from 'components/Layout';
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import { useWallet } from '@solana/wallet-adapter-react';
+import { Title } from 'components/Layout'
+import type { NextPage } from 'next'
+import Head from 'next/head'
+import { useWallet } from '@solana/wallet-adapter-react'
 const Home: NextPage = () => {
-  const { publicKey } = useWallet();
+  const { publicKey } = useWallet()
 
   return (
     <>
@@ -19,7 +19,7 @@ const Home: NextPage = () => {
         </>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
