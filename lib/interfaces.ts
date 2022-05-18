@@ -104,7 +104,14 @@ export interface CandyMachineData {
   }[]
 }
 
-type NumberToString<T extends number | string> = `${T}`
+
+
+type NumberToString<T extends number | string> = T extends infer T
+  ? T extends number
+    ? string
+    : T
+  : never
+
 
 export interface Cache {
   authority?: string
@@ -123,7 +130,7 @@ export interface Cache {
     }
   >
 
-  startDate: BN | null,
+  startDate: BN | null
   env: string
   cacheName: string
 }

@@ -180,7 +180,8 @@ const Form: FC<{
           // setCollectionMint,
           // rpcUrl,
         })
-        if (typeof _candyMachine == 'string') candyMachine = _candyMachine
+
+        if (typeof _candyMachine === 'string') candyMachine = _candyMachine
       } catch (err) {
         console.error('upload was not successful, please re-run.', err)
         setIsInteractingWithCM(false)
@@ -445,7 +446,7 @@ const Form: FC<{
           </>
         )}
         {!isInteractingWithCM && status && (
-          <span className='font-bold text-xl my-4 w-[30rem] '> {status}</span>
+          <span className='font-bold text-xl my-4 w-[30rem] '>{status}</span>
         )}
       </div>
     </form>
