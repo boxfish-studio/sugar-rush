@@ -31,9 +31,9 @@ const SideBarElement = ({
 }) => (
   <Link href={href}>
     <div
-      className='relative flex items-center justify-center w-24 h-12 mx-auto mt-4 text-black 
-      transition-all duration-300 ease-linear sidebar-icon-bg shadow-lg cursor-pointer hover:bg-indigo-500
-       hover:text-white rounded-xl hover:rounded-xl hover:scale-105 group'
+      className='relative flex items-center justify-center w-24 h-12 mx-auto mt-4 text-white 
+      transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-indigo-500
+       rounded-xl hover:rounded-xl hover:scale-105 group'
     >
       {text}
       <span
