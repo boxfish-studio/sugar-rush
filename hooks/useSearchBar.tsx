@@ -9,7 +9,7 @@ const useSearchBar = (initialState: string[]) => {
   useEffect(() => {
     if (searchRef.current) {
       const results = initialState.filter((account) => {
-        return account.includes(search);
+        return account.toLowerCase().includes(search.toLowerCase());
       });
       setSearchResults(results);
     }
