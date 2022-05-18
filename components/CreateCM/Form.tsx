@@ -5,24 +5,24 @@ import {
   getCandyMachineV2Config,
   verifyAssets,
   loadCandyProgramV2,
-} from 'lib/candy-machine/upload/config';
+} from 'lib/upload/config';
 import {
   CandyMachineConfig,
   Gatekeeper,
-  StorageType,
-} from 'lib/candy-machine/types';
+  FetchedCandyMachineConfig
+} from 'lib/interfaces';
+import { StorageType } from 'lib/enums';
 import {
   parseDateToUTC,
   parseDateFromDateBN,
   parseTimeFromDateBN,
   getCurrentDate,
   getCurrentTime,
-} from 'lib/candy-machine/utils';
-import { uploadV2 } from 'lib/candy-machine/upload/upload';
+} from 'lib/utils';
+import { uploadV2 } from 'lib/upload/upload';
 import { AnchorProvider, BN } from '@project-serum/anchor';
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
-import { FetchedCandyMachineConfig } from 'lib/candy-machine/types';
-import { updateV2 } from 'lib/candy-machine/update/update';
+import { updateV2 } from 'lib/update/update';
 
 const Form: FC<{
   fetchedValues?: FetchedCandyMachineConfig;

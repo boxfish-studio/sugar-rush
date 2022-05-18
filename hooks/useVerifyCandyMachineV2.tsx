@@ -1,27 +1,27 @@
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import { useState } from 'react';
-import { Account } from 'lib/candy-machine/types';
+import { Account } from 'lib/types';
 import { PublicKey } from '@solana/web3.js';
 import { Program, AnchorProvider, BN } from '@project-serum/anchor';
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants';
-import { chunks, fromUTF8Array } from 'lib/candy-machine/verify/helpers';
-import { saveCache } from 'lib/candy-machine/cache';
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants';
+import { shardArray, getTextFromUTF8Array } from 'lib/verify/helpers';
+import { saveCache } from 'lib/cache';
 
 import {
   CONFIG_ARRAY_START_V2,
   CONFIG_LINE_SIZE_V2,
-} from 'lib/candy-machine/constants';
+} from 'lib/constants';
 
 const useVerifyCandyMachineV2 = (cache: File) => {
   const { connection } = useConnection();
   const anchorWallet = useAnchorWallet();
-  const [error, setError] = useState({ error: false, message: '' });
+  const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   async function verifyCandyMachine({ account }: { account: Account }) {
     if (!cache) {
-      setError({ error: true, message: 'Upload a cache file.' });
+      setError('Upload a cache file.');
       return;
     }
     if (account && anchorWallet && cache) {
@@ -29,7 +29,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
       const cacheName = cacheContent.cacheName;
       const env = cacheContent.env;
       setMessage('');
-      setError({ error: false, message: '' });
+      setError( '' );
       setIsLoading(false);
       let errorMessage = '';
       try {
@@ -49,14 +49,14 @@ const useVerifyCandyMachineV2 = (cache: File) => {
           provider
         );
 
-        const candyMachine = await program.provider.connection.getAccountInfo(
+        const candyMachineInfo = await program.provider.connection.getAccountInfo(
           new PublicKey(account)
         );
 
-        const candyMachineObj: any = await program.account.candyMachine.fetch(
+        const candyMachineObject: any = await program.account.candyMachineInfo.fetch(
           new PublicKey(account)
         );
-        let allGood = true;
+        let isGood = true;
 
         const keys = Object.keys(cacheContent.items)
           .filter((k) => !cacheContent.items[k].verifyRun)
@@ -69,11 +69,11 @@ const useVerifyCandyMachineV2 = (cache: File) => {
         }
 
         await Promise.all(
-          chunks(keys, 500).map(async (allIndexesInSlice) => {
+          shardArray(keys, 500).map(async (allIndexesInSlice) => {
             for (let i = 0; i < allIndexesInSlice.length; i++) {
               const key = allIndexesInSlice[i];
               setMessage(`Looking at key ${key}`);
-              const thisSlice = candyMachine!.data.slice(
+              const thisSlice = candyMachineInfo!.data.slice(
                 CONFIG_ARRAY_START_V2 +
                   4 +
                   CONFIG_LINE_SIZE_V2 * (key as unknown as number),
@@ -82,20 +82,20 @@ const useVerifyCandyMachineV2 = (cache: File) => {
                   CONFIG_LINE_SIZE_V2 * ((key as unknown as number) + 1)
               );
 
-              const name = fromUTF8Array([
+              const name = getTextFromUTF8Array([
                 ...thisSlice.slice(4, 36).filter((n) => n !== 0),
               ]);
-              const uri = fromUTF8Array([
+              const uri = getTextFromUTF8Array([
                 ...thisSlice.slice(40, 240).filter((n) => n !== 0),
               ]);
               const cacheItem = cacheContent.items[key];
 
-              if (name != cacheItem.name || uri != cacheItem.link) {
+              if (name !== cacheItem.name || uri !== cacheItem.link) {
                 (errorMessage =
                   `Name (${name}) or uri (${uri}) didnt match cache values of (${cacheItem.name})` +
                   `and (${cacheItem.link}). marking to rerun for image ${key}`),
                   (cacheItem.onChain = false);
-                allGood = false;
+                isGood = false;
               } else {
                 cacheItem.verifyRun = true;
               }
@@ -103,14 +103,14 @@ const useVerifyCandyMachineV2 = (cache: File) => {
           })
         );
 
-        if (!allGood) {
+        if (!isGood) {
           throw new Error(
-            `not all NFTs checked out. check out logs below for details`
+            `Not all NFTs checked out. Check out logs below for details`
           );
         }
 
         const lineCount = new BN(
-          candyMachine!.data.slice(
+          candyMachineInfo!.data.slice(
             CONFIG_ARRAY_START_V2,
             CONFIG_ARRAY_START_V2 + 4
           ),
@@ -119,14 +119,14 @@ const useVerifyCandyMachineV2 = (cache: File) => {
         );
         setMessage(
           `Uploaded ${lineCount.toNumber()}/${
-            candyMachineObj.data.itemsAvailable
+            candyMachineObject.data.itemsAvailable
           }`
         );
 
-        if (candyMachineObj.data.itemsAvailable > lineCount.toNumber()) {
+        if (candyMachineObject.data.itemsAvailable > lineCount.toNumber()) {
           throw new Error(
             `predefined number of NFTs (${
-              candyMachineObj.data.itemsAvailable
+              candyMachineObject.data.itemsAvailable
             }) is smaller than the uploaded one (${lineCount.toNumber()})`
           );
         } else {
@@ -138,10 +138,10 @@ const useVerifyCandyMachineV2 = (cache: File) => {
         console.error(err);
         saveCache(cacheName, env, cacheContent);
         setIsLoading(false);
-        setError({
-          error: true,
-          message: errorMessage || (err as Error).message,
-        });
+        setError(
+         
+           errorMessage || (err as Error).message,
+        );
       }
     }
   }

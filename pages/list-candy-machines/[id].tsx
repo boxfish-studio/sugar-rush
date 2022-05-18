@@ -5,11 +5,11 @@ import { Program, AnchorProvider, BN } from '@project-serum/anchor';
 import { PublicKey, Connection } from '@solana/web3.js';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import { Spinner, Title } from 'components/Layout';
-import { FetchedCandyMachineConfig } from 'lib/candy-machine/types';
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants';
+import { FetchedCandyMachineConfig } from 'lib/interfaces';
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants';
 import Form from 'components/CreateCM/Form';
 import Head from 'next/head';
-import { Account } from 'lib/candy-machine/types';
+import { Account } from 'lib/types';
 
 const CandyMachine: NextPage = () => {
   const router = useRouter();
@@ -19,7 +19,7 @@ const CandyMachine: NextPage = () => {
   const { connection } = useConnection();
   const [candyMachineConfig, setCandyMachineConfig] =
     useState<FetchedCandyMachineConfig>();
-  const [error, setError] = useState({ error: false, message: '' });
+  const [error, setError] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -61,7 +61,7 @@ const CandyMachine: NextPage = () => {
       } catch (err) {
         console.error(err);
         setIsLoading(false);
-        setError({ error: true, message: (err as Error).message });
+        setError( (err as Error).message );
       }
     }
   }
@@ -90,7 +90,7 @@ const CandyMachine: NextPage = () => {
           </a>
         </span>
         {isLoading && <Spinner />}
-        {error.error && (
+        {error && (
           <div className='flex flex-col items-center justify-center mt-11'>
             Error fetching candy machine config
             <button
@@ -102,7 +102,7 @@ const CandyMachine: NextPage = () => {
           </div>
         )}
 
-        {!error.error && candyMachineConfig?.uuid && (
+        {!error && candyMachineConfig?.uuid && (
           <>
             <span className='mt-5'>
               There are {new BN(candyMachineConfig.itemsAvailable).toNumber()}{' '}

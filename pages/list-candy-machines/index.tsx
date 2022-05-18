@@ -6,7 +6,7 @@ import CandyMachineCard from 'components/FetchCM/CandyMachineCard';
 import React, { useEffect, useState } from 'react';
 import { useRPC } from 'hooks';
 import { Spinner, Title } from 'components/Layout';
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants';
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants';
 
 const ListCandyMachines: NextPage = () => {
   const { publicKey } = useWallet();

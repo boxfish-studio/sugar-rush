@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Title, ConnectWallet } from 'components/Layout';
+import { Title, CheckConnectedWallet } from 'components/Layout';
 import Head from 'next/head';
 import { useUploadCache, useVerifyCandyMachineV2 } from 'hooks';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -46,23 +46,23 @@ const VerifyCandyMachine: NextPage = () => {
             onClick={() => verifyCandyMachine({ account })}
           >
             {isLoading && <span>...</span>}
-            {!isLoading && !error.error && <span>Verify CM</span>}
-            {!isLoading && error.error && <span>Verify CM</span>}
+            {!isLoading && !error && <span>Verify CM</span>}
+            {!isLoading && error && <span>Verify CM</span>}
           </button>
-          {!error.error && message && (
+          {!error && message && (
             <div className='border border-cyan-500 mx-36 mt-10 p-5 rounded-xl text-black'>
               {message}
             </div>
           )}
 
-          {!isLoading && error.error && (
+          {!isLoading && error && (
             <div className='border border-red-500 mx-36 mt-10 p-5 rounded-xl'>
-              {error.message}
+              {error}
             </div>
           )}
         </div>
       ) : (
-        <ConnectWallet />
+        <CheckConnectedWallet />
       )}
     </>
   );
