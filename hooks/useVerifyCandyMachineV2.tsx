@@ -48,7 +48,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
           )
 
         const candyMachineObject: any =
-          await program.account.candyMachineInfo.fetch(new PublicKey(account))
+          await program.account.candyMachine.fetch(new PublicKey(account))
         let isGood = true
 
         const keys = Object.keys(cacheContent.items)

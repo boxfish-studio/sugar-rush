@@ -37,6 +37,7 @@ const Form: FC<{
   const { files, uploadAssets } = useUploadFiles()
   const { cache, uploadCache } = useUploadCache()
   const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
+  const [status, setStatus] = useState('')
 
   const initialState = {
     price: fetchedValues?.price
@@ -80,6 +81,8 @@ const Form: FC<{
   async function createCandyMachineV2() {
     if (!isFormValid()) return
     setIsInteractingWithCM(true)
+    setStatus('')
+    let candyMachine: string = ""
     const config: CandyMachineConfig = {
       price: values.price,
       number: values['number-of-nfts'],
@@ -146,7 +149,7 @@ const Form: FC<{
 
       console.log('started at: ' + startMilliseconds.toString())
       try {
-        await uploadV2({
+        const _candyMachine = await uploadV2({
           files: supportedFiles,
           cacheName: 'example',
           env: 'devnet',
@@ -177,13 +180,17 @@ const Form: FC<{
           // setCollectionMint,
           // rpcUrl,
         })
+        if (typeof _candyMachine == 'string') candyMachine = _candyMachine
       } catch (err) {
         console.error('upload was not successful, please re-run.', err)
         setIsInteractingWithCM(false)
+        setStatus('upload was not successful, please re-run.')
       }
       const endMilliseconds = Date.now()
       console.log(endMilliseconds.toString())
+
       setIsInteractingWithCM(false)
+      setStatus(`Candy Machine created successfully! ${candyMachine}`)
     }
   }
 
@@ -200,6 +207,7 @@ const Form: FC<{
     try {
       if (!isFormUpdateValid()) return
       setIsInteractingWithCM(true)
+      setStatus('')
 
       const config: CandyMachineConfig = {
         price: values.price,
@@ -288,9 +296,11 @@ const Form: FC<{
           newAuthority: values['new-authority'],
         })
         setIsInteractingWithCM(false)
+        setStatus('Candy Machine updated successfully!')
       }
     } catch (err) {
       setIsInteractingWithCM(false)
+      setStatus('Candy Machine update was not successful, please re-run.')
     }
   }
   if (!connected) {
@@ -433,6 +443,9 @@ const Form: FC<{
               your Candy Machine.
             </span>
           </>
+        )}
+        {!isInteractingWithCM && status && (
+          <span className='font-bold text-xl my-4 w-[30rem] '> {status}</span>
         )}
       </div>
     </form>

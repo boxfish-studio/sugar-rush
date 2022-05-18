@@ -95,7 +95,7 @@ export async function uploadV2({
   // collectionMintPubkey: null | PublicKey;
   // setCollectionMint: boolean;
   // rpcUrl: null | string;
-}): Promise<boolean> {
+}): Promise<boolean | string> {
   // const savedContent = loadCache(cacheName, env);
   let cacheContent: any =
     //  savedContent
@@ -314,7 +314,7 @@ export async function uploadV2({
     }
 
     console.log(`Done. Successful = ${uploadSuccessful}.`)
-    return uploadSuccessful
+    return cacheContent.program.candyMachine 
   } catch (err) {
     console.error(err)
     return false
