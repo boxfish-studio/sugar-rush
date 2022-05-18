@@ -9,14 +9,14 @@ import { Spinner, Title } from 'components/Layout';
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants';
 
 const ListCandyMachines: NextPage = () => {
-  const { publicKey } = useWallet();
+  const { publicKey, connected } = useWallet()
 
-  const [accounts, setAccounts] = useState<string[]>([]);
-  const [loading, setLoading] = useState({ loading: false, error: false });
-  const { rpcEndpoint } = useRPC();
+  const [accounts, setAccounts] = useState<string[]>([])
+  const [loading, setLoading] = useState({ loading: false, error: false })
+  const { rpcEndpoint } = useRPC()
 
   async function fetchAccounts() {
-    setLoading({ loading: true, error: false });
+    setLoading({ loading: true, error: false })
     try {
       if (publicKey) {
         const accounts = await rpcEndpoint.getProgramAccounts(
@@ -32,22 +32,32 @@ const ListCandyMachines: NextPage = () => {
               },
             ],
           }
-        );
+        )
         const accountsPubkeys = accounts.map((account) =>
           account.pubkey.toBase58()
-        );
-        setAccounts(accountsPubkeys);
-        setLoading({ loading: false, error: false });
+        )
+        setAccounts(accountsPubkeys)
+        setLoading({ loading: false, error: false })
       }
     } catch (err) {
-      console.error(err);
-      setLoading({ loading: false, error: true });
+      console.error(err)
+      setLoading({ loading: false, error: true })
     }
   }
 
   useEffect(() => {
-    fetchAccounts();
-  }, [publicKey]);
+    fetchAccounts()
+  }, [publicKey])
+
+  if (!connected) {
+    return (
+      <div className='flex justify-center items-center flex-col'>
+        <h1 className='text-red-600 text-xl flex flex-col items-center h-auto justify-center mt-8'>
+          Connect your wallet to create a Candy Machine
+        </h1>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -76,7 +86,7 @@ const ListCandyMachines: NextPage = () => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ListCandyMachines;
+export default ListCandyMachines
