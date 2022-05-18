@@ -39,7 +39,7 @@ const ListCandyMachines: NextPage = () => {
         )
         const accountsPubkeys = accounts.map((account) =>
           account.pubkey.toBase58()
-        );
+        ).sort();
         setAccounts(accountsPubkeys);
         setError(false);
       } catch (err) {
