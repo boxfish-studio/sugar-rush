@@ -13,7 +13,8 @@ import { arweaveUpload } from './arweave';
 // import { awsUpload } from '../helpers/upload/aws';
 // import { ipfsCreds, ipfsUpload } from '../helpers/upload/ipfs';
 
-import { StorageType, Manifest } from '../types';
+import {  Manifest } from '../types';
+import { StorageType } from '../enums';
 import { sleep, getFileExtension, getFileName } from './helpers';
 // import { nftStorageUpload } from '../helpers/upload/nft-storage';
 // import { pinataUpload } from '../helpers/upload/pinata';

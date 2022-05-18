@@ -1,18 +1,15 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useState } from 'react';
 import { Program, AnchorProvider, BN } from '@project-serum/anchor';
 import { PublicKey, Connection } from '@solana/web3.js';
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react';
 import { Spinner, Title } from 'components/Layout';
-import { FetchedCandyMachineConfig } from 'lib/candy-machine/types';
+import { FetchedCandyMachineConfig } from 'lib/interfaces';
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants';
 import Form from 'components/CreateCM/Form';
 import Head from 'next/head';
-const CANDY_MACHINE_PROGRAM = new PublicKey(
-  'cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ'
-);
-
-type Account = string | string[] | undefined;
+import { Account } from 'lib/types';
 
 const CandyMachine: NextPage = () => {
   const router = useRouter();
@@ -22,7 +19,9 @@ const CandyMachine: NextPage = () => {
   const { connection } = useConnection();
   const [candyMachineConfig, setCandyMachineConfig] =
     useState<FetchedCandyMachineConfig>();
-  const [loading, setLoading] = useState({ loading: false, error: false });
+  const [error, setError] = useState('');
+
+  const [isLoading, setIsLoading] = useState(false);
 
   async function fetchCandyMachine({
     account,
@@ -33,28 +32,36 @@ const CandyMachine: NextPage = () => {
   }): Promise<FetchedCandyMachineConfig | undefined> {
     if (account && anchorWallet) {
       try {
-        setLoading({ loading: true, error: false });
+        setIsLoading(true);
         const provider = new AnchorProvider(connection, anchorWallet, {
           preflightCommitment: 'processed',
         });
 
-        const idl = await Program.fetchIdl(CANDY_MACHINE_PROGRAM, provider);
+        const idl = await Program.fetchIdl(
+          CANDY_MACHINE_PROGRAM_V2_ID,
+          provider
+        );
 
-        const program = new Program(idl!, CANDY_MACHINE_PROGRAM, provider);
+        const program = new Program(
+          idl!,
+          CANDY_MACHINE_PROGRAM_V2_ID,
+          provider
+        );
 
         const state: any = await program.account.candyMachine.fetch(
           new PublicKey(account)
         );
+
         state.data.solTreasuryAccount = state.wallet;
         state.data.itemsRedeemed = state.itemsRedeemed;
         console.log('candyMachineConfig: ', state);
-
-        setLoading({ loading: false, error: false });
+        setIsLoading(false);
 
         return state.data;
       } catch (err) {
         console.error(err);
-        setLoading({ loading: false, error: true });
+        setIsLoading(false);
+        setError( (err as Error).message );
       }
     }
   }
@@ -77,15 +84,13 @@ const CandyMachine: NextPage = () => {
           {account}{' '}
           <a
             className='text-blue-700'
-            href={'https://solscan.io/account/${account}?cluster=devnet'}
-            target='_blank'
-            rel='noopener noreferrer'
+            href={`https://solscan.io/account/${account}?cluster=devnet`}
           >
             View in Solscan
           </a>
         </span>
-        {loading.loading && <Spinner />}
-        {loading.error && (
+        {isLoading && <Spinner />}
+        {error && (
           <div className='flex flex-col items-center justify-center mt-11'>
             Error fetching candy machine config
             <button
@@ -97,7 +102,7 @@ const CandyMachine: NextPage = () => {
           </div>
         )}
 
-        {!loading.error && candyMachineConfig?.uuid && (
+        {!error && candyMachineConfig?.uuid && (
           <>
             <span className='mt-5'>
               There are {new BN(candyMachineConfig.itemsAvailable).toNumber()}{' '}

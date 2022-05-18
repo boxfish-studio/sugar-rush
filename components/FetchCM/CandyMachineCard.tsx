@@ -7,7 +7,7 @@ const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
   return (
     <>
       <input
-        className='border border-gray-500 p-2 rounded-lg mt-6 w-[30rem]'
+        className='border border-gray-500 p-2 rounded-lg mt-6 md:min-w-[30rem] min-w-fit'
         ref={searchRef}
         type='search'
         placeholder='Search candy machine...'
@@ -24,6 +24,11 @@ const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
             <Link href={`/list-candy-machines/${account}`}>
               <a className='text-white absolute left-6 bottom-2 bg-slate-800 w-fit p-1 rounded-xl px-6'>
                 Inspect
+              </a>
+            </Link>
+            <Link href={`/verify-candy-machine/${account}`}>
+              <a className='text-white absolute right-6 bottom-2 bg-slate-800 w-fit p-1 rounded-xl px-4'>
+                Verify Candy Machine
               </a>
             </Link>
           </div>

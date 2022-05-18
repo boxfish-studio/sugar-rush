@@ -10,7 +10,7 @@ import { PublicKey, Keypair, SystemProgram } from '@solana/web3.js';
 
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import { AnchorWallet } from '@solana/wallet-adapter-react';
-import {CandyMachineData} from "../types"
+import { CandyMachineData } from '../interfaces';
 
 export function parseDate(date: string) {
   if (date === 'now') {
