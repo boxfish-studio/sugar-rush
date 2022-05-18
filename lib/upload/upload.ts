@@ -314,7 +314,7 @@ export async function uploadV2({
     }
 
     console.log(`Done. Successful = ${uploadSuccessful}.`)
-    return cacheContent.program.candyMachine 
+    return cacheContent.program.candyMachine
   } catch (err) {
     console.error(err)
     return false

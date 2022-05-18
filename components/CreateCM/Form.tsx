@@ -82,7 +82,7 @@ const Form: FC<{
     if (!isFormValid()) return
     setIsInteractingWithCM(true)
     setStatus('')
-    let candyMachine: string = ""
+    let candyMachine: string = ''
     const config: CandyMachineConfig = {
       price: values.price,
       number: values['number-of-nfts'],
