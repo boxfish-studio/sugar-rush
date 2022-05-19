@@ -106,8 +106,6 @@ export interface CandyMachineData {
 
 type NumberToString<T extends number | string> = T extends number ? `${T}` : T
 
-type x = NumberToString<1>
-
 export interface Cache {
   authority?: string
   program: {
