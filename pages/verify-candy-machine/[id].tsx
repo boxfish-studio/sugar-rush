@@ -12,6 +12,7 @@ const VerifyCandyMachine: NextPage = () => {
   const { connected } = useWallet()
   const { error, isLoading, verifyCandyMachine, message, connection } =
     useVerifyCandyMachineV2(cache)
+
   return (
     <>
       <Head>

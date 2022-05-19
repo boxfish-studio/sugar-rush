@@ -30,7 +30,7 @@ const Form: FC<{
   updateCandyMachine?: boolean
   candyMachinePubkey?: string | string[]
 }> = ({ fetchedValues, updateCandyMachine, candyMachinePubkey }) => {
-  const { publicKey, connected } = useWallet()
+  const { publicKey } = useWallet()
   const anchorWallet = useAnchorWallet()
   const { rpcEndpoint } = useRPC()
 
@@ -304,9 +304,7 @@ const Form: FC<{
       setStatus('Candy Machine update was not successful, please re-run.')
     }
   }
-  if (!connected) {
-    return <CheckConnectedWallet />
-  }
+
   return (
     <form
       className='flex flex-col items-center h-auto justify-center mt-8'
