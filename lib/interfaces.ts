@@ -104,14 +104,11 @@ export interface CandyMachineData {
   }[]
 }
 
-
-
 type NumberToString<T extends number | string> = T extends infer T
   ? T extends number
     ? string
     : T
   : never
-
 
 export interface Cache {
   authority?: string
