@@ -57,7 +57,7 @@ const CreateCandyMachine: NextPage = () => {
                 🤘️ The files you have to upload to the Candy Machine are your
                 NFT images/gifs with their respective metadata scoped in a JSON
                 file. If you have a collection of {numbers.length} NFTs, you
-                must name them
+                must name them like this:
                 <ol className='my-4'>
                   {numbers.map((number) => (
                     <li key={number}>
@@ -67,6 +67,8 @@ const CreateCandyMachine: NextPage = () => {
                     </li>
                   ))}
                 </ol>
+                The first one must start with 0.png and 0.json and moving
+                upwards by 1. <br />
                 You can{' '}
                 <a
                   href='/assets.zip'

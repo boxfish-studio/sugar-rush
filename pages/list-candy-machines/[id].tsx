@@ -103,12 +103,12 @@ const CandyMachine: NextPage = () => {
         {!error && candyMachineConfig?.uuid && (
           <>
             <span className='mt-5'>
-              There are {new BN(candyMachineConfig.itemsAvailable).toNumber()}{' '}
-              unminted NFT.
+              Unminted NFTs:{' '}
+              {new BN(candyMachineConfig.itemsAvailable).toNumber()}{' '}
             </span>
             <span className='mt-5'>
-              {new BN(candyMachineConfig.itemsRedeemed).toNumber()} redeemed
-              NFT.
+              Redeemed NFTs:{' '}
+              {new BN(candyMachineConfig.itemsRedeemed).toNumber()}
             </span>
             <Form
               fetchedValues={candyMachineConfig}
