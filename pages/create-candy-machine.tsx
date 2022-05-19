@@ -4,6 +4,7 @@ import Form from 'components/CreateCM/Form'
 import { CheckConnectedWallet, Title } from 'components/Layout'
 import { useState } from 'react'
 import { useWallet } from '@solana/wallet-adapter-react'
+import styles from 'styles/Accordion.module.css'
 
 const upArrow = '↑'
 const downArrow = '↓'
@@ -39,9 +40,9 @@ const CreateCandyMachine: NextPage = () => {
       <Form />
       <div className='flex flex-col justify-center items-center'>
         <div
-          className={`w-[38rem] rounded-xl border-4 border-cyan-600 p-3 border-l-[2rem] accordion overflow-y-hidden ${
-            !isHidden ? 'show' : ''
-          }`}
+          className={`w-[38rem] rounded-xl border-4 border-cyan-600 p-3 border-l-[2rem] ${
+            styles.accordion
+          } overflow-y-hidden ${!isHidden ? styles.show : ''}`}
         >
           <span
             className='flex flex-col justify-center items-center cursor-pointer text-cyan-800 font-extrabold h-auto relative'

@@ -37,7 +37,8 @@ async function upload(data: FormData, manifest: Manifest, index: number) {
 }
 
 function estimateManifestSize(filenames: string[]) {
-  const paths: { [key: string]: any } = {}
+  const paths: Record<string, Record<'id' | 'ext', string>> = {}
+
   for (const name of filenames) {
     console.log('name', name)
     paths[name] = {
