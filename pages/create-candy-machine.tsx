@@ -2,7 +2,16 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Form from 'components/CreateCM/Form'
 import { Title } from 'components/Layout'
+import { useState } from 'react'
+
+const upArrow = '↑'
+const downArrow = '↓'
+
 const CreateCandyMachine: NextPage = () => {
+  const [isHidden, setIsHidden] = useState(true)
+
+  const numbers = [...Array(3).keys()]
+
   return (
     <>
       <Head>
@@ -14,6 +23,56 @@ const CreateCandyMachine: NextPage = () => {
         <Title text='Create Candy Machine' />
       </div>
       <Form />
+      <div className='flex flex-col justify-center items-center'>
+        <div
+          className={`w-[38rem] rounded-xl border-4 border-cyan-600 p-3 border-l-[2rem] accordion overflow-y-hidden ${
+            isHidden ? '' : 'show'
+          }`}
+        >
+          <span
+            className='flex flex-col justify-center items-center cursor-pointer text-cyan-800 font-extrabold h-auto relative'
+            onClick={() => setIsHidden(!isHidden)}
+          >
+            {isHidden ? `Show ${downArrow}` : `Hide ${upArrow}`}
+          </span>
+          {!isHidden && (
+            <>
+              <div>
+                Are you confused? No worries, you will not be lost any longer!
+                🤘️ The files you have to upload to the Candy Machine are your
+                NFT images/gifs with their respective metadata scoped in a JSON
+                file. If you have a collection of {numbers.length} NFTs, you
+                must name them
+                <ol className='my-4'>
+                  {numbers.map((number) => (
+                    <li key={number}>
+                      <span className='font-bold'>
+                        {number}.png - {number}.json
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+                You can{' '}
+                <a
+                  href='/assets.zip'
+                  download
+                  className='text-blue-500 hover:underline'
+                >
+                  download
+                </a>{' '}
+                the following assets containing 3 NFTs (6 files) to see the
+                structure of the JSON metadata. More info can be found{' '}
+                <a
+                  className='font-bold text-blue-500 hover:underline'
+                  href='https://docs.metaplex.com/candy-machine-v2/preparing-assets'
+                >
+                  here
+                </a>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </>
   )
 }

@@ -18,3 +18,28 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.accordion {
+  animation: close 200ms ease-in-out forwards;
+}
+.accordion.show {
+  animation: open 300ms ease-in-out forwards;
+}
+
+@keyframes open {
+  from {
+    height: 3.5rem;
+  }
+  to {
+    height: 20rem;
+  }
+}
+
+@keyframes close {
+  from {
+    height: 20rem;
+  }
+  to {
+    height: 3.5rem;
+  }
+}
