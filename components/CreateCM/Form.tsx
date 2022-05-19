@@ -421,7 +421,19 @@ const Form: FC<{
         )}
 
         {updateCandyMachine && !isInteractingWithCM && (
-          <ActionButton text='Update Candy Machine' type='submit' />
+          <>
+            <ActionButton text='Update Candy Machine' type='submit' />
+            {values['new-authority'] && (
+              <span
+                className='w-[30rem] font-bold
+            text-red-500 my-3'
+              >
+                WARNING! This will transfer the authority of the Candy Machine
+                to the new account. You will no longer have access to update
+                this Candy Machine.
+              </span>
+            )}
+          </>
         )}
         {!updateCandyMachine && !isInteractingWithCM && (
           <ActionButton text='Create Candy Machine' type='submit' />
