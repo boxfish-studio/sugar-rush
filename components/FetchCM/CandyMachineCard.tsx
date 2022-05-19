@@ -4,12 +4,15 @@ import { useSearchBar, useRemoveCandyMachineAccount } from 'hooks'
 
 import { Modal } from 'components/Layout'
 
-const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
+const CandyMachineCard: FC<{
+  accounts: string[]
+  setAccounts: React.Dispatch<React.SetStateAction<string[]>>
+}> = ({ accounts, setAccounts }) => {
   const { searchResults, searchRef, setSearch } = useSearchBar(accounts)
   const [isOpen, setIsOpen] = useState(false)
   const [selectedAccount, setSelectedAccount] = useState('')
 
-  const { removeAccount } = useRemoveCandyMachineAccount()
+  const { removeAccount } = useRemoveCandyMachineAccount(accounts, setAccounts)
 
   return (
     <>
@@ -40,7 +43,7 @@ const CandyMachineCard: FC<{ accounts: string[] }> = ({ accounts }) => {
               </a>
             </Link>
             <button
-              className='text-white absolute left-36 bottom-2 bg-red-500 p-1 rounded-xl px-4'
+              className='text-white absolute left-48 bottom-2 bg-red-500 p-1 rounded-xl px-4'
               onClick={() => {
                 setSelectedAccount(account)
                 setIsOpen(true)
