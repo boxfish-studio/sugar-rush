@@ -6,7 +6,7 @@ import { PublicKey } from '@solana/web3.js'
 import CandyMachineCard from 'components/FetchCM/CandyMachineCard'
 import React, { useEffect, useState } from 'react'
 import { useRPC } from 'hooks'
-import { Spinner, Title } from 'components/Layout'
+import { CheckConnectedWallet, Spinner, Title } from 'components/Layout'
 import Link from 'next/link'
 
 const CANDY_MACHINE_PROGRAM_V2_ID = new PublicKey(
@@ -64,13 +64,7 @@ const ListCandyMachines: NextPage = () => {
   }, [connected])
 
   if (!connected) {
-    return (
-      <div className='flex justify-center items-center flex-col'>
-        <h1 className='text-red-600 text-xl flex flex-col items-center h-auto justify-center mt-8'>
-          Connect your wallet to create a Candy Machine
-        </h1>
-      </div>
-    )
+    return <CheckConnectedWallet />
   }
 
   return (
@@ -83,7 +77,7 @@ const ListCandyMachines: NextPage = () => {
       <div className='flex justify-center items-center flex-col'>
         <Title text='List Candy Machine' />
 
-        {!error && accounts.length == 0 && <Spinner />}
+        {!error && accounts.length === 0 && <Spinner />}
         {error && !isLoading && (
           <div className='flex flex-col items-center justify-center mt-11'>
             Error fetching accounts

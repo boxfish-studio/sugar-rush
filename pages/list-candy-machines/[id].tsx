@@ -81,6 +81,8 @@ const CandyMachine: NextPage = () => {
           <a
             className='text-blue-700'
             href={`https://solscan.io/account/${account}?cluster=devnet`}
+            target='_blank'
+            rel='noopener noreferrer'
           >
             View in Solscan
           </a>

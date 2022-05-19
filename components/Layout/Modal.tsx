@@ -62,7 +62,7 @@ const Modal: FC<{
                 target='_blank'
                 rel='noopener noreferrer'
               >
-                {account} - View in Solscan
+                View in Solscan
               </a>
               <h1 className='text-red-500 text-xl'>
                 <span className='font-bold'>WARNING!</span> You are attempting
@@ -87,7 +87,7 @@ const Modal: FC<{
                         target='_blank'
                         rel='noopener noreferrer'
                       >
-                        {account} - View in Solscan
+                        Check the details of the transaction in solscan
                       </a>
                     </span>
                   </>
