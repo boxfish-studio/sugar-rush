@@ -1,67 +1,63 @@
-import * as anchor from '@project-serum/anchor';
+import * as anchor from '@project-serum/anchor'
 import {
   CANDY_MACHINE_PROGRAM_V2_ID,
   supportedImageTypes,
   supportedAnimationTypes,
   JSON_EXTENSION,
-} from '../constants';
+} from '../constants'
 
-import { PublicKey } from '@solana/web3.js';
-import { getMint, TOKEN_PROGRAM_ID, getAccount } from '@solana/spl-token';
-import { getAtaForMint, parseDate } from './helpers';
-import { WhitelistMintMode, CandyMachineConfig } from '../interfaces';
-import { StorageType } from '../enums';
+import { PublicKey } from '@solana/web3.js'
+import { getMint, TOKEN_PROGRAM_ID, getAccount } from '@solana/spl-token'
+import { getAtaForMint, parseDate } from './helpers'
+import { WhitelistMintMode, CandyMachineConfig } from '../interfaces'
+import { StorageType } from '../enums'
 
 export interface CandyMachineData {
-  itemsAvailable: anchor.BN;
-  uuid: null | string;
-  symbol: string;
-  sellerFeeBasisPoints: number;
-  isMutable: boolean;
-  maxSupply: anchor.BN;
-  price: anchor.BN;
-  retainAuthority: boolean;
+  itemsAvailable: anchor.BN
+  uuid: null | string
+  symbol: string
+  sellerFeeBasisPoints: number
+  isMutable: boolean
+  maxSupply: anchor.BN
+  price: anchor.BN
+  retainAuthority: boolean
   gatekeeper: null | {
-    expireOnUse: boolean;
-    gatekeeperNetwork: PublicKey;
-  };
-  goLiveDate: null | anchor.BN;
-  endSettings: null | [number, anchor.BN];
+    expireOnUse: boolean
+    gatekeeperNetwork: PublicKey
+  }
+  goLiveDate: null | anchor.BN
+  endSettings: null | [number, anchor.BN]
   whitelistMintSettings: null | {
-    mode: WhitelistMintMode;
-    mint: anchor.web3.PublicKey;
-    presale: boolean;
-    discountPrice: null | anchor.BN;
-  };
+    mode: WhitelistMintMode
+    mint: anchor.web3.PublicKey
+    presale: boolean
+    discountPrice: null | anchor.BN
+  }
   hiddenSettings: null | {
-    name: string;
-    uri: string;
-    hash: Uint8Array;
-  };
+    name: string
+    uri: string
+    hash: Uint8Array
+  }
   creators: {
-    address: PublicKey;
-    verified: boolean;
-    share: number;
-  }[];
+    address: PublicKey
+    verified: boolean
+    share: number
+  }[]
 }
 
 export async function loadCandyProgramV2(
   provider: anchor.Provider,
   customRpcUrl?: string
 ) {
-  if (customRpcUrl) console.log('USING CUSTOM URL', customRpcUrl);
+  if (customRpcUrl) console.log('USING CUSTOM URL', customRpcUrl)
   const idl = (await anchor.Program.fetchIdl(
     CANDY_MACHINE_PROGRAM_V2_ID,
     provider
-  )) as anchor.Idl;
+  )) as anchor.Idl
 
-  const program = new anchor.Program(
-    idl,
-    CANDY_MACHINE_PROGRAM_V2_ID,
-    provider
-  );
-  console.log('program id from anchor', program.programId.toBase58());
-  return program;
+  const program = new anchor.Program(idl, CANDY_MACHINE_PROGRAM_V2_ID, provider)
+  console.log('program id from anchor', program.programId.toBase58())
+  return program
 }
 
 export async function getCandyMachineV2Config(
@@ -69,45 +65,45 @@ export async function getCandyMachineV2Config(
   configForm: CandyMachineConfig,
   anchorProgram: anchor.Program<anchor.Idl>
 ): Promise<{
-  storage: StorageType;
-  nftStorageKey: string | null;
-  ipfsInfuraProjectId: string | null;
-  number: number;
-  ipfsInfuraSecret: string | null;
-  pinataJwt: string | null;
-  pinataGateway: string | null;
-  awsS3Bucket: string | null;
-  retainAuthority: boolean;
-  mutable: boolean;
-  batchSize: number | null;
-  price: anchor.BN;
-  treasuryWallet: PublicKey;
-  splToken: PublicKey | null;
+  storage: StorageType
+  nftStorageKey: string | null
+  ipfsInfuraProjectId: string | null
+  number: number
+  ipfsInfuraSecret: string | null
+  pinataJwt: string | null
+  pinataGateway: string | null
+  awsS3Bucket: string | null
+  retainAuthority: boolean
+  mutable: boolean
+  batchSize: number | null
+  price: anchor.BN
+  treasuryWallet: PublicKey
+  splToken: PublicKey | null
   gatekeeper: null | {
-    expireOnUse: boolean;
-    gatekeeperNetwork: PublicKey;
-  };
-  endSettings: null | [number, anchor.BN];
+    expireOnUse: boolean
+    gatekeeperNetwork: PublicKey
+  }
+  endSettings: null | [number, anchor.BN]
   whitelistMintSettings: null | {
-    mode: any;
-    mint: PublicKey;
-    presale: boolean;
-    discountPrice: null | anchor.BN;
-  };
+    mode: any
+    mint: PublicKey
+    presale: boolean
+    discountPrice: null | anchor.BN
+  }
   hiddenSettings: null | {
-    name: string;
-    uri: string;
-    hash: Uint8Array;
-  };
-  goLiveDate: anchor.BN | null;
-  uuid: string | null;
-  arweaveJwk: string | null;
+    name: string
+    uri: string
+    hash: Uint8Array
+  }
+  goLiveDate: anchor.BN | null
+  uuid: string | null
+  arweaveJwk: string | null
 }> {
   if (configForm === undefined) {
-    throw new Error('The configForm is undefined');
+    throw new Error('The configForm is undefined')
   }
 
-  const config = configForm;
+  const config = configForm
 
   const {
     storage,
@@ -132,112 +128,108 @@ export async function getCandyMachineV2Config(
     goLiveDate,
     uuid,
     arweaveJwk,
-  } = config;
+  } = config
 
-  let wallet;
-  let parsedPrice = price;
+  let wallet
+  let parsedPrice = price
 
   const splTokenAccountFigured = splTokenAccount
     ? splTokenAccount
     : splToken
     ? (await getAtaForMint(new PublicKey(splToken), walletKeyPair))[0]
-    : null;
+    : null
 
   if (splToken) {
     if (solTreasuryAccount) {
       throw new Error(
         'If spl-token-account or spl-token is set then sol-treasury-account cannot be set'
-      );
+      )
     }
     if (!splToken) {
-      throw new Error(
-        'If spl-token-account is set, spl-token must also be set'
-      );
+      throw new Error('If spl-token-account is set, spl-token must also be set')
     }
-    const splTokenKey = new PublicKey(splToken);
+    const splTokenKey = new PublicKey(splToken)
     const splTokenAccountKey = new PublicKey(
       splTokenAccountFigured as anchor.web3.PublicKey
-    );
+    )
     if (!splTokenAccountFigured) {
-      throw new Error(
-        'If spl-token is set, spl-token-account must also be set'
-      );
+      throw new Error('If spl-token is set, spl-token-account must also be set')
     }
 
-    console.log('anchor program loaded', anchorProgram);
+    console.log('anchor program loaded', anchorProgram)
 
     const mintInfo = await getMint(
       anchorProgram.provider.connection,
       splTokenKey,
       undefined,
       TOKEN_PROGRAM_ID
-    );
+    )
     if (!mintInfo.isInitialized) {
-      throw new Error(`The specified spl-token is not initialized`);
+      throw new Error(`The specified spl-token is not initialized`)
     }
     const tokenAccount = await getAccount(
       anchorProgram.provider.connection,
       splTokenAccountKey,
       undefined,
       TOKEN_PROGRAM_ID
-    );
+    )
     if (!tokenAccount.isInitialized) {
-      throw new Error(`The specified spl-token-account is not initialized`);
+      throw new Error(`The specified spl-token-account is not initialized`)
     }
     if (!tokenAccount.mint.equals(splTokenKey)) {
       throw new Error(
         `The spl-token-account's mint (${tokenAccount.mint.toString()}) does not match specified spl-token ${splTokenKey.toString()}`
-      );
+      )
     }
 
-    wallet = new PublicKey(splTokenAccountKey);
-    parsedPrice = price * 10 ** mintInfo.decimals;
+    wallet = new PublicKey(splTokenAccountKey)
+    parsedPrice = price * 10 ** mintInfo.decimals
     if (
       (whitelistMintSettings && whitelistMintSettings?.discountPrice) ||
       (whitelistMintSettings &&
         whitelistMintSettings?.discountPrice?.toNumber() === 0)
     ) {
-      (whitelistMintSettings.discountPrice as any) *= 10 ** mintInfo.decimals;
+      ;(whitelistMintSettings.discountPrice as any) *= 10 ** mintInfo.decimals
     }
   } else {
-    parsedPrice = price * 10 ** 9;
+    parsedPrice = price * 10 ** 9
     if (
       whitelistMintSettings?.discountPrice ||
       whitelistMintSettings?.discountPrice?.toNumber() === 0
     ) {
-      (whitelistMintSettings.discountPrice as any) *= 10 ** 9;
+      ;(whitelistMintSettings.discountPrice as any) *= 10 ** 9
     }
     wallet = solTreasuryAccount
       ? new PublicKey(solTreasuryAccount)
-      : walletKeyPair;
+      : walletKeyPair
   }
 
   if (whitelistMintSettings) {
-    whitelistMintSettings.mint = new PublicKey(whitelistMintSettings.mint);
+    whitelistMintSettings.mint = new PublicKey(whitelistMintSettings.mint)
     if (
       whitelistMintSettings?.discountPrice ||
       whitelistMintSettings?.discountPrice?.toNumber() === 0
     ) {
       whitelistMintSettings.discountPrice = new anchor.BN(
         whitelistMintSettings.discountPrice
-      );
+      )
     }
   }
 
   if (endSettings) {
     if (endSettings.endSettingType.date) {
-      endSettings.number = new anchor.BN(parseDate(endSettings.value));
+      endSettings.number = new anchor.BN(parseDate(endSettings.value))
     } else if (endSettings.endSettingType.amount) {
-      endSettings.number = new anchor.BN(endSettings.value);
+      endSettings.number = new anchor.BN(endSettings.value)
     }
-    delete endSettings.value;
+    delete endSettings.value
   }
 
   if (hiddenSettings) {
-    const utf8Encode = new TextEncoder();
-    hiddenSettings.hash = utf8Encode.encode(hiddenSettings.hash.toString());
+    const utf8Encode = new TextEncoder()
+    hiddenSettings.hash = utf8Encode.encode(hiddenSettings.hash.toString())
   }
-  console.log('correct config');
+  console.log('correct config')
 
   return {
     storage,
@@ -266,7 +258,7 @@ export async function getCandyMachineV2Config(
     goLiveDate: goLiveDate ? new anchor.BN(parseDate(goLiveDate)) : null,
     uuid,
     arweaveJwk,
-  };
+  }
 }
 
 /**
@@ -288,58 +280,58 @@ export function verifyAssets(
   storage: StorageType,
   number: number
 ): { supportedFiles: File[]; elemCount: number } {
-  let imageFileCount = 0;
-  let animationFileCount = 0;
-  let jsonFileCount = 0;
+  let imageFileCount = 0
+  let animationFileCount = 0
+  let jsonFileCount = 0
 
   /**
    * From the files list, check that the files are valid images and animations or json files.
    */
   const supportedFiles = files.filter((it) => {
     if (supportedImageTypes.some((e) => e === it.type)) {
-      imageFileCount++;
+      imageFileCount++
     } else if (supportedAnimationTypes.some((e) => e === it.type)) {
-      animationFileCount++;
+      animationFileCount++
     } else if (it.type == JSON_EXTENSION) {
-      jsonFileCount++;
+      jsonFileCount++
     } else {
-      console.warn(`WARNING: Skipping unsupported file type ${it}`);
-      return false;
+      console.warn(`WARNING: Skipping unsupported file type ${it}`)
+      return false
     }
 
-    return true;
-  });
+    return true
+  })
 
   if (animationFileCount !== 0 && storage === StorageType.Arweave) {
     throw new Error(
       'The "arweave" storage option is incompatible with animation files. Please try again with another storage option using `--storage <option>`.'
-    );
+    )
   }
 
   if (animationFileCount !== 0 && animationFileCount !== jsonFileCount) {
     throw new Error(
       `number of animation files (${animationFileCount}) is different than the number of json files (${jsonFileCount})`
-    );
+    )
   } else if (imageFileCount !== jsonFileCount) {
     throw new Error(
       `number of img files (${imageFileCount}) is different than the number of json files (${jsonFileCount})`
-    );
+    )
   }
 
-  const elemCount = number ? number : imageFileCount;
+  const elemCount = number ? number : imageFileCount
   if (elemCount < imageFileCount) {
     throw new Error(
       `max number (${elemCount}) cannot be smaller than the number of images in the source folder (${imageFileCount})`
-    );
+    )
   }
 
   if (animationFileCount === 0) {
-    console.info(`Beginning the upload for ${elemCount} (img+json) pairs`);
+    console.info(`Beginning the upload for ${elemCount} (img+json) pairs`)
   } else {
     console.info(
       `Beginning the upload for ${elemCount} (img+animation+json) sets`
-    );
+    )
   }
-  console.log('supportedFiles', supportedFiles);
-  return { supportedFiles, elemCount };
+  console.log('supportedFiles', supportedFiles)
+  return { supportedFiles, elemCount }
 }

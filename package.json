@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pretty": "prettier --write  \"./**/*.{tsx,ts}\""
   },
   "dependencies": {
     "@metaplex/arweave-cost": "^1.0.4",
@@ -36,6 +37,7 @@
     "@types/react-dom": "18.0.3",
     "eslint": "8.14.0",
     "eslint-config-next": "12.1.6",
+    "prettier": "2.6.2",
     "typescript": "4.6.4"
   }
 }

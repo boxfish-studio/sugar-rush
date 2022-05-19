@@ -4,18 +4,20 @@
  * Represented here in its minimal form.
  */
 export type Manifest = {
-  image: string;
-  animation_url: string;
-  name: string;
-  symbol: string;
-  seller_fee_basis_points: number;
+  image: string
+  animation_url: string
+  name: string
+  symbol: string
+  seller_fee_basis_points: number
   properties: {
-    files: Array<{ type: string; uri: string }>;
+    files: Array<{ type: string; uri: string }>
     creators: Array<{
-      address: string;
-      share: number;
-    }>;
-  };
-};
+      address: string
+      share: number
+    }>
+  }
+}
 
-export type Account = string | string[] | undefined;
+export type Account = string | string[] | undefined
+
+export type UnwrapPromise<T> = T extends Promise<infer Return> ? Return : T

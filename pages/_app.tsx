@@ -1,11 +1,11 @@
-import '../styles/globals.css';
-import type { AppProps } from 'next/app';
-import React, { useMemo } from 'react';
+import '../styles/globals.css'
+import type { AppProps } from 'next/app'
+import React, { useMemo } from 'react'
 import {
   ConnectionProvider,
   WalletProvider,
-} from '@solana/wallet-adapter-react';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+} from '@solana/wallet-adapter-react'
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import {
   GlowWalletAdapter,
   PhantomWalletAdapter,
@@ -14,15 +14,15 @@ import {
   SolletExtensionWalletAdapter,
   SolletWalletAdapter,
   TorusWalletAdapter,
-} from '@solana/wallet-adapter-wallets';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { Wallet, Navbar } from 'components/Layout';
-import { clusterApiUrl } from '@solana/web3.js';
-require('@solana/wallet-adapter-react-ui/styles.css');
+} from '@solana/wallet-adapter-wallets'
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
+import { Wallet, Navbar } from 'components/Layout'
+import { clusterApiUrl } from '@solana/web3.js'
+require('@solana/wallet-adapter-react-ui/styles.css')
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const network = WalletAdapterNetwork.Devnet;
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  const network = WalletAdapterNetwork.Devnet
+  const endpoint = useMemo(() => clusterApiUrl(network), [network])
 
   const wallets = useMemo(
     () => [
@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       new SolletExtensionWalletAdapter({ network }),
     ],
     [network]
-  );
+  )
 
   return (
     <ConnectionProvider endpoint={endpoint}>
@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
-  );
+  )
 }
 
-export default MyApp;
+export default MyApp

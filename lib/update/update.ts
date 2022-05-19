@@ -1,6 +1,7 @@
-import { PublicKey } from '@solana/web3.js';
-import { Program } from '@project-serum/anchor';
-import { saveCache } from '../cache';
+import { PublicKey } from '@solana/web3.js'
+import { Program } from '@project-serum/anchor'
+import { saveCache } from '../cache'
+import { Cache } from 'lib/interfaces'
 
 export async function updateV2({
   newSettings,
@@ -11,18 +12,18 @@ export async function updateV2({
   cache,
   newAuthority,
 }: {
-  newSettings: any;
-  candyMachinePubkey: string | string[];
-  publicKey: PublicKey;
-  treasuryWallet: PublicKey;
-  anchorProgram: Program;
-  cache: string;
-  newAuthority: string;
+  newSettings: any
+  candyMachinePubkey: string | string[]
+  publicKey: PublicKey
+  treasuryWallet: PublicKey
+  anchorProgram: Program
+  cache: string
+  newAuthority: string
 }) {
   try {
-    const cacheContent = JSON.parse(cache);
-    const env = cacheContent.env;
-    const cacheName = cacheContent.cacheName;
+    const cacheContent: Cache = JSON.parse(cache)
+    const env = cacheContent.env
+    const cacheName = cacheContent.cacheName
 
     const tx = await anchorProgram.methods
       .updateCandyMachine(newSettings)
@@ -32,11 +33,11 @@ export async function updateV2({
         wallet: treasuryWallet,
       })
       .signers([])
-      .rpc();
+      .rpc()
 
-    cacheContent.startDate = newSettings.goLiveDate;
+    cacheContent.startDate = newSettings.goLiveDate
 
-    console.log('update_candy_machine finished', tx);
+    console.log('update_candy_machine finished', tx)
 
     if (newAuthority) {
       const tx = await anchorProgram.methods
@@ -46,15 +47,15 @@ export async function updateV2({
           authority: publicKey,
           wallet: treasuryWallet,
         })
-        .rpc();
+        .rpc()
 
-      cacheContent.authority = new PublicKey(newAuthority).toBase58();
-      console.log(` - updated authority: ${cacheContent.authority}`);
-      console.log('update_authority finished', tx);
+      cacheContent.authority = new PublicKey(newAuthority).toBase58()
+      console.log(` - updated authority: ${cacheContent.authority}`)
+      console.log('update_authority finished', tx)
     }
 
-    saveCache(cacheName, env, cacheContent);
+    saveCache(cacheName, env, cacheContent)
   } catch (err) {
-    console.error(err);
+    console.error(err)
   }
 }

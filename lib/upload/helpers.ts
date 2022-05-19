@@ -1,25 +1,25 @@
-import * as anchor from '@project-serum/anchor';
+import * as anchor from '@project-serum/anchor'
 import {
   SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
   CONFIG_ARRAY_START_V2,
   CONFIG_LINE_SIZE_V2,
   CANDY_MACHINE_PROGRAM_V2_ID,
-} from '../constants';
+} from '../constants'
 
-import { PublicKey, Keypair, SystemProgram } from '@solana/web3.js';
+import { PublicKey, Keypair, SystemProgram } from '@solana/web3.js'
 
-import { TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { AnchorWallet } from '@solana/wallet-adapter-react';
-import { CandyMachineData } from '../interfaces';
+import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
+import { AnchorWallet } from '@solana/wallet-adapter-react'
+import { CandyMachineData } from '../interfaces'
 
 export function parseDate(date: string) {
   if (date === 'now') {
-    return Date.now() / 1000;
+    return Date.now() / 1000
   }
-  return Date.parse(date) / 1000;
+  return Date.parse(date) / 1000
 }
 export function sleep(milliseconds: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  return new Promise((resolve) => setTimeout(resolve, milliseconds))
 }
 export const getAtaForMint = async (
   mint: anchor.web3.PublicKey,
@@ -28,11 +28,11 @@ export const getAtaForMint = async (
   return await anchor.web3.PublicKey.findProgramAddress(
     [buyer.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
     SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
-  );
-};
+  )
+}
 
 export function uuidFromConfigPubkey(configAccount: PublicKey) {
-  return configAccount.toBase58().slice(0, 6);
+  return configAccount.toBase58().slice(0, 6)
 }
 
 export const createCandyMachineV2 = async function (
@@ -42,27 +42,27 @@ export const createCandyMachineV2 = async function (
   // splToken: PublicKey,
   candyData: CandyMachineData
 ) {
-  const candyAccount = Keypair.generate();
-  candyData.uuid = uuidFromConfigPubkey(candyAccount.publicKey);
+  const candyAccount = Keypair.generate()
+  candyData.uuid = uuidFromConfigPubkey(candyAccount.publicKey)
 
   if (!candyData.symbol) {
-    throw new Error(`Invalid config, there must be a symbol.`);
+    throw new Error(`Invalid config, there must be a symbol.`)
   }
 
   if (!candyData.creators || candyData.creators.length === 0) {
-    throw new Error(`Invalid config, there must be at least one creator.`);
+    throw new Error(`Invalid config, there must be at least one creator.`)
   }
 
   const totalShare = (candyData.creators || []).reduce(
     (acc, curr) => acc + curr.share,
     0
-  );
+  )
 
   if (totalShare !== 100) {
-    throw new Error(`Invalid config, creators shares must add up to 100`);
+    throw new Error(`Invalid config, creators shares must add up to 100`)
   }
 
-  let remainingAccounts: any[] = [];
+  let remainingAccounts: any[] = []
   // if (splToken) {
   //   remainingAccounts.push({
   //     pubkey: splToken,
@@ -95,10 +95,10 @@ export const createCandyMachineV2 = async function (
         ),
       ])
       .rpc(),
-  };
-  console.log('cmCreation', cmCreation);
-  return cmCreation;
-};
+  }
+  console.log('cmCreation', cmCreation)
+  return cmCreation
+}
 
 export async function createCandyMachineV2Account(
   anchorProgram: anchor.Program,
@@ -106,13 +106,13 @@ export async function createCandyMachineV2Account(
   payerWallet: PublicKey,
   candyAccount: PublicKey
 ) {
-  console.log('creating v2 account');
+  console.log('creating v2 account')
   const size =
     CONFIG_ARRAY_START_V2 +
     4 +
     candyData.itemsAvailable.toNumber() * CONFIG_LINE_SIZE_V2 +
     8 +
-    2 * (Math.floor(candyData.itemsAvailable.toNumber() / 8) + 1);
+    2 * (Math.floor(candyData.itemsAvailable.toNumber() / 8) + 1)
 
   const account = anchor.web3.SystemProgram.createAccount({
     fromPubkey: payerWallet,
@@ -123,19 +123,19 @@ export async function createCandyMachineV2Account(
         size
       ),
     programId: CANDY_MACHINE_PROGRAM_V2_ID,
-  });
-  console.log('account created', account);
-  return account;
+  })
+  console.log('account created', account)
+  return account
 }
 
 export const getUnixTs = () => {
-  return new Date().getTime() / 1000;
-};
+  return new Date().getTime() / 1000
+}
 
 export const getFileName = (fileName: string) => {
-  return fileName.split('.')[0];
-};
+  return fileName.split('.')[0]
+}
 
 export const getFileExtension = (fileName: string) => {
-  return fileName.split('.')[1];
-};
+  return fileName.split('.')[1]
+}

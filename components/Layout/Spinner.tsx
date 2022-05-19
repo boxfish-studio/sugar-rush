@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC } from 'react'
 
 const Spinner: FC = () => {
   return (
@@ -18,7 +18,7 @@ const Spinner: FC = () => {
         fill='currentFill'
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export default Spinner;
+export default Spinner

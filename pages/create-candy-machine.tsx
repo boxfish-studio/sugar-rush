@@ -1,7 +1,7 @@
-import type { NextPage } from 'next';
-import Head from 'next/head';
-import Form from 'components/CreateCM/Form';
-import { Title } from 'components/Layout';
+import type { NextPage } from 'next'
+import Head from 'next/head'
+import Form from 'components/CreateCM/Form'
+import { Title } from 'components/Layout'
 const CreateCandyMachine: NextPage = () => {
   return (
     <>
@@ -15,7 +15,7 @@ const CreateCandyMachine: NextPage = () => {
       </div>
       <Form />
     </>
-  );
-};
+  )
+}
 
-export default CreateCandyMachine;
+export default CreateCandyMachine
