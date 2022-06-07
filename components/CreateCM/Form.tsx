@@ -309,10 +309,11 @@ const Form: FC<{
   }
   return (
     <form
-      className='flex flex-col items-center h-auto justify-center mt-8'
+      className='flex flex-col items-center h-auto justify-center mt-4'
+
       onSubmit={onSubmit}
     >
-      <div className='flex flex-col p-4 xxl-shadow rounded-2xl scale-90 bg-gray-200 min-w-max items-center justify-center'>
+      <div className='create-form flex flex-col p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>
         <FormInput
           id='price'
           text='Price of each NFT (SOL)'
@@ -399,8 +400,8 @@ const Form: FC<{
         )}
         {!updateCandyMachine && (
           <>
-            <label htmlFor='storage'>Storage</label>
-            <input list='storage' name='storage' className='w-[40rem]' />
+            <label htmlFor='storage' className="my-3 font-medium">Storage</label>
+            <input list='storage' name='storage' className='w-full p-2' />
             <datalist id='storage' defaultValue='Arweave'>
               {Object.keys(StorageType)
                 .filter((key) => key === 'Arweave')
@@ -408,25 +409,25 @@ const Form: FC<{
                   <option key={key} value={key} />
                 ))}
             </datalist>
-
-            <label htmlFor='files'>Files</label>
-
-            <input type='file' name='files' multiple onChange={uploadAssets} />
+            <label htmlFor='file-upload' className="my-8 px-4 py-2 rounded-xl bg-slate-200 font-medium border border-gray-500 inline-block cursor-pointer">Upload Files</label>
+            <input id="file-upload" type='file' name='files' multiple onChange={uploadAssets} className='w-full p-2 hidden' />
           </>
         )}
         {updateCandyMachine && (
           <>
-            <label htmlFor='cache'>Cache file</label>
+            <label htmlFor='cache' className="my-3 font-medium">Cache file</label>
 
             <input type='file' name='cache' onChange={uploadCache} />
           </>
         )}
 
         {updateCandyMachine && !isInteractingWithCM && (
+
           <ActionButton text='Update Candy Machine' type='submit' />
         )}
         {!updateCandyMachine && !isInteractingWithCM && (
           <ActionButton text='Create Candy Machine' type='submit' />
+
         )}
 
         {updateCandyMachine && isInteractingWithCM && (
@@ -474,9 +475,9 @@ const FormInput: FC<Input> = ({
 }) => {
   return (
     <>
-      <label htmlFor={id}>{text}</label>
+      <label htmlFor={id} className="my-3 font-medium">{text}</label>
       <input
-        className='w-[40rem]'
+        className='w-full p-2'
         id={id}
         type={type}
         step='any'
