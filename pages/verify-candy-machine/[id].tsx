@@ -54,13 +54,13 @@ const VerifyCandyMachine: NextPage = () => {
             />
           )}
           {!error && message && (
-            <div className='border border-cyan-500 mx-36 mt-10 p-5 rounded-xl text-black'>
+            <div className='text-[hsl(258,52%,56%)] text-center mt-6'>
               {message}
             </div>
           )}
 
           {!isLoading && error && (
-            <div className='border border-red-500 mx-36 mt-10 p-5 rounded-xl'>
+            <div className='text-red-500 text-center mt-6'>
               {error}
             </div>
           )}
