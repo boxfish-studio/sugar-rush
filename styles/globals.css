@@ -18,3 +18,21 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.container {
+  padding:8rem 2rem 0 2rem;
+}
+
+.create-form{
+  min-width: 380px;
+}
+@media screen and (min-width: 600px) {
+  .create-form {
+    min-width: 500px;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .create-form {
+    min-width: 700px;
+  }
+}
