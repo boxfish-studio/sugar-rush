@@ -36,7 +36,7 @@ const SideBarElement = ({
   <Link href={href}>
     <div
       className={`relative flex items-center justify-center w-24 h-8 mx-auto mt-4 text-white
-      transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-indigo-500
+      transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-[hsl(258,52%,65%)]
        rounded-xl group ${className}`}
     >
       {text}

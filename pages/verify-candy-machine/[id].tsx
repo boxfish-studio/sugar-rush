@@ -20,12 +20,14 @@ const VerifyCandyMachine: NextPage = () => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       {connected ? (
-        <div className='container flex justify-center items-center flex-col'>
+        <div className='container flex justify-center items-center flex-col text-center'>
           <Title text='Verify Candy Machine' />
-          <span className='mt-8'>
-            {account}{' '}
+          <div className='mt-8 flex flex-col text-center'>
+            <span className='break-all border border-slate-300 shadow-xl py-2 px-4 rounded-lg text-center'>
+              {account}{' '}
+            </span>
             <a
-              className='text-blue-700'
+              className='text-[hsl(258,52%,56%)] mt-4'
               href={`https://solscan.io/account/${account}${connection.rpcEndpoint.includes('devnet')
                 ? '?cluster=devnet'
                 : ''
@@ -35,11 +37,10 @@ const VerifyCandyMachine: NextPage = () => {
             >
               View in Solscan
             </a>
-          </span>
-          <div className='mt-7 flex flex-col justify-center items-center gap-3'>
-            <label htmlFor='cache'>Cache file</label>
-
-            <input type='file' name='cache' onChange={uploadCache} />
+          </div>
+          <div className='flex flex-col justify-center items-center gap-3'>
+            <label htmlFor='cache' className="my-8 px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-100 transition-all duration-300 ease-linear font-medium border border-gray-500 inline-block cursor-pointer">Upload Cache file</label>
+            <input id="cache" type='file' name='cache' onChange={uploadCache} className='w-full p-2 hidden' />
           </div>
 
           {isLoading && (

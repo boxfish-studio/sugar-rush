@@ -11,10 +11,10 @@ const ActionButton: FC<{
 }> = ({ text, isLoading = false, type = 'button', onClick }) => {
   return (
     <button
-      className={`inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md mt-2
-                    text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 ${
-                      isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
-                    }`}
+      className={`flex items-center justify-center px-4 py-2 mx-auto mt-4 text-white
+      transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-[hsl(258,52%,65%)]
+       rounded-xl group  ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
+        }`}
       disabled={isLoading}
       onClick={onClick}
       type={type}

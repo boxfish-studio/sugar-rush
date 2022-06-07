@@ -409,15 +409,15 @@ const Form: FC<{
                   <option key={key} value={key} />
                 ))}
             </datalist>
-            <label htmlFor='file-upload' className="my-8 px-4 py-2 rounded-xl bg-slate-200 font-medium border border-gray-500 inline-block cursor-pointer">Upload Files</label>
-            <input id="file-upload" type='file' name='files' multiple onChange={uploadAssets} className='w-full p-2 hidden' />
+            <label htmlFor='file' className="my-8 px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-100 transition-all duration-300 ease-linear font-medium border border-gray-500 inline-block cursor-pointer">Upload Files</label>
+            <input id="file" type='file' name='files' multiple onChange={uploadAssets} className='w-full p-2 hidden' />
           </>
         )}
         {updateCandyMachine && (
           <>
-            <label htmlFor='cache' className="my-3 font-medium">Cache file</label>
+            <label htmlFor='cache' className="my-8 px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-100 transition-all duration-300 ease-linear font-medium border border-gray-500 inline-block cursor-pointer">Upload Cache file</label>
+            <input id="cache" type='file' name='cache' onChange={uploadCache} className='w-full p-2 hidden' />
 
-            <input type='file' name='cache' onChange={uploadCache} />
           </>
         )}
 

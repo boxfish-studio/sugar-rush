@@ -38,12 +38,12 @@ const CandyMachineCard: FC<{
             <span className='break-all'>{account}</span>
             <div className=' flex justify-around w-full flex-wrap'>
               <Link href={`/list-candy-machines/${account}`}>
-                <a className=' mt-4 md:mt-8 text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 p-1 rounded-xl px-6'>
+                <a className='mt-4 md:mt-8 px-4 py-2 text-white transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-[hsl(258,52%,65%)] rounded-xl'>
                   Inspect
                 </a>
               </Link>
               <button
-                className='text-white mt-4 md:mt-8 bg-red-500 hover:bg-red-400 transition ease-in-out duration-150 p-1 rounded-xl px-4'
+                className='text-white mt-4 md:mt-8 bg-red-500 hover:bg-red-400 px-4 py-2 transition-all duration-300 ease-linear shadow-lg cursor-pointer rounded-xl'
                 onClick={() => {
                   setSelectedAccount(account)
                   setIsOpen(true)
@@ -52,7 +52,7 @@ const CandyMachineCard: FC<{
                 Delete
               </button>
               <Link href={`/verify-candy-machine/${account}`}>
-                <a className='mt-4 md:mt-8 text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 p-1 rounded-xl px-4'>
+                <a className='mt-4 md:mt-8 px-4 py-2 text-white transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-[hsl(258,52%,65%)] rounded-xl'>
                   Verify
                 </a>
               </Link>
