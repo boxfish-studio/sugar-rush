@@ -1,8 +1,17 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Form from 'components/CreateCM/Form'
-import { Title } from 'components/Layout'
+import { Title, CheckConnectedWallet } from 'components/Layout'
+import { useWallet } from '@solana/wallet-adapter-react'
+
 const CreateCandyMachine: NextPage = () => {
+
+  const { publicKey } = useWallet()
+
+  if (!publicKey) {
+    return <CheckConnectedWallet />
+  }
+
   return (
     <>
       <Head>

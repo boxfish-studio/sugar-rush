@@ -1,9 +1,13 @@
-import { Title } from 'components/Layout'
+import { CheckConnectedWallet, Title } from 'components/Layout'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useWallet } from '@solana/wallet-adapter-react'
 const Home: NextPage = () => {
   const { publicKey } = useWallet()
+
+  if (!publicKey) {
+    return <CheckConnectedWallet />
+  }
 
   return (
     <>
@@ -15,7 +19,6 @@ const Home: NextPage = () => {
       <div className='flex justify-center items-center flex-col'>
         <>
           <Title text='Welcome ' />
-          {publicKey?.toBase58()}
         </>
       </div>
     </>
