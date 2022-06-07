@@ -29,7 +29,7 @@ const CandyMachineCard: FC<{
         account={selectedAccount}
         callback={removeAccount}
       />
-      <div className={`grid lg:grid-cols-${searchResults.length < 2 ? '1' : '2'} gap-7 mt-6 md:mt-8 grid-flow-row grid-cols-1`}>
+      <div className='grid grid-cols-1 gap-7 mt-6 md:mt-8'>
         {searchResults.map((account) => (
           <div
             key={account}

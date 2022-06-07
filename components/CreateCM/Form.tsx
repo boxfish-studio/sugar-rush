@@ -437,8 +437,7 @@ const Form: FC<{
           <>
             <ActionButton text='Creating Candy Machine...' isLoading />
             <span
-              className='w-[30rem] font-bold
-            text-red-500 my-3'
+              className='text-red-500 text-center mt-6 w-full md:w-1/2 my-3'
             >
               IMPORTANT! Make sure to save the Cache file that will be
               downloaded at the end! Without it, you will not be able to update
