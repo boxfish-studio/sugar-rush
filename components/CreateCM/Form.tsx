@@ -447,7 +447,7 @@ const Form: FC<{
           </>
         )}
         {!isInteractingWithCM && status && (
-          <span className='font-bold text-xl my-4 w-[30rem] '>{status}</span>
+          <span className='font-medium text-xl mt-6 mb-4'>{status}</span>
         )}
       </div>
     </form>
