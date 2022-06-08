@@ -37,7 +37,7 @@ const CandyMachineCard: FC<{
           >
             {account}
 
-            <Link href={`/list-candy-machines/${account}`}>
+            <Link href={`/${account}`}>
               <a className='text-white absolute left-6 bottom-2 bg-slate-800 p-1 rounded-xl px-6'>
                 Inspect
               </a>
