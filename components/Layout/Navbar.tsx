@@ -8,11 +8,10 @@ const Navbar: FC = () => {
 
   return (
     <div className={`${isDisable ? "pointer-events-none opacity-50" : ""} fixed top-0 left-0 z-10 flex flex-col w-28 h-screen m-0 text-white shadow-lg bg-slate-400`}>
-      <SideBarElement tooltip='Home' href='/' text='Home' />
       <SideBarElement
-        tooltip='List of Candy Machines'
-        href='/list-candy-machines'
-        text='List CMs'
+        tooltip='Manage Candy Machines'
+        href='/'
+        text='Manage CMs'
       />
       <SideBarElement
         tooltip='Create Candy Machine'
@@ -34,7 +33,7 @@ const SideBarElement = ({
 }) => (
   <Link href={href}>
     <div
-      className='relative flex items-center justify-center w-24 h-12 mx-auto mt-4 text-white 
+      className='relative flex items-center justify-center w-28 h-12 mx-auto mt-4 text-white 
       transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-indigo-500
        rounded-xl hover:rounded-xl hover:scale-105 group'
     >
