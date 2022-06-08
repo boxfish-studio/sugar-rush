@@ -1,0 +1,49 @@
+name: CM Dashboard Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "static/**"
+      - "package.json"
+
+concurrency:
+  group: ui
+
+jobs:
+  vercel:
+    runs-on: ubuntu-latest
+
+    # env:
+    #   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+    #   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    #   VERCEL_PROJECT_NAME: ${{ secrets.VERCEL_PROJECT_NAME }}
+    #   VERCEL_DOMAIN: ${{ secrets.DOMAIN }}
+
+    # - name: Use Node.js 16.x
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: '16.x'
+      #     registry-url: https://registry.npmjs.org/
+      # - run: npm ci
+      # - run: npm run build
+      # - name: Deploy
+        # run: |
+        #   npx vercel --token ${{ secrets.VERCEL_TOKEN }} --scope ${{ secrets.VERCEL_SCOPE }} --force -m githubCommitSha=${{ github.sha }}
+        #   VERCEL_DEPLOYMENT_URL=$(npx vercel ls --token ${{ secrets.VERCEL_TOKEN }} --scope ${{ secrets.VERCEL_SCOPE }} -m githubCommitSha=${{ github.sha }} | grep $VERCEL_PROJECT_NAME | awk {'print $2'})
+        #   npx vercel alias --token ${{ secrets.VERCEL_TOKEN }} --scope ${{ secrets.VERCEL_SCOPE }} $VERCEL_DEPLOYMENT_URL $VERCEL_DOMAIN
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          yarn
+          yarn run build
+      - name: deploy site to vercel      
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.ORG_ID}}
+          vercel-project-id: ${{ secrets.PROJECT_ID}}
+          alias-domains: ${{ secrets.DOMAIN }}
