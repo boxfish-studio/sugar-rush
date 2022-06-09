@@ -13,7 +13,7 @@ const Navbar: FC = () => {
   }, []);
 
   return (
-    <div className={`fixed top-0 left-0 z-10 flex flex-row md:flex-col items-end w-screen md:w-32 transition-all ease-linear ${offset > 0 ? 'h-16' : 'h-24'} md:h-screen m-0 text-white shadow-lg bg-slate-300`}>
+    <div className={`fixed top-0 left-0 z-10 flex flex-row md:flex-col items-end w-screen md:w-32 transition-all ease-linear ${offset > 50 ? 'h-16' : 'h-24'} md:h-screen m-0 text-white shadow-lg bg-slate-300`}>
       <SideBarElement tooltip='Home' href='/' text='Home' className="mb-4 md:mb-0" />
       <SideBarElement
         tooltip='List of Candy Machines'
