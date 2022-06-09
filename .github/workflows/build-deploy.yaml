@@ -3,7 +3,7 @@ name: CM Dashboard Build and Deploy
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   vercel:
