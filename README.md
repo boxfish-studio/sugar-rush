@@ -16,19 +16,42 @@
 
 ## About
 
-Candy machine dashboard is a tool where you can create and manage a candy machine in solana
+Candy machine dashboard is a tool where you can create and manage candy machine in solana
 
 ## Using the program
 
-Can use the program in: https://cm.boxfish.studio
+Can use the program in https://cm.boxfish.studio
 
+Connect your wallet
 
+### Create a Candy Machine
+
+- Fill the form
+- Upload 1 asset file and 1 json file for each NFT
+- The 0.json file must always exist
+- Click "Create Candy Machine" button and sign all transactions
+- Save the cache file
+
+### Manage Candy Machine
+
+- Have some candy machine created
+- To update -> Click "Inspect" button
+-- Fill in the form with the new changes
+-- Upload the cache file saved when this candy machine was created 
+-- Click "Create Candy Machine" button and sign all transactions
+-- Save the new cache file
+- To delete -> Click "Delete" button
+-- Click "Yes" button and sign all transactions
+- To verify -> Click "Verify" button
+-- Upload the cache file saved when this candy machine was created 
+-- Click "Verify Candy Machine" button and sign all transactions
+-- Save the new cache file
 ## Installation
 
 Clone the repo, and run the development server:
 
 ```bash
-yarn dev
+yarn dev 
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result and connect your wallet.
