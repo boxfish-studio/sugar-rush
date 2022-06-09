@@ -37,7 +37,7 @@ const CandyMachineCard: FC<{
           >
             <span className='break-all'>{account}</span>
             <div className=' flex justify-around w-full flex-wrap'>
-              <Link href={`/list-candy-machines/${account}`}>
+              <Link href={`/${account}`}>
                 <a className='mt-4 md:mt-8 px-4 py-2 text-white transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-[hsl(258,52%,65%)] rounded-xl'>
                   Inspect
                 </a>

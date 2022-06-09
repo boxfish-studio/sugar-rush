@@ -1,31 +1,20 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC } from 'react'
 
 import Link from 'next/link'
 
 const Navbar: FC = () => {
-  // const [offset, setOffset] = useState(0);
-
-  // useEffect(() => {
-  //   const onScroll = () => setOffset(window.pageYOffset);
-  //   window.removeEventListener('scroll', onScroll);
-  //   window.addEventListener('scroll', onScroll, { passive: true });
-  //   return () => window.removeEventListener('scroll', onScroll);
-  // }, []);
 
   return (
     <div className={`fixed top-0 left-0 z-10 flex flex-row md:flex-col items-end w-screen md:w-32 transition-all ease-linear h-24 md:h-screen m-0 text-white shadow-lg bg-slate-300`}>
-      <SideBarElement tooltip='Home' href='/' text='Home' className="mb-4 md:mb-0" />
       <SideBarElement
-        tooltip='List of Candy Machines'
-        href='/list-candy-machines'
-        text='List CMs'
-        className="mb-4 md:mb-0"
+        tooltip='Manage Candy Machines'
+        href='/'
+        text='Manage CMs'
       />
       <SideBarElement
         tooltip='Create Candy Machine'
         href='/create-candy-machine'
         text='Create CM'
-        className="mb-4 md:mb-0"
       />
     </div>
   )
@@ -35,18 +24,16 @@ const SideBarElement = ({
   text,
   tooltip,
   href,
-  className
 }: {
   text: string
   tooltip: string
   href: string
-  className?: string
 }) => (
   <Link href={href}>
     <div
-      className={`relative flex items-center justify-center w-24 h-8 mx-auto mt-4 text-white
+      className='relative flex items-center justify-center w-24 h-8 mx-auto mt-4 text-white
       transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-[hsl(258,52%,65%)]
-       rounded-xl group ${className}`}
+       rounded-xl group mb-4 md:mb-0'
     >
       {text}
       <span

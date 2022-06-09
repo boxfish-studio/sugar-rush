@@ -38,6 +38,7 @@ const Form: FC<{
   const { cache, uploadCache } = useUploadCache()
   const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
   const [status, setStatus] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const initialState = {
     price: fetchedValues?.price
@@ -68,14 +69,34 @@ const Form: FC<{
   function isFormValid(): boolean {
     // TODO add more conditions
     // TODO add custom message to show error message
-    if (files.length === 0) return false
-    if (files.length % 2 != 0) return false
-    if (values['number-of-nfts'] * 2 != files.length) return false
-    if (!values['date-mint'] || !values['time-mint']) return false
-    if (values.price == 0 || isNaN(values.price)) return false
-    if (values['number-of-nfts'] == 0 || isNaN(values['number-of-nfts']))
-      return false
 
+    if (files.length === 0) {
+      setErrorMessage('There are no files to upload')
+      return false
+    }
+    if (files.length % 2 != 0) {
+      setErrorMessage('You have to upload 2 files per NFT')
+      return false
+    }
+    if (values['number-of-nfts'] * 2 != files.length) {
+      setErrorMessage('Does not match the number of nfts')
+      return false
+    }
+    let isZeroJsonFile: boolean = files.filter(e => e.name === '0.json').length === 0 ? false : true
+    if (!isZeroJsonFile) {
+      setErrorMessage('The 0.json file must exist in Files')
+      return false
+    }
+    if (values.price == 0 || isNaN(values.price)) {
+      setErrorMessage('The Price of each NFT cannot be 0')
+      return false
+    }
+    if (values['number-of-nfts'] == 0 || isNaN(values['number-of-nfts'])) {
+      setErrorMessage('The Number of NFTs cannot be 0')
+      return false
+    }
+
+    setErrorMessage('')
     return true
   }
   async function createCandyMachineV2() {
@@ -324,6 +345,7 @@ const Form: FC<{
               ? new BN(fetchedValues.price).toNumber() / LAMPORTS_PER_SOL
               : undefined
           }
+          required
         />
         {!updateCandyMachine && (
           <FormInput
@@ -336,6 +358,7 @@ const Form: FC<{
                 ? new BN(fetchedValues.itemsAvailable).toNumber()
                 : undefined
             }
+            required
           />
         )}
         {updateCandyMachine && (
@@ -377,6 +400,7 @@ const Form: FC<{
               ? parseDateFromDateBN(fetchedValues?.goLiveDate)
               : getCurrentDate()
           }
+          required
         />
         <FormInput
           id='time-mint'
@@ -388,6 +412,7 @@ const Form: FC<{
               ? parseTimeFromDateBN(fetchedValues?.goLiveDate)
               : getCurrentTime()
           }
+          required
         />
         {updateCandyMachine && (
           // No default value since it is dangerous to transfer the authority of the CM to another account.
@@ -401,7 +426,7 @@ const Form: FC<{
         {!updateCandyMachine && (
           <>
             <label htmlFor='storage' className="my-3 font-medium">Storage</label>
-            <input list='storage' name='storage' className='w-full p-2' />
+            <input list='storage' name='storage' className='w-full p-2' required />
             <datalist id='storage' defaultValue='Arweave'>
               {Object.keys(StorageType)
                 .filter((key) => key === 'Arweave')
@@ -410,15 +435,21 @@ const Form: FC<{
                 ))}
             </datalist>
             <label htmlFor='file' className="my-8 px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-100 transition-all duration-300 ease-linear font-medium border border-gray-500 inline-block cursor-pointer">Upload Files</label>
-            <input id="file" type='file' name='files' multiple onChange={uploadAssets} className='w-full p-2 hidden' />
+            <input id="file" type='file' name='files' multiple onChange={uploadAssets} className='w-full p-2 hidden' required />
           </>
         )}
         {updateCandyMachine && (
           <>
             <label htmlFor='cache' className="my-8 px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-100 transition-all duration-300 ease-linear font-medium border border-gray-500 inline-block cursor-pointer">Upload Cache file</label>
-            <input id="cache" type='file' name='cache' onChange={uploadCache} className='w-full p-2 hidden' />
+            <input id="cache" type='file' name='cache' onChange={uploadCache} className='w-full p-2 hidden' required />
 
           </>
+        )}
+
+        {errorMessage.length > 0 && (
+          <span className='text-red-500 border border-red-500 mt-3 p-3 rounded-xl'>
+            {errorMessage}
+          </span>
         )}
 
         {updateCandyMachine && !isInteractingWithCM && (
@@ -459,6 +490,7 @@ interface Input {
   type: string
   defaultValue?: string | number
   defaultChecked?: boolean
+  required?: boolean
   value?: string | number
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
@@ -470,6 +502,7 @@ const FormInput: FC<Input> = ({
   defaultValue,
   defaultChecked,
   value,
+  required,
   onChange,
 }) => {
   return (
@@ -484,6 +517,7 @@ const FormInput: FC<Input> = ({
         defaultValue={defaultValue}
         defaultChecked={defaultChecked}
         value={value}
+        required={required}
         onChange={onChange}
       />
     </>
