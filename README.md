@@ -1,23 +1,15 @@
-
-# CANDY MACHINE DASHBOARD
-## from Boxfish.Studio
-
-
+<h1 align="center">
+  CANDY MACHINE DASHBOARD
+</h1>
+<h2 align="center">from Boxfish.Studio</h2>
 
 <p align="center">
-
-<a href="#About">About</a> ◈
-
-<a href="#using-the-program">Using the program</a> ◈
-
-<a href="#installation">Installation</a> ◈
-
-<a href="#community-contributions">Community contributions</a> ◈
-
-<a href="#acknowledgments">Acknowledgments</a> ◈
-
-<a href="#authors">Authors</a>
-
+    <a href="#About">About</a> ◈
+    <a href="#using-the-program">Using the program</a> ◈
+    <a href="#installation">Installation</a> ◈
+    <a href="#community-contributions">Community contributions</a> ◈
+    <a href="#acknowledgments">Acknowledgments</a> ◈
+    <a href="#authors">Authors</a>
 </p>
 
 ---
