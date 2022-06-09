@@ -20,18 +20,18 @@ Candy machine dashboard is a tool where you can create and manage a candy machin
 
 ## Using the program
 
-You can use the program in: https://cm.boxfish.studio
+Can use the program in: https://cm.boxfish.studio
+
 
 ## Installation
 
 Clone the repo, and run the development server:
 
 ```bash
-yarn
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result and connect your wallet.
 
 ## Community contributions
 Pull requests are more than welcome!
