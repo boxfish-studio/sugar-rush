@@ -52,6 +52,7 @@ const ManageCandyMachines: NextPage = () => {
     }
   }
 
+  
   useEffect(() => {
     setError(false)
     setIsLoading(true)
