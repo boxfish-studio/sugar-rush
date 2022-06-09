@@ -3,7 +3,7 @@ import { FC } from 'react'
 
 const Wallet: FC = () => {
   return (
-    <div className='absolute right-0 scale-75 flex flex-row gap-3 z-10'>
+    <div className='fixed right-0 scale-75 flex flex-row gap-3 z-10'>
       <WalletMultiButton />
     </div>
   )
