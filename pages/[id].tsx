@@ -5,11 +5,14 @@ import { Program, AnchorProvider, BN } from '@project-serum/anchor'
 import { PublicKey, Connection } from '@solana/web3.js'
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
 import { Spinner, Title } from 'components/Layout'
-import { FetchedCandyMachineConfig } from 'lib/interfaces'
+import { FetchedCandyMachineConfig, Nft } from 'lib/interfaces'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants'
 import Form from 'components/CreateCM/Form'
 import Head from 'next/head'
 import { Account } from 'lib/types'
+import { useUploadCache } from 'hooks'
+import { ActionButton } from 'components/Layout'
+
 
 const CandyMachine: NextPage = () => {
   const router = useRouter()
@@ -20,8 +23,21 @@ const CandyMachine: NextPage = () => {
   const [candyMachineConfig, setCandyMachineConfig] =
     useState<FetchedCandyMachineConfig>()
   const [error, setError] = useState('')
+  const [nfts, setNfts] = useState<Nft[]>([])
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const { cache, uploadCache } = useUploadCache()
+
+  async function viewNFTs() {
+    let cacheData = await cache.text();
+    let cacheDataJson = JSON.parse(cacheData);
+    if (cacheDataJson?.program?.candyMachine === account) {
+      setNfts(Object.values(cacheDataJson.items));    
+    } else {
+      alert("This cache file is not from this candy machine")
+    }
+  }
 
   async function fetchCandyMachine({
     account,
@@ -103,9 +119,24 @@ const CandyMachine: NextPage = () => {
         {!error && candyMachineConfig?.uuid && (
           <>
             <span className='mt-5'>
-              There are {new BN(candyMachineConfig.itemsAvailable).toNumber()}{' '}
+              There are {new BN(candyMachineConfig.itemsAvailable).toNumber() - new BN(candyMachineConfig.itemsRedeemed).toNumber()}{' '}
               unminted NFT.
             </span>
+            {new BN(candyMachineConfig.itemsAvailable).toNumber() - new BN(candyMachineConfig.itemsRedeemed).toNumber() !== 0 && 
+              <>
+                <br />
+                Upload cache file to show nfts
+                <input type='file' name='cache' onChange={uploadCache} />
+                {cache && <ActionButton text='Show NFTs' onClick={viewNFTs} />}
+              </>
+            }
+            {nfts.length !== 0 &&
+            <section className='flex flex-row items-center h-auto justify-center mt-8 gap-x-5'>
+              {nfts.map((nft, i) => (
+                <img key={i} src={nft?.imageLink} alt={nft?.name} width='200' height='200'></img>
+                ))}
+            </section>
+            }
             <span className='mt-5'>
               {new BN(candyMachineConfig.itemsRedeemed).toNumber()} redeemed
               NFT.

@@ -118,16 +118,18 @@ export interface Cache {
   }
   items: Record<
     NumberToString<number | string>,
-    {
-      link: string
-      imageLink: string
-      name: string
-      onChain: boolean
-      verifyRun?: boolean
-    }
+    Nft
   >
 
   startDate: BN | null
   env: string
   cacheName: string
+}
+
+export interface Nft {
+  link: string
+  imageLink: string
+  name: string
+  onChain: boolean
+  verifyRun?: boolean
 }
