@@ -44,6 +44,10 @@ export const WRAPPED_SOL_MINT = new PublicKey(
   'So11111111111111111111111111111111111111112'
 )
 
+export const CIVIC = new PublicKey(
+  'gatem74V238djXdzWnJf94Wo1DcnuGkfijbf3AuBhfs',
+);
+
 export const ARWEAVE_UPLOAD_ENDPOINT =
   'https://us-central1-metaplex-studios.cloudfunctions.net/uploadFile'
 

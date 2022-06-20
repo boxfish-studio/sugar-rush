@@ -1,5 +1,5 @@
 import { PublicKey } from '@solana/web3.js'
-import { BN } from '@project-serum/anchor'
+import { BN, web3, Program } from '@project-serum/anchor'
 import { StorageType } from './enums'
 
 export interface WhitelistMintMode {
@@ -130,4 +130,47 @@ export interface Cache {
   startDate: BN | null
   env: string
   cacheName: string
+}
+
+export type SetupState = {
+  mint: web3.Keypair;
+  userTokenAccount: web3.PublicKey;
+  transaction: string;
+};
+
+export interface CandyMachineAccount {
+  id: web3.PublicKey;
+  program: Program;
+  state: CandyMachineState;
+}
+
+interface CandyMachineState {
+  authority: web3.PublicKey;
+  itemsAvailable: number;
+  itemsRedeemed: number;
+  itemsRemaining: number;
+  treasury: web3.PublicKey;
+  tokenMint: null | web3.PublicKey;
+  isSoldOut: boolean;
+  isActive: boolean;
+  isPresale: boolean;
+  isWhitelistOnly: boolean;
+  goLiveDate: BN;
+  price: BN;
+  gatekeeper: null | {
+    expireOnUse: boolean;
+    gatekeeperNetwork: web3.PublicKey;
+  };
+  endSettings: null | {
+    number: BN;
+    endSettingType: any;
+  };
+  whitelistMintSettings: whitelistMintSettings
+  hiddenSettings: hiddenSettings
+  retainAuthority: boolean;
+}
+
+export interface CollectionData {
+  mint: web3.PublicKey;
+  candyMachine: web3.PublicKey;
 }

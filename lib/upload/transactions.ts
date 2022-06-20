@@ -9,6 +9,7 @@ import {
   Transaction,
   TransactionInstruction,
   TransactionSignature,
+  Keypair
 } from '@solana/web3.js'
 import { getUnixTs, sleep } from './helpers'
 import { DEFAULT_TIMEOUT } from '../constants'
@@ -36,6 +37,8 @@ export const sendTransactionWithRetryWithKeypair = async (
     block || (await connection.getLatestBlockhash(commitment))
   ).blockhash
 
+  console.log(wallet.publicKey);
+  
   transaction.feePayer = wallet.publicKey
   console.log('await signTransaction')
 
@@ -66,8 +69,14 @@ export async function sendSignedTransaction({
   successMessage?: string
   timeout?: number
 }): Promise<{ txid: string; slot: number }> {
+  console.log("--------------------");
+  console.log("signedTransaction", signedTransaction);
+  
   const rawTransaction = signedTransaction.serialize()
+  console.log("rawTransaction",rawTransaction);
+  
   const startTime = getUnixTs()
+  console.log("startTime",startTime);
   let slot = 0
 
   let txid: TransactionSignature = await connection.sendRawTransaction(
@@ -166,7 +175,7 @@ async function simulateTransaction(
   return res.result
 }
 
-async function awaitTransactionSignatureConfirmation(
+export async function awaitTransactionSignatureConfirmation(
   txid: TransactionSignature,
   timeout: number,
   connection: Connection,
@@ -254,3 +263,116 @@ async function awaitTransactionSignatureConfirmation(
   console.log('Returning status', status)
   return status
 }
+
+export enum SequenceType {
+  Sequential,
+  Parallel,
+  StopOnFailure,
+}
+
+export const sendTransactions = async (
+  connection: Connection,
+  wallet: any,
+  instructionSet: TransactionInstruction[][],
+  signersSet: Keypair[][],
+  sequenceType: SequenceType = SequenceType.Parallel,
+  commitment: Commitment = 'singleGossip',
+  successCallback: (txid: string, ind: number) => void = (txid, ind) => {},
+  failCallback: (reason: string, ind: number) => boolean = (txid, ind) => false,
+  block?: BlockhashAndFeeCalculator,
+  beforeTransactions: Transaction[] = [],
+  afterTransactions: Transaction[] = [],
+): Promise<{ number: number; txs: { txid: string; slot: number }[] }> => {
+  if (!wallet.publicKey) throw new Error("Wallet not connected");
+
+  const unsignedTxns: Transaction[] = beforeTransactions;
+
+  if (!block) {
+    block = await connection.getRecentBlockhash(commitment);
+  }
+
+  for (let i = 0; i < instructionSet.length; i++) {
+    const instructions = instructionSet[i];
+    const signers = signersSet[i];
+
+    if (instructions.length === 0) {
+      continue;
+    }
+
+    let transaction = new Transaction();
+    instructions.forEach(instruction => transaction.add(instruction));
+    transaction.recentBlockhash = block.blockhash;
+    transaction.setSigners(
+      // fee payed by the wallet owner
+      wallet.publicKey,
+      ...signers.map(s => s.publicKey),
+    );
+
+    if (signers.length > 0) {
+      transaction.partialSign(...signers);
+    }
+
+    unsignedTxns.push(transaction);
+  }
+  unsignedTxns.push(...afterTransactions);
+
+  const partiallySignedTransactions = unsignedTxns.filter(t =>
+    t.signatures.find(sig => sig.publicKey.equals(wallet.publicKey)),
+  );
+  const fullySignedTransactions = unsignedTxns.filter(
+    t => !t.signatures.find(sig => sig.publicKey.equals(wallet.publicKey)),
+  );
+  let signedTxns = await wallet.signAllTransactions(
+    partiallySignedTransactions,
+  );
+  signedTxns = fullySignedTransactions.concat(signedTxns);
+  const pendingTxns: Promise<{ txid: string; slot: number }>[] = [];
+
+  console.log(
+    'Signed txns length',
+    signedTxns.length,
+    'vs handed in length',
+    instructionSet.length,
+  );
+  for (let i = 0; i < signedTxns.length; i++) {
+    console.log("connection", connection);
+    console.log("signedTxns[i]", signedTxns[i]);
+    
+    const signedTxnPromise = sendSignedTransaction({
+      connection,
+      signedTransaction: signedTxns[i],
+    });
+
+    console.log("signedTxnPromise", signedTxnPromise);
+    
+
+    if (sequenceType !== SequenceType.Parallel) {
+      try {
+        await signedTxnPromise.then(({ txid, slot }) =>
+          successCallback(txid, i),
+        );
+        pendingTxns.push(signedTxnPromise);
+      } catch (e) {
+        console.log('Failed at txn index:', i);
+        console.log('Caught failure:', e);
+
+        failCallback(signedTxns[i], i);
+        if (sequenceType === SequenceType.StopOnFailure) {
+          return {
+            number: i,
+            txs: await Promise.all(pendingTxns),
+          };
+        }
+      }
+    } else {
+      pendingTxns.push(signedTxnPromise);
+    }
+  }
+
+  if (sequenceType !== SequenceType.Parallel) {
+    const result = await Promise.all(pendingTxns);
+    return { number: signedTxns.length, txs: result };
+  }
+
+  return { number: signedTxns.length, txs: await Promise.all(pendingTxns) };
+};

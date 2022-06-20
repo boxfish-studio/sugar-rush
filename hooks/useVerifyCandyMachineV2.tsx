@@ -16,6 +16,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [canMint, setCanMint] = useState(false)
 
   async function verifyCandyMachine({ account }: { account: Account }) {
     if (!cache) {
@@ -124,6 +125,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
             }) is smaller than the uploaded one (${lineCount.toNumber()})`
           )
         } else {
+          setCanMint(true)
           setMessage('All assets are verified. Ready to deploy!')
         }
         saveCache(cacheName, env, cacheContent)
@@ -143,6 +145,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
     verifyCandyMachine,
     message,
     connection,
+    canMint
   }
 }
 

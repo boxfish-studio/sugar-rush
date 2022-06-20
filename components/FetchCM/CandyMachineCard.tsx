@@ -53,7 +53,7 @@ const CandyMachineCard: FC<{
             </button>
             <Link href={`/verify-candy-machine/${account}`}>
               <a className='text-white absolute right-6 bottom-2 bg-slate-800 p-1 rounded-xl px-4'>
-                Verify
+                Verify & mint
               </a>
             </Link>
           </div>

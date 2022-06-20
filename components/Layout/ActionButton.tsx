@@ -11,7 +11,7 @@ const ActionButton: FC<{
 }> = ({ text, isLoading = false, type = 'button', onClick }) => {
   return (
     <button
-      className={`inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md mt-2
+      className={`inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md mt-2 mx-2
                     text-white bg-indigo-500 hover:bg-indigo-400 transition ease-in-out duration-150 ${
                       isLoading ? 'cursor-not-allowed' : 'cursor-pointer'
                     }`}

@@ -2,16 +2,24 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Title, CheckConnectedWallet, ActionButton } from 'components/Layout'
 import Head from 'next/head'
-import { useUploadCache, useVerifyCandyMachineV2 } from 'hooks'
+import { useUploadCache, useVerifyCandyMachineV2, useMintCandyMachine } from 'hooks'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { useEffect, useState } from 'react'
 
 const VerifyCandyMachine: NextPage = () => {
   const router = useRouter()
   const account = router.query.id
   const { cache, uploadCache } = useUploadCache()
   const { connected } = useWallet()
-  const { error, isLoading, verifyCandyMachine, message, connection } =
-    useVerifyCandyMachineV2(cache)
+  const { error, isLoading, verifyCandyMachine, message, connection, canMint } =
+  useVerifyCandyMachineV2(cache)
+  const { isUserMinting, itemsRemaining, nftPrice, isActive, mintAccount, refreshCandyMachineState } = useMintCandyMachine(account as string);
+
+
+  useEffect(() => {
+    refreshCandyMachineState();
+  }, [canMint])
+
   return (
     <>
       <Head>
@@ -64,6 +72,22 @@ const VerifyCandyMachine: NextPage = () => {
               {error}
             </div>
           )}
+
+          {/* TODO: remove ! */}
+          {!canMint && (
+            <div className='border border-gray-500 mt-10 p-5 rounded-xl grid grid-cols-3 justify-items-center gap-5'>
+              <span>Remaining: {itemsRemaining}</span>
+              <span>Price: {nftPrice}</span>
+              <span>Live: {isActive ? "Yes" : "No"}</span> 
+              <span className='col-span-3'>
+                <ActionButton text='Mint 1 token' isLoading={isUserMinting} onClick={() => mintAccount()} />
+              </span>
+
+            <span>{message}</span>
+              
+            </div>
+          )}
+          
         </div>
       ) : (
         <CheckConnectedWallet />
