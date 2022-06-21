@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Title, CheckConnectedWallet, ActionButton, Spinner } from 'components/Layout'
+import { Title, CheckConnectedWallet, Carousel, Spinner } from 'components/Layout'
 import Head from 'next/head'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
@@ -97,7 +97,7 @@ const { connection } = useConnection()
         <link rel='icon' href='/favicon.ico' />
       </Head>
       {connected ? (
-        <div className='flex justify-center items-center flex-col'>
+        <div className='flex justify-center items-center flex-col text-center'>
           <Title text='View Candy Machine Tokens' />
           <span className='mt-8'>
             {account}{' '}
@@ -115,17 +115,7 @@ const { connection } = useConnection()
             </a>
           </span>
           {isLoading  && <Spinner />}
-          {message.length !== 0 ? <span className='mt-8'>{message}</span> :
-           (
-            <section className='flex flex-row items-center h-auto justify-center mt-8 gap-x-5'>
-              {tokens.length !== 0 && tokens.map((token, index) => (
-                <div className='flex flex-col items-center mt-8' key={index}>
-                  <span>{token.name}</span>
-                  <img src={token.imageLink} alt={token.name} width='200' height='200'></img>
-                </div>
-              ))}
-             </section>
-           )}
+          {message.length !== 0 ? <span className='mt-8'>{message}</span> : <Carousel token={tokens} />}
         </div>
       ) : (
         <CheckConnectedWallet />

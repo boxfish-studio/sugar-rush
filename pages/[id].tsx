@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Program, AnchorProvider, BN } from '@project-serum/anchor'
 import { PublicKey, Connection } from '@solana/web3.js'
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
-import { Spinner, Title } from 'components/Layout'
+import { Carousel, Spinner, Title } from 'components/Layout'
 import { FetchedCandyMachineConfig, Token } from 'lib/interfaces'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants'
 import Form from 'components/CreateCM/Form'
@@ -128,16 +128,10 @@ const CandyMachine: NextPage = () => {
                             >
                                 Upload Cache file to view NFTs
                             </label>
-                            <input type='file' id='cache' name='cache' className='w-full p-2 hidden' onChange={viewTokens} />
+                            <input type='file' id='cache' name='cache' className='w-full px-2 hidden' onChange={viewTokens} />
                           </>
                         }
-                        {tokens.length !== 0 &&
-                        <section className='flex flex-row items-center h-auto justify-center mt-8 gap-x-5'>
-                          {tokens.map((token, i) => (
-                            <img key={i} src={token?.imageLink} alt={token?.name} width='200' height='200'></img>
-                            ))}
-                        </section>
-                        }
+                        { tokens.length !== 0 && <Carousel token={tokens}/> }
                         <Form fetchedValues={candyMachineConfig} updateCandyMachine candyMachinePubkey={account} />
                     </div>
                 )}
