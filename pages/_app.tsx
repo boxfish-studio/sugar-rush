@@ -42,9 +42,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Navbar />
         <WalletModalProvider>
           <Wallet />
-          <div style={{ marginLeft: '10rem' }}>
-            <Component {...pageProps} />
-          </div>
+          <Component {...pageProps} />
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
