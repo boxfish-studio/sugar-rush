@@ -133,3 +133,8 @@ export interface Nft {
   onChain: boolean
   verifyRun?: boolean
 }
+
+export interface Token {
+  name: string
+  image: string
+}
