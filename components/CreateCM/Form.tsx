@@ -69,7 +69,7 @@ const Form: FC<{
   function isFormValid(): boolean {
     // TODO add more conditions
     // TODO add custom message to show error message
-    
+
     if (files.length === 0) {
       setErrorMessage('There are no files to upload')
       return false
@@ -330,10 +330,11 @@ const Form: FC<{
   }
   return (
     <form
-      className='flex flex-col items-center h-auto justify-center mt-8'
+      className='flex flex-col items-center h-auto justify-center mt-4'
+
       onSubmit={onSubmit}
     >
-      <div className='flex flex-col p-4 xxl-shadow rounded-2xl scale-90 bg-gray-200 min-w-max items-center justify-center'>
+      <div className='create-form flex flex-col p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>
         <FormInput
           id='price'
           text='Price of each NFT (SOL)'
@@ -424,8 +425,8 @@ const Form: FC<{
         )}
         {!updateCandyMachine && (
           <>
-            <label htmlFor='storage'>Storage</label>
-            <input list='storage' name='storage' className='w-[40rem]' required />
+            <label htmlFor='storage' className="my-3 font-medium">Storage</label>
+            <input list='storage' name='storage' className='w-full p-2' required />
             <datalist id='storage' defaultValue='Arweave'>
               {Object.keys(StorageType)
                 .filter((key) => key === 'Arweave')
@@ -433,17 +434,15 @@ const Form: FC<{
                   <option key={key} value={key} />
                 ))}
             </datalist>
-
-            <label htmlFor='files'>Files</label>
-
-            <input type='file' name='files' multiple onChange={uploadAssets} required />
+            <label htmlFor='file' className="my-8 px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-100 transition-all duration-300 ease-linear font-medium border border-gray-500 inline-block cursor-pointer">Upload Files</label>
+            <input id="file" type='file' name='files' multiple onChange={uploadAssets} className='w-full p-2 hidden' required />
           </>
         )}
         {updateCandyMachine && (
           <>
-            <label htmlFor='cache'>Cache file</label>
+            <label htmlFor='cache' className="my-8 px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-100 transition-all duration-300 ease-linear font-medium border border-gray-500 inline-block cursor-pointer">Upload Cache file</label>
+            <input id="cache" type='file' name='cache' onChange={uploadCache} className='w-full p-2 hidden' required />
 
-            <input type='file' name='cache' onChange={uploadCache} required />
           </>
         )}
 
@@ -454,10 +453,12 @@ const Form: FC<{
         )}
 
         {updateCandyMachine && !isInteractingWithCM && (
+
           <ActionButton text='Update Candy Machine' type='submit' />
         )}
         {!updateCandyMachine && !isInteractingWithCM && (
           <ActionButton text='Create Candy Machine' type='submit' />
+
         )}
 
         {updateCandyMachine && isInteractingWithCM && (
@@ -467,8 +468,7 @@ const Form: FC<{
           <>
             <ActionButton text='Creating Candy Machine...' isLoading />
             <span
-              className='w-[30rem] font-bold
-            text-red-500 my-3'
+              className='text-red-500 text-center mt-6 w-full md:w-1/2 my-3'
             >
               IMPORTANT! Make sure to save the Cache file that will be
               downloaded at the end! Without it, you will not be able to update
@@ -477,7 +477,7 @@ const Form: FC<{
           </>
         )}
         {!isInteractingWithCM && status && (
-          <span className='font-bold text-xl my-4 w-[30rem] '>{status}</span>
+          <span className='font-medium text-xl mt-6 mb-4'>{status}</span>
         )}
       </div>
     </form>
@@ -507,9 +507,9 @@ const FormInput: FC<Input> = ({
 }) => {
   return (
     <>
-      <label htmlFor={id}>{text}</label>
+      <label htmlFor={id} className="my-3 font-medium">{text}</label>
       <input
-        className='w-[40rem]'
+        className='w-full p-2'
         id={id}
         type={type}
         step='any'
