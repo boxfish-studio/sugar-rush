@@ -52,8 +52,9 @@ const Modal: FC<{
                         <span className={`flex flex-col ${styles.text}`}>
                             <a
                                 className='text-blue-700 hover:underline my-3'
-                                href={`https://solscan.io/account/${account}${connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                                    }`}
+                                href={`https://solscan.io/account/${account}${
+                                    connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
+                                }`}
                                 target='_blank'
                                 rel='noopener noreferrer'
                             >
@@ -72,8 +73,9 @@ const Modal: FC<{
                                             Successfully closed account - Reedemed {tx.balanceChange.toFixed(4)} SOL
                                             <a
                                                 className='text-blue-700 hover:underline my-3'
-                                                href={`https://solscan.io/tx/${tx.txid}${connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                                                    }`}
+                                                href={`https://solscan.io/tx/${tx.txid}${
+                                                    connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
+                                                }`}
                                                 target='_blank'
                                                 rel='noopener noreferrer'
                                             >

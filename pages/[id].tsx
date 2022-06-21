@@ -104,7 +104,11 @@ const CandyMachine: NextPage = () => {
                         <span className='mt-2'>
                             {new BN(candyMachineConfig.itemsRedeemed).toNumber()} redeemed NFT.
                         </span>
-                        <UpdateCreateCandyMachineForm fetchedValues={candyMachineConfig} updateCandyMachine candyMachinePubkey={account} />
+                        <UpdateCreateCandyMachineForm
+                            fetchedValues={candyMachineConfig}
+                            updateCandyMachine
+                            candyMachinePubkey={account}
+                        />
                     </div>
                 )}
             </div>
