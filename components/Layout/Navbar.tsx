@@ -1,11 +1,12 @@
-import React, { FC } from 'react'
-
+import { FC } from 'react'
+import { useWallet } from '@solana/wallet-adapter-react'
 import Link from 'next/link'
 
 const Navbar: FC = () => {
+  const { publicKey } = useWallet()
 
   return (
-    <div className={`fixed top-0 left-0 z-10 flex flex-row md:flex-col items-end w-screen md:w-32 transition-all ease-linear h-24 md:h-screen m-0 text-white shadow-lg bg-slate-300`}>
+    <div className={`${!publicKey ? "pointer-events-none opacity-50" : ""} fixed top-0 left-0 z-10 flex flex-row md:flex-col items-end w-screen md:w-32 transition-all ease-linear h-24 md:h-screen m-0 text-white shadow-lg bg-slate-300`}>
       <SideBarElement
         tooltip='Manage Candy Machines'
         href='/'

@@ -18,7 +18,6 @@ import {
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import { Wallet, Navbar } from 'components/Layout'
 import { clusterApiUrl } from '@solana/web3.js'
-require('@solana/wallet-adapter-react-ui/styles.css')
 
 function MyApp({ Component, pageProps }: AppProps) {
   const network = WalletAdapterNetwork.Devnet

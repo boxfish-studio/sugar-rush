@@ -66,7 +66,7 @@ const ManageCandyMachines: NextPage = () => {
   if (!connected) {
     return <CheckConnectedWallet />
   }
-
+  
   return (
     <div className='relative'>
       <Head>
