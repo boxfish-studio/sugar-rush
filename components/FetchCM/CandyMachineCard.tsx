@@ -33,17 +33,17 @@ const CandyMachineCard: FC<{
         {searchResults.map((account) => (
           <div
             key={account}
-            className='bg-slate-300 items-center justify-center  p-2 h-28 flex flex-col relative rounded-xl shadow-xl w-[28rem]'
+            className='bg-slate-300 items-center justify-center p-2 h-28 flex flex-col relative rounded-xl shadow-xl w-[28rem]'
           >
             {account}
 
             <Link href={`/${account}`}>
-              <a className='text-white absolute left-6 bottom-2 bg-slate-800 p-1 rounded-xl px-6'>
+              <a className='text-white absolute left-4 bottom-2 bg-slate-800 p-1 rounded-xl px-6'>
                 Inspect
               </a>
             </Link>
             <button
-              className='text-white absolute left-48 bottom-2 bg-red-500 p-1 rounded-xl px-4'
+              className='text-white absolute left-36 bottom-2 bg-red-500 p-1 rounded-xl px-4'
               onClick={() => {
                 setSelectedAccount(account)
                 setIsOpen(true)
@@ -52,8 +52,13 @@ const CandyMachineCard: FC<{
               Delete
             </button>
             <Link href={`/verify-candy-machine/${account}`}>
-              <a className='text-white absolute right-6 bottom-2 bg-slate-800 p-1 rounded-xl px-4'>
+              <a className='text-white absolute right-28 bottom-2 bg-slate-800 p-1 rounded-xl px-4'>
                 Verify
+              </a>
+            </Link>
+            <Link href={`/view-candy-machine/${account}`}>
+              <a className='text-white absolute right-4 bottom-2 bg-slate-800 p-1 rounded-xl px-4'>
+                View
               </a>
             </Link>
           </div>

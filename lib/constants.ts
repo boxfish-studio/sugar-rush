@@ -98,6 +98,10 @@ export const CONFIG_ARRAY_START_V2 =
   32 +
   1 // gatekeeper
 
+export const MAX_DATA_SIZE = 4 + MAX_NAME_LENGTH + 4 + MAX_SYMBOL_LENGTH + 4 + MAX_URI_LENGTH + 2 + 1 + 4 + MAX_CREATOR_LIMIT * MAX_CREATOR_LEN;
+export const MAX_METADATA_LEN = 1 + 32 + 32 + MAX_DATA_SIZE + 1 + 1 + 9 + 172;
+export const CREATOR_ARRAY_START = 1 + 32 + 32 + 4 + MAX_NAME_LENGTH + 4 + MAX_URI_LENGTH + 4 + MAX_SYMBOL_LENGTH + 2 + 1 + 4;
+
 export const CONFIG_LINE_SIZE_V2 = 4 + 32 + 4 + 200
 export const CONFIG_LINE_SIZE = 4 + 32 + 4 + 200
 

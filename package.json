@@ -21,6 +21,7 @@
     "@supercharge/promise-pool": "^2.1.0",
     "add": "^2.0.6",
     "autoprefixer": "^10.4.7",
+    "bs58": "^5.0.0",
     "js-file-download": "^0.4.12",
     "mime": "^3.0.0",
     "next": "12.1.6",
