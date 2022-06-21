@@ -35,7 +35,7 @@ const Navbar: FC = () => {
                 text-white shadow-lg bg-slate-300
             '
         >
-            <div className='w-full flex flex-col space-x-4 md:space-x-0 md:space-y-4'>
+            <div className='w-full flex flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-4'>
                 {NAVBAR_ELEMENTS.map((element) => {
                     return <NavbarElement disabled={!publicKey} key={element.url} {...element} />
                 })}
@@ -49,7 +49,7 @@ const NavbarElement = ({ title, url, tooltip, disabled }: INavbarElement) => (
         <div
             style={{ pointerEvents: disabled ? 'none' : 'auto', opacity: disabled ? '50%' : '' }}
             className='
-            group w-full
+            group w-auto md:w-full
             relative text-center text-white cursor-pointer px-2 py-3 
             flex items-center justify-center 
             transition-all duration-300 ease-linear
@@ -60,7 +60,7 @@ const NavbarElement = ({ title, url, tooltip, disabled }: INavbarElement) => (
             <span
                 style={{ left: 'calc(100% + 8px)' }}
                 className='
-                    absolute w-full 
+                    absolute w-auto md:w-full 
                     p-2 m-2 
                     text-xs font-bold text-red 
                     transition-all duration-300
