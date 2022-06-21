@@ -1,5 +1,5 @@
 import fileDownloader from 'js-file-download'
-import { Cache } from './interfaces'
+import { ICache } from 'lib/cache'
 
 // export function cachePath(
 //   env: string,
@@ -29,8 +29,8 @@ import { Cache } from './interfaces'
 //   return JSON.parse(fs.readFileSync(path).toString());
 // }
 
-export function saveCache(cacheName: string, env: string, cacheContent: Cache) {
-  cacheContent.env = env
-  cacheContent.cacheName = cacheName
-  fileDownloader(JSON.stringify(cacheContent), cacheName)
+export function saveCache(cacheName: string, env: string, cacheContent: ICache) {
+    cacheContent.env = env
+    cacheContent.cacheName = cacheName
+    fileDownloader(JSON.stringify(cacheContent), cacheName)
 }
