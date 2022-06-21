@@ -67,7 +67,7 @@ const ManageCandyMachines: NextPage = () => {
   if (!connected) {
     return <CheckConnectedWallet />
   }
-
+  
   return (
     <>
       <Head>
