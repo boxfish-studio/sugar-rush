@@ -30,7 +30,7 @@ import { Cache } from './interfaces'
 // }
 
 export function saveCache(cacheName: string, env: string, cacheContent: Cache) {
-  cacheContent.env = env
-  cacheContent.cacheName = cacheName
-  fileDownloader(JSON.stringify(cacheContent), cacheName)
+    cacheContent.env = env
+    cacheContent.cacheName = cacheName
+    fileDownloader(JSON.stringify(cacheContent), cacheName)
 }
