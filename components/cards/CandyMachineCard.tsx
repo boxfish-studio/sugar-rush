@@ -1,8 +1,7 @@
-import { FC, useState } from 'react'
+import { Modal } from 'components'
+import { useRemoveCandyMachineAccount, useSearchBar } from 'hooks'
 import Link from 'next/link'
-import { useSearchBar, useRemoveCandyMachineAccount } from 'hooks'
-
-import { Modal } from 'components/Layout'
+import { FC, useState } from 'react'
 
 const CandyMachineCard: FC<{
     accounts: string[]

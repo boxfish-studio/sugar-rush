@@ -1,5 +1,5 @@
+import { Title } from 'components'
 import { FC } from 'react'
-import { Title } from 'components/Layout'
 
 const CheckConnectedWallet: FC = () => {
     return (
