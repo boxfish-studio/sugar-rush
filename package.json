@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pretty": "prettier --write  \"./**/*.{tsx,ts}\""
+    "format": "prettier --write  \"./**/*.{tsx,ts,css}\""
   },
   "dependencies": {
     "@metaplex/arweave-cost": "^1.0.4",

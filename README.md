@@ -1,34 +1,71 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">
+  CANDY MACHINE DASHBOARD
+</h1>
+<h2 align="center">from Boxfish.Studio</h2>
 
-## Getting Started
+<p align="center">
+    <a href="#About">About</a> ◈
+    <a href="#using-the-program">Using the program</a> ◈
+    <a href="#installation">Installation</a> ◈
+    <a href="#community-contributions">Community contributions</a> ◈
+    <a href="#acknowledgments">Acknowledgments</a> ◈
+    <a href="#authors">Authors</a>
+</p>
 
-First, run the development server:
+---
+
+## About
+
+Candy machine dashboard is a tool where you can create and manage candy machine in solana
+
+## Using the program
+
+Can use the program in https://cm.boxfish.studio
+
+Connect your wallet
+
+### Create a Candy Machine
+
+- Fill the form
+- Upload 1 asset file and 1 json file for each NFT
+- The 0.json file must always exist
+- Click "Create Candy Machine" button and sign all transactions
+- Save the cache file
+
+### Manage Candy Machine
+
+- Have some candy machine created
+- To update -> Click "Inspect" button
+-- Fill in the form with the new changes
+-- Upload the cache file saved when this candy machine was created 
+-- Click "Create Candy Machine" button and sign all transactions
+-- Save the new cache file
+- To delete -> Click "Delete" button
+-- Click "Yes" button and sign all transactions
+- To verify -> Click "Verify" button
+-- Upload the cache file saved when this candy machine was created 
+-- Click "Verify Candy Machine" button and sign all transactions
+-- Save the new cache file
+## Installation
+
+Clone the repo, and run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
+yarn dev 
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result and connect your wallet.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Community contributions
+Pull requests are more than welcome!
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Acknowledgments
+The code of course would not be possible without the amazing work of the Metaplex team and the contributors to their [codebase](https://github.com/metaplex-foundation/metaplex/).
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Authors
 
-## Learn More
+[Boxfish Studio].
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+[Boxfish Studio]: http://boxfish.studio
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
