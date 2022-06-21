@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Title, CheckConnectedWallet, ActionButton } from 'components/Layout'
+import { Title, CheckConnectedWallet, ActionButton, Spinner } from 'components/Layout'
 import Head from 'next/head'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
@@ -75,7 +75,7 @@ const { connection } = useConnection()
         let arweaveData = await fetchArweave.json()
         let tokenData = {
           name: arweaveData.name,
-          image: arweaveData.image,
+          imageLink: arweaveData.image,
         }
         result.push(tokenData)
       }
@@ -114,14 +114,14 @@ const { connection } = useConnection()
               View in Solscan
             </a>
           </span>
-          {isLoading && <span className='mt-8'>Loading...</span>}
+          {isLoading  && <Spinner />}
           {message.length !== 0 ? <span className='mt-8'>{message}</span> :
            (
             <section className='flex flex-row items-center h-auto justify-center mt-8 gap-x-5'>
               {tokens.length !== 0 && tokens.map((token, index) => (
                 <div className='flex flex-col items-center mt-8' key={index}>
                   <span>{token.name}</span>
-                  <img src={token.image} alt={token.name} width='200' height='200'></img>
+                  <img src={token.imageLink} alt={token.name} width='200' height='200'></img>
                 </div>
               ))}
              </section>
