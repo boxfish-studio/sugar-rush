@@ -52,7 +52,7 @@ const CandyMachineCard: FC<{
                                 </a>
                             </Link>
                             <Link href={`/view-candy-machine/${account}`}>
-                              <a className='text-white absolute right-4 bottom-2 bg-slate-800 p-1 rounded-xl px-4'>
+                              <a className='mt-4 md:mt-8 px-4 py-2 text-white transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-[hsl(258,52%,65%)] rounded-xl'>
                                 View
                               </a>
                             </Link>
