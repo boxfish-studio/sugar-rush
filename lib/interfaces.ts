@@ -114,7 +114,7 @@ export interface Cache {
     }
     items: Record<
         NumberToString<number | string>,
-        Nft
+        Token
     >
 
     startDate: BN | null
@@ -122,15 +122,10 @@ export interface Cache {
     cacheName: string
 }
 
-export interface Nft {
-  link: string
-  imageLink: string
-  name: string
-  onChain: boolean
-  verifyRun?: boolean
-}
-
 export interface Token {
   name: string
-  image: string
+  imageLink: string
+  link?: string
+  onChain?: boolean
+  verifyRun?: boolean
 }
