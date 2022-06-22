@@ -3,11 +3,10 @@
   <img src="doc/img/boxfish-logo-small.png" title="Boxfish Studio" width="50">
 </p>
 </a>
-<br />
 <h1 align="center">
   Sugar Rush
 </h1>
-<h2 align="center">A Solana Candymachine managing dashboard. By Boxfish Studio</h2>
+<h3 align="center">A Solana Candymachine managing dashboard. By Boxfish Studio</h3>
 
 <p align="center">
     <a href="#About">About</a> ◈
