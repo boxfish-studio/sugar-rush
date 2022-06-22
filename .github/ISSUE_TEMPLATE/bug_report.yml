@@ -1,3 +1,9 @@
+---
+name: Found a bug?
+description: Please use this form to report a bug
+title: '[Bug report]: '
+labels: 'bug report'
+
 body:
     - type: markdown
       attributes:
