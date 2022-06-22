@@ -1,4 +1,5 @@
-import { PublicKey, clusterApiUrl } from '@solana/web3.js'
+import { clusterApiUrl, PublicKey } from '@solana/web3.js'
+
 export const CANDY_MACHINE = 'candy_machine'
 export const AUCTION_HOUSE = 'auction_house'
 export const TOKEN_ENTANGLER = 'token_entangler'
@@ -128,3 +129,8 @@ export const supportedAnimationTypes = [
     'text/html',
 ]
 export const JSON_EXTENSION = 'application/json'
+
+export const GATEKEEPER = {
+    gatekeeperNetwork: 'ignREusXmGrscGNUesoU9mxfds9AiYTezUKex2PsZV6',
+    expireOnUse: true,
+} as const

@@ -1,44 +1,10 @@
 import * as anchor from '@project-serum/anchor'
-import { CANDY_MACHINE_PROGRAM_V2_ID, supportedImageTypes, supportedAnimationTypes, JSON_EXTENSION } from '../constants'
-
+import { getAccount, getMint, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
-import { getMint, TOKEN_PROGRAM_ID, getAccount } from '@solana/spl-token'
+import { CANDY_MACHINE_PROGRAM_V2_ID, JSON_EXTENSION, supportedAnimationTypes, supportedImageTypes } from 'lib/constants'
+import { StorageType } from 'lib/enums'
+import { ICandyMachineConfig } from 'lib/interfaces'
 import { getAtaForMint, parseDate } from './helpers'
-import { WhitelistMintMode, CandyMachineConfig } from '../interfaces'
-import { StorageType } from '../enums'
-
-export interface CandyMachineData {
-    itemsAvailable: anchor.BN
-    uuid: null | string
-    symbol: string
-    sellerFeeBasisPoints: number
-    isMutable: boolean
-    maxSupply: anchor.BN
-    price: anchor.BN
-    retainAuthority: boolean
-    gatekeeper: null | {
-        expireOnUse: boolean
-        gatekeeperNetwork: PublicKey
-    }
-    goLiveDate: null | anchor.BN
-    endSettings: null | [number, anchor.BN]
-    whitelistMintSettings: null | {
-        mode: WhitelistMintMode
-        mint: anchor.web3.PublicKey
-        presale: boolean
-        discountPrice: null | anchor.BN
-    }
-    hiddenSettings: null | {
-        name: string
-        uri: string
-        hash: Uint8Array
-    }
-    creators: {
-        address: PublicKey
-        verified: boolean
-        share: number
-    }[]
-}
 
 export async function loadCandyProgramV2(provider: anchor.Provider, customRpcUrl?: string) {
     if (customRpcUrl) console.log('USING CUSTOM URL', customRpcUrl)
@@ -51,7 +17,7 @@ export async function loadCandyProgramV2(provider: anchor.Provider, customRpcUrl
 
 export async function getCandyMachineV2Config(
     walletKeyPair: PublicKey,
-    configForm: CandyMachineConfig,
+    configForm: ICandyMachineConfig,
     anchorProgram: anchor.Program<anchor.Idl>
 ): Promise<{
     storage: StorageType
@@ -125,8 +91,8 @@ export async function getCandyMachineV2Config(
     const splTokenAccountFigured = splTokenAccount
         ? splTokenAccount
         : splToken
-        ? (await getAtaForMint(new PublicKey(splToken), walletKeyPair))[0]
-        : null
+            ? (await getAtaForMint(new PublicKey(splToken), walletKeyPair))[0]
+            : null
 
     if (splToken) {
         if (solTreasuryAccount) {
@@ -168,12 +134,12 @@ export async function getCandyMachineV2Config(
             (whitelistMintSettings && whitelistMintSettings?.discountPrice) ||
             (whitelistMintSettings && whitelistMintSettings?.discountPrice?.toNumber() === 0)
         ) {
-            ;(whitelistMintSettings.discountPrice as any) *= 10 ** mintInfo.decimals
+            ; (whitelistMintSettings.discountPrice as any) *= 10 ** mintInfo.decimals
         }
     } else {
         parsedPrice = price * 10 ** 9
         if (whitelistMintSettings?.discountPrice || whitelistMintSettings?.discountPrice?.toNumber() === 0) {
-            ;(whitelistMintSettings.discountPrice as any) *= 10 ** 9
+            ; (whitelistMintSettings.discountPrice as any) *= 10 ** 9
         }
         wallet = solTreasuryAccount ? new PublicKey(solTreasuryAccount) : walletKeyPair
     }
@@ -217,9 +183,9 @@ export async function getCandyMachineV2Config(
         splToken: splToken ? new PublicKey(splToken) : null,
         gatekeeper: gatekeeper
             ? {
-                  gatekeeperNetwork: new PublicKey(gatekeeper.gatekeeperNetwork),
-                  expireOnUse: gatekeeper.expireOnUse,
-              }
+                gatekeeperNetwork: new PublicKey(gatekeeper.gatekeeperNetwork),
+                expireOnUse: gatekeeper.expireOnUse,
+            }
             : null,
         endSettings,
         hiddenSettings,

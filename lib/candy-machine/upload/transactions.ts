@@ -1,3 +1,4 @@
+import { AnchorWallet } from '@solana/wallet-adapter-react'
 import {
     Blockhash,
     Commitment,
@@ -8,11 +9,10 @@ import {
     SimulatedTransactionResponse,
     Transaction,
     TransactionInstruction,
-    TransactionSignature,
+    TransactionSignature
 } from '@solana/web3.js'
+import { DEFAULT_TIMEOUT } from 'lib/constants'
 import { getUnixTs, sleep } from './helpers'
-import { DEFAULT_TIMEOUT } from '../constants'
-import { AnchorWallet } from '@solana/wallet-adapter-react'
 
 interface BlockhashAndFeeCalculator {
     blockhash: Blockhash
@@ -75,14 +75,14 @@ export async function sendSignedTransaction({
     console.log('Started awaiting confirmation for', txid)
 
     let done = false
-    ;(async () => {
-        while (!done && getUnixTs() - startTime < timeout) {
-            connection.sendRawTransaction(rawTransaction, {
-                skipPreflight: true,
-            })
-            await sleep(500)
-        }
-    })()
+        ; (async () => {
+            while (!done && getUnixTs() - startTime < timeout) {
+                connection.sendRawTransaction(rawTransaction, {
+                    skipPreflight: true,
+                })
+                await sleep(500)
+            }
+        })()
 
     try {
         const confirmation = await awaitTransactionSignatureConfirmation(txid, timeout, connection, 'confirmed', true)
@@ -198,7 +198,7 @@ async function awaitTransactionSignatureConfirmation(
         }
         while (!done && queryStatus) {
             // eslint-disable-next-line no-loop-func
-            ;(async () => {
+            ; (async () => {
                 try {
                     const signatureStatuses = await connection.getSignatureStatuses([txid])
                     status = signatureStatuses && signatureStatuses.value[0]

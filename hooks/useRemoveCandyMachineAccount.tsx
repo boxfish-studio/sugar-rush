@@ -1,9 +1,9 @@
-import { useAnchorWallet, AnchorWallet } from '@solana/wallet-adapter-react'
 import { AnchorProvider, Program } from '@project-serum/anchor'
+import { AnchorWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
+import { LAMPORTS_PER_SOL, PublicKey, TransactionInstruction } from '@solana/web3.js'
 import { useRPC } from 'hooks'
-import { loadCandyProgramV2 } from 'lib/upload/config'
-import { PublicKey, TransactionInstruction, LAMPORTS_PER_SOL } from '@solana/web3.js'
-import { sendTransactionWithRetryWithKeypair } from 'lib/upload/transactions'
+import { loadCandyProgramV2 } from 'lib/candy-machine/upload/config'
+import { sendTransactionWithRetryWithKeypair } from 'lib/candy-machine/upload/transactions'
 import { UnwrapPromise } from 'lib/types'
 
 type Transaction = UnwrapPromise<ReturnType<typeof sendTransactionWithRetryWithKeypair>>

@@ -1,14 +1,11 @@
+import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
-import { useState } from 'react'
-import { Account } from 'lib/types'
 import { PublicKey } from '@solana/web3.js'
-import { Program, AnchorProvider, BN } from '@project-serum/anchor'
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants'
-import { shardArray, getTextFromUTF8Array } from 'lib/verify/helpers'
-import { saveCache } from 'lib/cache'
-
-import { CONFIG_ARRAY_START_V2, CONFIG_LINE_SIZE_V2 } from 'lib/constants'
-import { Cache } from 'lib/interfaces'
+import { ICache, saveCache } from 'lib/cache'
+import { CANDY_MACHINE_PROGRAM_V2_ID, CONFIG_ARRAY_START_V2, CONFIG_LINE_SIZE_V2 } from 'lib/constants'
+import { Account } from 'lib/types'
+import { getTextFromUTF8Array, shardArray } from 'lib/utils'
+import { useState } from 'react'
 
 const useVerifyCandyMachineV2 = (cache: File) => {
     const { connection } = useConnection()
@@ -23,7 +20,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
             return
         }
         if (account && anchorWallet && cache) {
-            const cacheContent: Cache = JSON.parse(await cache.text())
+            const cacheContent: ICache = JSON.parse(await cache.text())
             const cacheName = cacheContent.cacheName
             const env = cacheContent.env
             setMessage('')
@@ -68,7 +65,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
                             const cacheItem = cacheContent.items[key]
 
                             if (name !== cacheItem.name || uri !== cacheItem.link) {
-                                ;(errorMessage =
+                                ; (errorMessage =
                                     `Name (${name}) or uri (${uri}) didnt match cache values of (${cacheItem.name})` +
                                     `and (${cacheItem.link}). marking to rerun for image ${key}`),
                                     (cacheItem.onChain = false)
@@ -93,8 +90,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
 
                 if (candyMachineObject.data.itemsAvailable > lineCount.toNumber()) {
                     throw new Error(
-                        `predefined number of NFTs (${
-                            candyMachineObject.data.itemsAvailable
+                        `predefined number of NFTs (${candyMachineObject.data.itemsAvailable
                         }) is smaller than the uploaded one (${lineCount.toNumber()})`
                     )
                 } else {

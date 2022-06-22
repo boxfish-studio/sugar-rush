@@ -27,9 +27,8 @@ const VerifyCandyMachine: NextPage = () => {
                         </span>
                         <a
                             className='text-[hsl(258,52%,56%)] mt-4'
-                            href={`https://solscan.io/account/${account}${
-                                connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                            }`}
+                            href={`https://solscan.io/account/${account}${connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
+                                }`}
                             target='_blank'
                             rel='noopener noreferrer'
                         >
