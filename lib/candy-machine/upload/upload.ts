@@ -3,7 +3,7 @@ import { AnchorWallet } from '@solana/wallet-adapter-react'
 import { PublicKey } from '@solana/web3.js'
 import { PromisePool } from '@supercharge/promise-pool'
 import { ICache, saveCache } from 'lib/cache'
-import { StorageType } from 'lib/enums'
+import { StorageType } from 'lib/candy-machine/enums'
 // import {
 //   makeArweaveBundleUploadGenerator,
 //   withdrawBundlr,

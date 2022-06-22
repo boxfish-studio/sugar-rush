@@ -1,7 +1,7 @@
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
-import { StorageType } from 'lib/enums'
+import { StorageType } from 'lib/candy-machine/enums'
 
 interface IWhitelistMintSettings {
     mode: any

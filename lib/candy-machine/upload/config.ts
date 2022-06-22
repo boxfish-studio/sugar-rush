@@ -6,9 +6,9 @@ import {
     SUPPORTED_ANIMATION_TYPES,
     SUPPORTED_IMAGE_TYPES,
 } from 'lib/candy-machine/constants'
+import { StorageType } from 'lib/candy-machine/enums'
 import { ICandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { JSON_EXTENSION } from 'lib/constants'
-import { StorageType } from 'lib/enums'
 import { getAtaForMint, parseDate } from './helpers'
 
 export async function loadCandyProgramV2(provider: anchor.Provider, customRpcUrl?: string) {
