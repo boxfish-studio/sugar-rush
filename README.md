@@ -6,7 +6,10 @@
 <h1 align="center">
   Sugar Rush
 </h1>
-<h3 align="center">A Solana Candymachine managing dashboard. By Boxfish Studio</h3>
+<h3 align="center">A Solana Candymachine managing dashboard</h3>
+<p align="center">
+By <a href="https://boxfish.studio">Boxfish Studio</a>
+</p>
 
 <p align="center">
     <a href="#About">About</a> ◈
