@@ -1,6 +1,6 @@
 import { BN } from '@project-serum/anchor'
 import { PublicKey } from '@solana/web3.js'
-import { GATEKEEPER } from 'lib/constants'
+import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
 import { StorageType } from 'lib/enums'
 
 interface IWhitelistMintSettings {
@@ -16,7 +16,7 @@ interface IHiddenSettings {
     hash: Uint8Array
 }
 
-export interface IWhitelistMintMode {
+interface IWhitelistMintMode {
     neverBurn: undefined | boolean
     burnEveryTime: undefined | boolean
 }
@@ -47,7 +47,7 @@ export interface IFetchedCandyMachineConfig {
 export interface ICandyMachineConfig {
     price: number
     number: number
-    gatekeeper: typeof GATEKEEPER | null
+    gatekeeper: typeof DEFAULT_GATEKEEPER | null
     solTreasuryAccount: string
     splTokenAccount: null
     splToken: null

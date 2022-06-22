@@ -4,11 +4,11 @@ import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
 import { ActionButton, CheckConnectedWallet } from 'components'
 import { useForm, useRPC, useUploadCache, useUploadFiles } from 'hooks'
 import { updateV2 } from 'lib/candy-machine'
+import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
+import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/candy-machine/upload/config'
 import { uploadV2 } from 'lib/candy-machine/upload/upload'
-import { GATEKEEPER } from 'lib/constants'
 import { StorageType } from 'lib/enums'
-import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/interfaces'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
 import React, { FC, useState } from 'react'
 
@@ -88,7 +88,7 @@ const UpdateCreateCandyMachineForm: FC<{
         const config: ICandyMachineConfig = {
             price: values.price,
             number: values['number-of-nfts'],
-            gatekeeper: values.captcha ? GATEKEEPER : null,
+            gatekeeper: values.captcha ? DEFAULT_GATEKEEPER : null,
             solTreasuryAccount: values['treasury-account'],
             splTokenAccount: null,
             splToken: null,
@@ -211,7 +211,7 @@ const UpdateCreateCandyMachineForm: FC<{
             const config: ICandyMachineConfig = {
                 price: values.price,
                 number: values['number-of-nfts'],
-                gatekeeper: values.captcha ? GATEKEEPER : null,
+                gatekeeper: values.captcha ? DEFAULT_GATEKEEPER : null,
                 solTreasuryAccount: values['treasury-account'],
                 splTokenAccount: null,
                 splToken: null,

@@ -1,6 +1,5 @@
 import { BN } from '@project-serum/anchor'
-
-type NumberToString<T extends number | string> = T extends infer T ? (T extends number ? string : T) : never
+import { NumberToString } from 'lib/types'
 
 export interface ICache {
     authority?: string

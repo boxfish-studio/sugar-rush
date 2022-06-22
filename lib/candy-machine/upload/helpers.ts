@@ -7,8 +7,8 @@ import {
     CONFIG_ARRAY_START_V2,
     CONFIG_LINE_SIZE_V2,
     SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
-} from 'lib/constants'
-import { ICandyMachineData } from 'lib/interfaces'
+} from 'lib/candy-machine/constants'
+import { ICandyMachineData } from 'lib/candy-machine/interfaces'
 
 export function parseDate(date: string) {
     if (date === 'now') {

@@ -1,7 +1,7 @@
 import { calculate } from '@metaplex/arweave-cost'
 import * as anchor from '@project-serum/anchor'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
-import { ARWEAVE_PAYMENT_WALLET, ARWEAVE_UPLOAD_ENDPOINT } from 'lib/constants'
+import { ARWEAVE_PAYMENT_WALLET, ARWEAVE_UPLOAD_ENDPOINT } from 'lib/candy-machine/constants'
 import { Manifest } from 'lib/types'
 import { getFileExtension } from './helpers'
 import { sendTransactionWithRetryWithKeypair } from './transactions'

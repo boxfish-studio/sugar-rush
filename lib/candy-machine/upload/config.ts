@@ -3,12 +3,12 @@ import { getAccount, getMint, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
 import {
     CANDY_MACHINE_PROGRAM_V2_ID,
-    JSON_EXTENSION,
-    supportedAnimationTypes,
-    supportedImageTypes,
-} from 'lib/constants'
+    SUPPORTED_ANIMATION_TYPES,
+    SUPPORTED_IMAGE_TYPES,
+} from 'lib/candy-machine/constants'
+import { ICandyMachineConfig } from 'lib/candy-machine/interfaces'
+import { JSON_EXTENSION } from 'lib/constants'
 import { StorageType } from 'lib/enums'
-import { ICandyMachineConfig } from 'lib/interfaces'
 import { getAtaForMint, parseDate } from './helpers'
 
 export async function loadCandyProgramV2(provider: anchor.Provider, customRpcUrl?: string) {
@@ -228,9 +228,9 @@ export function verifyAssets(
      * From the files list, check that the files are valid images and animations or json files.
      */
     const supportedFiles = files.filter((it) => {
-        if (supportedImageTypes.some((e) => e === it.type)) {
+        if (SUPPORTED_IMAGE_TYPES.some((e) => e === it.type)) {
             imageFileCount++
-        } else if (supportedAnimationTypes.some((e) => e === it.type)) {
+        } else if (SUPPORTED_ANIMATION_TYPES.some((e) => e === it.type)) {
             animationFileCount++
         } else if (it.type == JSON_EXTENSION) {
             jsonFileCount++
