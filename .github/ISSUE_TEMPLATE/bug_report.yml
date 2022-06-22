@@ -1,7 +1,4 @@
-
-
 body:
-
     - type: markdown
       attributes:
           value: '## Device details'
@@ -9,7 +6,7 @@ body:
       id: device
       attributes:
           label: Device type
-          description: What kind of device does this issue occur on? (Select all that apply)
+          description: What kind of device does this issue occur on?
           multiple: true
           options:
             - Desktop
@@ -20,7 +17,7 @@ body:
       id: os
       attributes:
           label: Operating System
-          description: Which OS does this issue occur on? (Select all that apply)
+          description: Which OS does this issue occur on?
           multiple: true
           options:
             - Linux
@@ -56,7 +53,7 @@ body:
           description: What version are you using?
           placeholder: "1.4.0"
       validations:
-          required: true      
+          required: false      
     - type: markdown
       attributes:
           value: '## Issue report'
@@ -76,12 +73,11 @@ body:
               - 'No'
       validations:
           required: true
-
     - type: textarea
       id: repro_steps
       attributes:
           label: Steps to reproduce the issue
-          description: Explain how the maintainer can reproduce the issue.
+          description: Explain how can be reproduced the issue.
           placeholder: |
               1.
               2.
@@ -98,4 +94,3 @@ body:
           options:
               - label: I have searched the issues tracker this issue and there is none
                 required: true
-
