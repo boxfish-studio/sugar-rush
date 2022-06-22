@@ -19,7 +19,6 @@ const UpdateCreateCandyMachineForm: FC<{
     const { publicKey, connected } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { rpcEndpoint } = useRPC()
-    const test = 0
 
     const { files, uploadAssets } = useUploadFiles()
     const { cache, uploadCache } = useUploadCache()
