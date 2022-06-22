@@ -3,8 +3,10 @@ import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
 import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js'
 import {
-    CANDY_MACHINE_PROGRAM_V2_ID, CONFIG_ARRAY_START_V2,
-    CONFIG_LINE_SIZE_V2, SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
+    CANDY_MACHINE_PROGRAM_V2_ID,
+    CONFIG_ARRAY_START_V2,
+    CONFIG_LINE_SIZE_V2,
+    SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
 } from 'lib/constants'
 import { ICandyMachineData } from 'lib/interfaces'
 

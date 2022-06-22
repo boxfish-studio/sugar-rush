@@ -65,7 +65,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
                             const cacheItem = cacheContent.items[key]
 
                             if (name !== cacheItem.name || uri !== cacheItem.link) {
-                                ; (errorMessage =
+                                ;(errorMessage =
                                     `Name (${name}) or uri (${uri}) didnt match cache values of (${cacheItem.name})` +
                                     `and (${cacheItem.link}). marking to rerun for image ${key}`),
                                     (cacheItem.onChain = false)
@@ -90,7 +90,8 @@ const useVerifyCandyMachineV2 = (cache: File) => {
 
                 if (candyMachineObject.data.itemsAvailable > lineCount.toNumber()) {
                     throw new Error(
-                        `predefined number of NFTs (${candyMachineObject.data.itemsAvailable
+                        `predefined number of NFTs (${
+                            candyMachineObject.data.itemsAvailable
                         }) is smaller than the uploaded one (${lineCount.toNumber()})`
                     )
                 } else {

@@ -47,53 +47,53 @@ export async function uploadV2({
     anchorProgram,
     rateLimit,
 }: // arweaveJwk,
-    // collectionMintPubkey,
-    // rpcUrl,
-    // setCollectionMint,
+// collectionMintPubkey,
+// rpcUrl,
+// setCollectionMint,
 
-    {
-        files: File[]
-        cacheName: string
-        env: 'mainnet-beta' | 'devnet'
-        totalNFTs: number
-        storage: string
-        retainAuthority: boolean
-        mutable: boolean
-        // nftStorageKey: string;
-        // ipfsCredentials: ipfsCreds;
-        // pinataJwt: string;
-        // pinataGateway: string;
-        // awsS3Bucket: string;
-        batchSize: number | null
-        price: BN
-        treasuryWallet: PublicKey
-        // splToken: PublicKey;
-        gatekeeper: null | {
-            expireOnUse: boolean
-            gatekeeperNetwork: web3.PublicKey
-        }
-        goLiveDate: null | BN
-        endSettings: null | [number, BN]
-        whitelistMintSettings: null | {
-            mode: any
-            mint: PublicKey
-            presale: boolean
-            discountPrice: null | BN
-        }
-        hiddenSettings: null | {
-            name: string
-            uri: string
-            hash: Uint8Array
-        }
-        // uuid: string;
-        walletKeyPair: AnchorWallet
-        anchorProgram: Program
-        // arweaveJwk: string;
-        rateLimit: number | null
-        // collectionMintPubkey: null | PublicKey;
-        // setCollectionMint: boolean;
-        // rpcUrl: null | string;
-    }): Promise<boolean | string> {
+{
+    files: File[]
+    cacheName: string
+    env: 'mainnet-beta' | 'devnet'
+    totalNFTs: number
+    storage: string
+    retainAuthority: boolean
+    mutable: boolean
+    // nftStorageKey: string;
+    // ipfsCredentials: ipfsCreds;
+    // pinataJwt: string;
+    // pinataGateway: string;
+    // awsS3Bucket: string;
+    batchSize: number | null
+    price: BN
+    treasuryWallet: PublicKey
+    // splToken: PublicKey;
+    gatekeeper: null | {
+        expireOnUse: boolean
+        gatekeeperNetwork: web3.PublicKey
+    }
+    goLiveDate: null | BN
+    endSettings: null | [number, BN]
+    whitelistMintSettings: null | {
+        mode: any
+        mint: PublicKey
+        presale: boolean
+        discountPrice: null | BN
+    }
+    hiddenSettings: null | {
+        name: string
+        uri: string
+        hash: Uint8Array
+    }
+    // uuid: string;
+    walletKeyPair: AnchorWallet
+    anchorProgram: Program
+    // arweaveJwk: string;
+    rateLimit: number | null
+    // collectionMintPubkey: null | PublicKey;
+    // setCollectionMint: boolean;
+    // rpcUrl: null | string;
+}): Promise<boolean | string> {
     // const savedContent = loadCache(cacheName, env);
     let cacheContent: Partial<ICache> = {
         program: {

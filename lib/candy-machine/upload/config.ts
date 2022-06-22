@@ -1,7 +1,12 @@
 import * as anchor from '@project-serum/anchor'
 import { getAccount, getMint, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
-import { CANDY_MACHINE_PROGRAM_V2_ID, JSON_EXTENSION, supportedAnimationTypes, supportedImageTypes } from 'lib/constants'
+import {
+    CANDY_MACHINE_PROGRAM_V2_ID,
+    JSON_EXTENSION,
+    supportedAnimationTypes,
+    supportedImageTypes,
+} from 'lib/constants'
 import { StorageType } from 'lib/enums'
 import { ICandyMachineConfig } from 'lib/interfaces'
 import { getAtaForMint, parseDate } from './helpers'
@@ -91,8 +96,8 @@ export async function getCandyMachineV2Config(
     const splTokenAccountFigured = splTokenAccount
         ? splTokenAccount
         : splToken
-            ? (await getAtaForMint(new PublicKey(splToken), walletKeyPair))[0]
-            : null
+        ? (await getAtaForMint(new PublicKey(splToken), walletKeyPair))[0]
+        : null
 
     if (splToken) {
         if (solTreasuryAccount) {
@@ -134,12 +139,12 @@ export async function getCandyMachineV2Config(
             (whitelistMintSettings && whitelistMintSettings?.discountPrice) ||
             (whitelistMintSettings && whitelistMintSettings?.discountPrice?.toNumber() === 0)
         ) {
-            ; (whitelistMintSettings.discountPrice as any) *= 10 ** mintInfo.decimals
+            ;(whitelistMintSettings.discountPrice as any) *= 10 ** mintInfo.decimals
         }
     } else {
         parsedPrice = price * 10 ** 9
         if (whitelistMintSettings?.discountPrice || whitelistMintSettings?.discountPrice?.toNumber() === 0) {
-            ; (whitelistMintSettings.discountPrice as any) *= 10 ** 9
+            ;(whitelistMintSettings.discountPrice as any) *= 10 ** 9
         }
         wallet = solTreasuryAccount ? new PublicKey(solTreasuryAccount) : walletKeyPair
     }
@@ -183,9 +188,9 @@ export async function getCandyMachineV2Config(
         splToken: splToken ? new PublicKey(splToken) : null,
         gatekeeper: gatekeeper
             ? {
-                gatekeeperNetwork: new PublicKey(gatekeeper.gatekeeperNetwork),
-                expireOnUse: gatekeeper.expireOnUse,
-            }
+                  gatekeeperNetwork: new PublicKey(gatekeeper.gatekeeperNetwork),
+                  expireOnUse: gatekeeper.expireOnUse,
+              }
             : null,
         endSettings,
         hiddenSettings,

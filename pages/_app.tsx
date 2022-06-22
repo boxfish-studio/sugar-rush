@@ -8,7 +8,7 @@ import {
     SolflareWalletAdapter,
     SolletExtensionWalletAdapter,
     SolletWalletAdapter,
-    TorusWalletAdapter
+    TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
 import { clusterApiUrl } from '@solana/web3.js'
 import { Navbar, Wallet } from 'components'
