@@ -1,7 +1,7 @@
 import { useConnection } from '@solana/wallet-adapter-react'
+import { ActionButton } from 'components'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
 import styles from 'styles/Modal.module.css'
-import { ActionButton } from 'components/Layout'
 
 const Modal: FC<{
     isOpen: boolean

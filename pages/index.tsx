@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import type { NextPage } from 'next'
-import Head from 'next/head'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { PublicKey } from '@solana/web3.js'
-import CandyMachineCard from 'components/FetchCM/CandyMachineCard'
-import React, { useEffect, useState } from 'react'
+import { CandyMachineCard, CheckConnectedWallet, Spinner, Title } from 'components'
 import { useRPC } from 'hooks'
-import { CheckConnectedWallet, Spinner, Title } from 'components/Layout'
+import type { NextPage } from 'next'
+import Head from 'next/head'
 import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
 
 const CANDY_MACHINE_PROGRAM_V2_ID = new PublicKey('cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ')
 

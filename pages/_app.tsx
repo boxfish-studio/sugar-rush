@@ -1,8 +1,6 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-import React, { useMemo } from 'react'
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
+import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react'
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import {
     GlowWalletAdapter,
     PhantomWalletAdapter,
@@ -12,9 +10,11 @@ import {
     SolletWalletAdapter,
     TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
-import { Wallet, Navbar } from 'components/Layout'
 import { clusterApiUrl } from '@solana/web3.js'
+import { Navbar, Wallet } from 'components'
+import type { AppProps } from 'next/app'
+import React, { useMemo } from 'react'
+import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const network = WalletAdapterNetwork.Devnet

@@ -1,9 +1,9 @@
-import type { NextPage } from 'next'
-import { useRouter } from 'next/router'
-import { Title, CheckConnectedWallet, ActionButton } from 'components/Layout'
-import Head from 'next/head'
-import { useUploadCache, useVerifyCandyMachineV2 } from 'hooks'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { ActionButton, CheckConnectedWallet, Title } from 'components'
+import { useUploadCache, useVerifyCandyMachineV2 } from 'hooks'
+import type { NextPage } from 'next'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 const VerifyCandyMachine: NextPage = () => {
     const router = useRouter()

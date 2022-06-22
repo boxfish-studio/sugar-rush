@@ -1,15 +1,14 @@
+import { AnchorProvider, BN, Program } from '@project-serum/anchor'
+import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
+import { Connection, PublicKey } from '@solana/web3.js'
+import { Spinner, Title, UpdateCreateCandyMachineForm } from 'components'
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants'
+import { FetchedCandyMachineConfig } from 'lib/interfaces'
+import { Account } from 'lib/types'
 import type { NextPage } from 'next'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Program, AnchorProvider, BN } from '@project-serum/anchor'
-import { PublicKey, Connection } from '@solana/web3.js'
-import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
-import { Spinner, Title } from 'components/Layout'
-import { FetchedCandyMachineConfig } from 'lib/interfaces'
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants'
-import Form from 'components/CreateCM/Form'
-import Head from 'next/head'
-import { Account } from 'lib/types'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -105,7 +104,11 @@ const CandyMachine: NextPage = () => {
                         <span className='mt-2'>
                             {new BN(candyMachineConfig.itemsRedeemed).toNumber()} redeemed NFT.
                         </span>
-                        <Form fetchedValues={candyMachineConfig} updateCandyMachine candyMachinePubkey={account} />
+                        <UpdateCreateCandyMachineForm
+                            fetchedValues={candyMachineConfig}
+                            updateCandyMachine
+                            candyMachinePubkey={account}
+                        />
                     </div>
                 )}
             </div>

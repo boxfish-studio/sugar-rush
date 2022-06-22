@@ -1,17 +1,17 @@
-import React, { FC, useState } from 'react'
-import { useWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
-import { useForm, useUploadFiles, useRPC, useUploadCache } from 'hooks'
-import { getCandyMachineV2Config, verifyAssets, loadCandyProgramV2 } from 'lib/upload/config'
-import { CandyMachineConfig, Gatekeeper, FetchedCandyMachineConfig } from 'lib/interfaces'
-import { StorageType } from 'lib/enums'
-import { parseDateToUTC, parseDateFromDateBN, parseTimeFromDateBN, getCurrentDate, getCurrentTime } from 'lib/utils'
-import { uploadV2 } from 'lib/upload/upload'
 import { AnchorProvider, BN } from '@project-serum/anchor'
+import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
+import { ActionButton, CheckConnectedWallet } from 'components'
+import { useForm, useRPC, useUploadCache, useUploadFiles } from 'hooks'
+import { StorageType } from 'lib/enums'
+import { CandyMachineConfig, FetchedCandyMachineConfig, Gatekeeper } from 'lib/interfaces'
 import { updateV2 } from 'lib/update/update'
-import { ActionButton, CheckConnectedWallet } from 'components/Layout'
+import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/upload/config'
+import { uploadV2 } from 'lib/upload/upload'
+import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
+import React, { FC, useState } from 'react'
 
-const Form: FC<{
+const UpdateCreateCandyMachineForm: FC<{
     fetchedValues?: FetchedCandyMachineConfig
     updateCandyMachine?: boolean
     candyMachinePubkey?: string | string[]
@@ -488,4 +488,4 @@ const FormInput: FC<Input> = ({ id, text, type, defaultValue, defaultChecked, va
     )
 }
 
-export default Form
+export default UpdateCreateCandyMachineForm
