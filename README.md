@@ -1,3 +1,9 @@
+<a href="https://boxfish.studio/">
+<p align="right">
+  <img src="../doc/img/boxfish-logo-small.png" title="Boxfish Studio" width="50">
+</p>
+</a>
+<br />
 <h1 align="center">
   CANDY MACHINE DASHBOARD
 </h1>
