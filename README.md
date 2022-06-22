@@ -8,7 +8,7 @@
 </h1>
 <h3 align="center">A Solana Candymachine managing dashboard</h3>
 <p align="center">
-By <a href="https://boxfish.studio" target="_blank">Boxfish Studio</a>
+By <a href="https://boxfish.studio">Boxfish Studio</a>
 </p>
 
 <p align="center">
