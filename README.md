@@ -1,6 +1,6 @@
 <a href="https://boxfish.studio/">
 <p align="right">
-  <img src="../doc/img/boxfish-logo-small.png" title="Boxfish Studio" width="50">
+  <img src="doc/img/boxfish-logo-small.png" title="Boxfish Studio" width="50">
 </p>
 </a>
 <br />
