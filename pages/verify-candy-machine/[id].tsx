@@ -1,5 +1,5 @@
 import { useWallet } from '@solana/wallet-adapter-react'
-import { ActionButton, CheckConnectedWallet, Title } from 'components'
+import { Button, CheckConnectedWallet, Title } from 'components'
 import { useUploadCache, useVerifyCandyMachineV2 } from 'hooks'
 import type { NextPage } from 'next'
 import Head from 'next/head'
@@ -52,10 +52,10 @@ const VerifyCandyMachine: NextPage = () => {
                         />
                     </div>
 
-                    {isLoading && <ActionButton text='Verifying Candy Machine...' isLoading />}
+                    {isLoading && <Button text='Verifying Candy Machine...' isLoading />}
 
                     {!isLoading && (
-                        <ActionButton text='Verify Candy Machine' onClick={() => verifyCandyMachine({ account })} />
+                        <Button text='Verify Candy Machine' onClick={() => verifyCandyMachine({ account })} />
                     )}
                     {!error && message && <div className='text-[hsl(258,52%,56%)] text-center mt-6'>{message}</div>}
 

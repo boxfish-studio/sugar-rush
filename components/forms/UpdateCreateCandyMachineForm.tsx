@@ -1,7 +1,7 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
-import { ActionButton, CheckConnectedWallet } from 'components'
+import { Button, CheckConnectedWallet } from 'components'
 import { useForm, useRPC, useUploadCache, useUploadFiles } from 'hooks'
 import { updateV2 } from 'lib/candy-machine'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
@@ -431,19 +431,13 @@ const UpdateCreateCandyMachineForm: FC<{
                     <span className='text-red-500 border border-red-500 mt-3 p-3 rounded-xl'>{errorMessage}</span>
                 )}
 
-                {updateCandyMachine && !isInteractingWithCM && (
-                    <ActionButton text='Update Candy Machine' type='submit' />
-                )}
-                {!updateCandyMachine && !isInteractingWithCM && (
-                    <ActionButton text='Create Candy Machine' type='submit' />
-                )}
+                {updateCandyMachine && !isInteractingWithCM && <Button text='Update Candy Machine' type='submit' />}
+                {!updateCandyMachine && !isInteractingWithCM && <Button text='Create Candy Machine' type='submit' />}
 
-                {updateCandyMachine && isInteractingWithCM && (
-                    <ActionButton text='Updating Candy Machine...' isLoading />
-                )}
+                {updateCandyMachine && isInteractingWithCM && <Button text='Updating Candy Machine...' isLoading />}
                 {!updateCandyMachine && isInteractingWithCM && (
                     <>
-                        <ActionButton text='Creating Candy Machine...' isLoading />
+                        <Button text='Creating Candy Machine...' isLoading />
                         <span className='text-red-500 text-center mt-6 w-full md:w-1/2 my-3'>
                             IMPORTANT! Make sure to save the Cache file that will be downloaded at the end! Without it,
                             you will not be able to update your Candy Machine.
