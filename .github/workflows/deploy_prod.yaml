@@ -20,4 +20,3 @@ jobs:
           PRODUCTION: true
           ALIAS_DOMAINS: |
             ${{ secrets.DOMAIN }}
-            sugarrush.{BRANCH}.vercel.app
