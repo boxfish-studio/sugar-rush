@@ -15,7 +15,7 @@
 }
 
 .wallet-adapter-button-trigger {
-    background-color: #512da8;
+    background-color: #512da8 !important;
 }
 
 .wallet-adapter-button:not([disabled]):focus-visible {
