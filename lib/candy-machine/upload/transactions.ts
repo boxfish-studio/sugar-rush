@@ -14,7 +14,7 @@ import {
 import { DEFAULT_TIMEOUT } from 'lib/constants'
 import { getUnixTs, sleep } from './helpers'
 
-interface BlockhashAndFeeCalculator {
+interface IBlockhashAndFeeCalculator {
     blockhash: Blockhash
     feeCalculator: FeeCalculator
 }
@@ -24,7 +24,7 @@ export const sendTransactionWithRetryWithKeypair = async (
     wallet: AnchorWallet,
     instructions: TransactionInstruction[],
     commitment: Commitment = 'singleGossip',
-    block?: BlockhashAndFeeCalculator,
+    block?: IBlockhashAndFeeCalculator,
     beforeSend?: () => void
 ) => {
     console.log('sendTransactionWithRetryWithKeypair')
