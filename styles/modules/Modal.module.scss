@@ -1,0 +1,75 @@
+.modal {
+    animation: fade-in 300ms ease-in-out forwards;
+}
+
+.hamb {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    opacity: 0;
+
+    animation: slide-right 300ms ease-in-out forwards;
+    animation-delay: 200ms;
+    animation-iteration-count: 1;
+
+    &:hover {
+        .line {
+            &:nth-child(1) {
+                transform: rotate(0deg) translateY(-0px) translateX(-10px) scaleX(0.8);
+            }
+            &:nth-child(2) {
+                transform: rotate(0deg) translateY(-13px) translateX(-10px) scaleX(0.8);
+            }
+        }
+    }
+}
+
+.line {
+    transition: transform 300ms ease-in-out;
+    &:nth-child(1) {
+        background-color: hsl(0, 0%, 0%);
+        display: block;
+        width: 40px;
+        height: 3px;
+        transform: rotate(45deg) translateY(10px) translateX(-4px);
+        margin-block: 10px;
+    }
+    &:nth-child(2) {
+        background-color: hsl(0, 0%, 0%);
+        display: block;
+        width: 40px;
+        height: 3px;
+        margin-block: 10px;
+        transform: rotate(-45deg) translateY(-13px);
+    }
+}
+
+@keyframes slide-left {
+    from {
+        transform: translateX(-50%);
+    }
+    to {
+        transform: translateX(0%);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-in {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes slide-right {
+    from {
+        transform: translateX(50%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0%);
+        opacity: 1;
+    }
+}
