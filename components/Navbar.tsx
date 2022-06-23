@@ -26,21 +26,29 @@ const Navbar: FC = () => {
     ]
 
     return (
-        <div
+        <nav
             className='
                 fixed top-0 left-0 z-10 
-                flex flex-row md:flex-col items-center md:justify-between px-2 py-4
+                flex flex-row md:flex-col md:justify-between py-4 px-6
                 md:h-screen w-screen md:w-48 
-                transition-all ease-linear 
-                text-white shadow-lg bg-slate-300
+                bg-gray-200
             '
         >
-            <div className='w-full flex flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-4'>
-                {NAVBAR_ELEMENTS.map((element) => {
-                    return <NavbarElement disabled={!publicKey} key={element.url} {...element} />
-                })}
+            <div className='w-full'>
+                <h4 className='uppercase mb-6'>Sugar Rush</h4>
+                <div className='w-full flex flex-row md:flex-col space-x-4 md:space-x-0 md:space-y-4'>
+                    {NAVBAR_ELEMENTS.map((element) => {
+                        return <NavbarElement disabled={!publicKey} key={element.url} {...element} />
+                    })}
+                </div>
             </div>
-        </div>
+            <p className='text-left text-xs'>
+                By{' '}
+                <a href='https://boxfish.studio' target='_blank' rel='noopener noreferrer'>
+                    Boxfish Studio
+                </a>
+            </p>
+        </nav>
     )
 }
 
@@ -48,25 +56,26 @@ const NavbarElement = ({ title, url, tooltip, disabled }: INavbarElement) => (
     <Link href={url}>
         <div
             style={{ pointerEvents: disabled ? 'none' : 'auto', opacity: disabled ? '50%' : '' }}
-            className='
-            group w-auto md:w-full
-            relative text-center text-white cursor-pointer px-2 py-3 
-            flex items-center justify-center 
-            transition-all duration-300 ease-linear
-            rounded-xl hover:rounded-xl
-            bg-[hsl(258,52%,56%)] hover:bg-[hsl(258,52%,65%)]'
+            className={`
+                    cursor-pointer
+                    group
+                    w-auto md:w-full
+                    relative
+                    flex items-center
+                    transition-all
+                    font-semibold text-blue-regular
+                    `}
         >
             {title}
             <span
-                style={{ left: 'calc(100% + 8px)' }}
+                style={{ left: 'calc(100% + 16px)' }}
                 className='
-                    absolute w-auto md:w-full 
-                    p-2 m-2 
+                    absolute p-2 m-2 w-max
                     text-xs font-bold text-red 
                     transition-all duration-300
-                    bg-gray-800 
+                    bg-gray-800 text-white
                     rounded-md shadow-md 
-                    scale-0 after:group-hover:scale-100'
+                    scale-0 group-hover:scale-100'
             >
                 {tooltip}
             </span>
