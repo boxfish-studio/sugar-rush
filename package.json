@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write  \"./**/*.{tsx,ts,css}\""
+    "format": "prettier --write  \"./**/*.{tsx,ts,css}\"",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@metaplex/arweave-cost": "^1.0.4",
@@ -37,7 +38,13 @@
     "@types/react-dom": "18.0.3",
     "eslint": "8.14.0",
     "eslint-config-next": "12.1.6",
+    "husky": ">=6",
+    "lint-staged": ">=10",
     "prettier": "2.6.2",
     "typescript": "4.6.4"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{tsx,ts,css}": "prettier --write"
   }
 }
