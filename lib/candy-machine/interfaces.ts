@@ -1,13 +1,27 @@
-import { PublicKey } from '@solana/web3.js'
 import { BN } from '@project-serum/anchor'
-import { StorageType } from './enums'
+import { PublicKey } from '@solana/web3.js'
+import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
+import { StorageType } from 'lib/candy-machine/enums'
 
-export interface WhitelistMintMode {
+interface IWhitelistMintSettings {
+    mode: any
+    mint: PublicKey
+    presale: boolean
+    discountPrice: null | BN
+}
+
+interface IHiddenSettings {
+    name: string
+    uri: string
+    hash: Uint8Array
+}
+
+interface IWhitelistMintMode {
     neverBurn: undefined | boolean
     burnEveryTime: undefined | boolean
 }
 
-export interface FetchedCandyMachineConfig {
+export interface IFetchedCandyMachineConfig {
     creators: {
         address: PublicKey
         share: 100
@@ -30,17 +44,17 @@ export interface FetchedCandyMachineConfig {
     itemsRedeemed: BN
 }
 
-export interface CandyMachineConfig {
+export interface ICandyMachineConfig {
     price: number
     number: number
-    gatekeeper: typeof Gatekeeper | null
+    gatekeeper: typeof DEFAULT_GATEKEEPER | null
     solTreasuryAccount: string
     splTokenAccount: null
     splToken: null
     goLiveDate: string
     endSettings: any
-    whitelistMintSettings: whitelistMintSettings | null
-    hiddenSettings: hiddenSettings | null
+    whitelistMintSettings: IWhitelistMintSettings | null
+    hiddenSettings: IHiddenSettings | null
     storage: StorageType
     ipfsInfuraProjectId: null
     ipfsInfuraSecret: null
@@ -54,24 +68,8 @@ export interface CandyMachineConfig {
     uuid: null
     arweaveJwk: null
 }
-export const Gatekeeper = {
-    gatekeeperNetwork: 'ignREusXmGrscGNUesoU9mxfds9AiYTezUKex2PsZV6',
-    expireOnUse: true,
-} as const
 
-interface whitelistMintSettings {
-    mode: any
-    mint: PublicKey
-    presale: boolean
-    discountPrice: null | BN
-}
-interface hiddenSettings {
-    name: string
-    uri: string
-    hash: Uint8Array
-}
-
-export interface CandyMachineData {
+export interface ICandyMachineData {
     itemsAvailable: BN
     uuid: null | string
     symbol: string
@@ -87,7 +85,7 @@ export interface CandyMachineData {
     goLiveDate: null | BN
     endSettings: null | [number, BN]
     whitelistMintSettings: null | {
-        mode: WhitelistMintMode
+        mode: IWhitelistMintMode
         mint: PublicKey
         presale: boolean
         discountPrice: null | BN
@@ -102,28 +100,4 @@ export interface CandyMachineData {
         verified: boolean
         share: number
     }[]
-}
-
-type NumberToString<T extends number | string> = T extends infer T ? (T extends number ? string : T) : never
-
-export interface Cache {
-    authority?: string
-    program: {
-        uuid: string
-        candyMachine: string
-    }
-    items: Record<
-        NumberToString<number | string>,
-        {
-            link: string
-            imageLink: string
-            name: string
-            onChain: boolean
-            verifyRun?: boolean
-        }
-    >
-
-    startDate: BN | null
-    env: string
-    cacheName: string
 }

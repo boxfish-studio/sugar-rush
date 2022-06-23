@@ -1,44 +1,15 @@
 import * as anchor from '@project-serum/anchor'
-import { CANDY_MACHINE_PROGRAM_V2_ID, supportedImageTypes, supportedAnimationTypes, JSON_EXTENSION } from '../constants'
-
+import { getAccount, getMint, TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { PublicKey } from '@solana/web3.js'
-import { getMint, TOKEN_PROGRAM_ID, getAccount } from '@solana/spl-token'
+import {
+    CANDY_MACHINE_PROGRAM_V2_ID,
+    SUPPORTED_ANIMATION_TYPES,
+    SUPPORTED_IMAGE_TYPES,
+} from 'lib/candy-machine/constants'
+import { StorageType } from 'lib/candy-machine/enums'
+import { ICandyMachineConfig } from 'lib/candy-machine/interfaces'
+import { JSON_EXTENSION } from 'lib/constants'
 import { getAtaForMint, parseDate } from './helpers'
-import { WhitelistMintMode, CandyMachineConfig } from '../interfaces'
-import { StorageType } from '../enums'
-
-export interface CandyMachineData {
-    itemsAvailable: anchor.BN
-    uuid: null | string
-    symbol: string
-    sellerFeeBasisPoints: number
-    isMutable: boolean
-    maxSupply: anchor.BN
-    price: anchor.BN
-    retainAuthority: boolean
-    gatekeeper: null | {
-        expireOnUse: boolean
-        gatekeeperNetwork: PublicKey
-    }
-    goLiveDate: null | anchor.BN
-    endSettings: null | [number, anchor.BN]
-    whitelistMintSettings: null | {
-        mode: WhitelistMintMode
-        mint: anchor.web3.PublicKey
-        presale: boolean
-        discountPrice: null | anchor.BN
-    }
-    hiddenSettings: null | {
-        name: string
-        uri: string
-        hash: Uint8Array
-    }
-    creators: {
-        address: PublicKey
-        verified: boolean
-        share: number
-    }[]
-}
 
 export async function loadCandyProgramV2(provider: anchor.Provider, customRpcUrl?: string) {
     if (customRpcUrl) console.log('USING CUSTOM URL', customRpcUrl)
@@ -51,7 +22,7 @@ export async function loadCandyProgramV2(provider: anchor.Provider, customRpcUrl
 
 export async function getCandyMachineV2Config(
     walletKeyPair: PublicKey,
-    configForm: CandyMachineConfig,
+    configForm: ICandyMachineConfig,
     anchorProgram: anchor.Program<anchor.Idl>
 ): Promise<{
     storage: StorageType
@@ -257,9 +228,9 @@ export function verifyAssets(
      * From the files list, check that the files are valid images and animations or json files.
      */
     const supportedFiles = files.filter((it) => {
-        if (supportedImageTypes.some((e) => e === it.type)) {
+        if (SUPPORTED_IMAGE_TYPES.some((e) => e === it.type)) {
             imageFileCount++
-        } else if (supportedAnimationTypes.some((e) => e === it.type)) {
+        } else if (SUPPORTED_ANIMATION_TYPES.some((e) => e === it.type)) {
             animationFileCount++
         } else if (it.type == JSON_EXTENSION) {
             jsonFileCount++

@@ -1,14 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useWallet } from '@solana/wallet-adapter-react'
-import { PublicKey } from '@solana/web3.js'
 import { CandyMachineCard, CheckConnectedWallet, Spinner, Title } from 'components'
 import { useRPC } from 'hooks'
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-
-const CANDY_MACHINE_PROGRAM_V2_ID = new PublicKey('cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ')
 
 const ManageCandyMachines: NextPage = () => {
     const { publicKey, connected } = useWallet()

@@ -1,3 +1,4 @@
+import { AnchorWallet } from '@solana/wallet-adapter-react'
 import {
     Blockhash,
     Commitment,
@@ -10,11 +11,10 @@ import {
     TransactionInstruction,
     TransactionSignature,
 } from '@solana/web3.js'
+import { DEFAULT_TIMEOUT } from 'lib/constants'
 import { getUnixTs, sleep } from './helpers'
-import { DEFAULT_TIMEOUT } from '../constants'
-import { AnchorWallet } from '@solana/wallet-adapter-react'
 
-interface BlockhashAndFeeCalculator {
+interface IBlockhashAndFeeCalculator {
     blockhash: Blockhash
     feeCalculator: FeeCalculator
 }
@@ -24,7 +24,7 @@ export const sendTransactionWithRetryWithKeypair = async (
     wallet: AnchorWallet,
     instructions: TransactionInstruction[],
     commitment: Commitment = 'singleGossip',
-    block?: BlockhashAndFeeCalculator,
+    block?: IBlockhashAndFeeCalculator,
     beforeSend?: () => void
 ) => {
     console.log('sendTransactionWithRetryWithKeypair')
