@@ -18,6 +18,6 @@ export type Manifest = {
     }
 }
 
-export type Account = string | string[] | undefined
-
 export type UnwrapPromise<T> = T extends Promise<infer Return> ? Return : T
+
+export type NumberToString<T extends number | string> = T extends infer T ? (T extends number ? string : T) : never
