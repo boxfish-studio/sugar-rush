@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="http://boxfish.studio"><img src="doc/img/suggar-rush-gh-splash-thin-min.png" title="Sugar Rush. By Boxfish Studio">
+  <a href="http://boxfish.studio"><img src="doc/img/suggar-rush-gh-splash-thin-min.png" title="Sugar Rush. By Boxfish Studio"></a>
 </h1>
 
 <h2 align="center">
