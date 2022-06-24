@@ -1,14 +1,15 @@
-<a href="https://boxfish.studio/">
-<p align="right">
-  <img src="doc/img/boxfish-logo-small.png" title="Boxfish Studio" width="50">
-</p>
-</a>
 <h1 align="center">
-  Sugar Rush
+  <br>
+  <a href="http://boxfish.studio"><img src="doc/img/suggar-rush-gh-splash-thin-min.png" title="Sugar Rush. By Boxfish Studio">
 </h1>
-<h3 align="center">A Solana Candymachine managing dashboard</h3>
+
+<h2 align="center">
+  Sugar Rush
+</h2>
+
+<p align="center">The Solana Candymachine Management Dashboard</p>
 <p align="center">
-By <a href="https://boxfish.studio">Boxfish Studio</a>
+by <a href="https://boxfish.studio">Boxfish Studio</a>
 </p>
 
 <p align="center">
