@@ -7,10 +7,7 @@
   Sugar Rush
 </h2>
 
-<p align="center">The Solana Candymachine Management Dashboard</p>
-<p align="center">
-by <a href="https://boxfish.studio">Boxfish Studio</a>
-</p>
+<p align="center">The Solana Candymachine Management Dashboard, by <a href="https://boxfish.studio">Boxfish Studio</a></p>
 
 <p align="center">
     <a href="#About">About</a> ◈
