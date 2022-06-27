@@ -1,5 +1,4 @@
-import { BN, web3 } from '@project-serum/anchor'
-import { CANDY_MACHINE_PROGRAM_V2_ID, CIVIC, SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID, TOKEN_METADATA_PROGRAM_ID, TOKEN_PROGRAM_ID } from './constants';
+import { BN } from '@project-serum/anchor'
 
 /**
  *
@@ -79,77 +78,40 @@ export function getCurrentDate() {
     return `${year}-${month}-${day}`
 }
 
-export const getAtaForMint = async (
-  mint: web3.PublicKey,
-  buyer: web3.PublicKey,
-): Promise<[web3.PublicKey, number]> => {
-  return await web3.PublicKey.findProgramAddress(
-    [buyer.toBuffer(), TOKEN_PROGRAM_ID.toBuffer(), mint.toBuffer()],
-    SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
-  );
-};
-
-export const getNetworkToken = async (
-  wallet: web3.PublicKey,
-  gatekeeperNetwork: web3.PublicKey,
-): Promise<[web3.PublicKey, number]> => {
-  return await web3.PublicKey.findProgramAddress(
-    [
-      wallet.toBuffer(),
-      Buffer.from('gateway'),
-      Buffer.from([0, 0, 0, 0, 0, 0, 0, 0]),
-      gatekeeperNetwork.toBuffer(),
-    ],
-    CIVIC,
-  );
-};
-
-
-export const getNetworkExpire = async (
-  gatekeeperNetwork: web3.PublicKey,
-): Promise<[web3.PublicKey, number]> => {
-  return await web3.PublicKey.findProgramAddress(
-    [gatekeeperNetwork.toBuffer(), Buffer.from('expire')],
-    CIVIC,
-  );
-};
-
-export const getMetadata = async (
-  mint: web3.PublicKey,
-): Promise<web3.PublicKey> => {
-  return (
-    await web3.PublicKey.findProgramAddress(
-      [
-        Buffer.from('metadata'),
-        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-        mint.toBuffer(),
-      ],
-      TOKEN_METADATA_PROGRAM_ID,
+export function shardArray(array: string[], size: number) {
+    return Array.apply(0, new Array(Math.ceil(array.length / size))).map((_, index) =>
+        array.slice(index * size, (index + 1) * size)
     )
-  )[0];
-};
+}
 
-export const getMasterEdition = async (
-  mint: web3.PublicKey,
-): Promise<web3.PublicKey> => {
-  return (
-    await web3.PublicKey.findProgramAddress(
-      [
-        Buffer.from('metadata'),
-        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-        mint.toBuffer(),
-        Buffer.from('edition'),
-      ],
-      TOKEN_METADATA_PROGRAM_ID,
-    )
-  )[0];
-};
+export function getTextFromUTF8Array(data: number[]) {
+    // array of bytes
+    let str: string = ''
 
-export const getCandyMachineCreator = async (
-  candyMachine: web3.PublicKey,
-): Promise<[web3.PublicKey, number]> => {
-  return await web3.PublicKey.findProgramAddress(
-    [Buffer.from('candy_machine'), candyMachine.toBuffer()],
-    CANDY_MACHINE_PROGRAM_V2_ID,
-  );
-};
+    for (let i = 0; i < data.length; i++) {
+        const value: number = data[i]
+
+        if (value < 0x80) {
+            str += String.fromCharCode(value)
+        } else if (value > 0xbf && value < 0xe0) {
+            str += String.fromCharCode(((value & 0x1f) << 6) | (data[i + 1] & 0x3f))
+            i += 1
+        } else if (value > 0xdf && value < 0xf0) {
+            str += String.fromCharCode(((value & 0x0f) << 12) | ((data[i + 1] & 0x3f) << 6) | (data[i + 2] & 0x3f))
+            i += 2
+        } else {
+            // surrogate pair
+            const charCode: number =
+                (((value & 0x07) << 18) |
+                    ((data[i + 1] & 0x3f) << 12) |
+                    ((data[i + 2] & 0x3f) << 6) |
+                    (data[i + 3] & 0x3f)) -
+                0x010000
+
+            str += String.fromCharCode((charCode >> 10) | 0xd800, (charCode & 0x03ff) | 0xdc00)
+            i += 3
+        }
+    }
+
+    return str
+}

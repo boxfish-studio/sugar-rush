@@ -1,16 +1,14 @@
 import * as anchor from '@project-serum/anchor'
-import {
-    SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
-    CONFIG_ARRAY_START_V2,
-    CONFIG_LINE_SIZE_V2,
-    CANDY_MACHINE_PROGRAM_V2_ID,
-} from '../constants'
-
-import { PublicKey, Keypair, SystemProgram } from '@solana/web3.js'
-
 import { TOKEN_PROGRAM_ID } from '@solana/spl-token'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
-import { CandyMachineData } from '../interfaces'
+import { Keypair, PublicKey, SystemProgram } from '@solana/web3.js'
+import {
+    CANDY_MACHINE_PROGRAM_V2_ID,
+    CONFIG_ARRAY_START_V2,
+    CONFIG_LINE_SIZE_V2,
+    SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
+} from 'lib/candy-machine/constants'
+import { ICandyMachineData } from 'lib/candy-machine/interfaces'
 
 export function parseDate(date: string) {
     if (date === 'now') {
@@ -40,7 +38,7 @@ export const createCandyMachineV2 = async function (
     payerWallet: AnchorWallet,
     treasuryWallet: PublicKey,
     // splToken: PublicKey,
-    candyData: CandyMachineData
+    candyData: ICandyMachineData
 ) {
     const candyAccount = Keypair.generate()
     candyData.uuid = uuidFromConfigPubkey(candyAccount.publicKey)
@@ -99,7 +97,7 @@ export const createCandyMachineV2 = async function (
 
 export async function createCandyMachineV2Account(
     anchorProgram: anchor.Program,
-    candyData: CandyMachineData,
+    candyData: ICandyMachineData,
     payerWallet: PublicKey,
     candyAccount: PublicKey
 ) {

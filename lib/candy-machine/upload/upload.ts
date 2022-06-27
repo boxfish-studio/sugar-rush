@@ -1,22 +1,19 @@
-import { createCandyMachineV2 } from './helpers'
-import { PublicKey } from '@solana/web3.js'
 import { BN, Program, web3 } from '@project-serum/anchor'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
+import { PublicKey } from '@solana/web3.js'
 import { PromisePool } from '@supercharge/promise-pool'
-
-import { saveCache } from '../cache'
-import { arweaveUpload } from './arweave'
+import { ICache, saveCache } from 'lib/cache'
+import { StorageType } from 'lib/candy-machine/enums'
 // import {
 //   makeArweaveBundleUploadGenerator,
 //   withdrawBundlr,
 // } from '../helpers/upload/arweave-bundle';
 // import { awsUpload } from '../helpers/upload/aws';
 // import { ipfsCreds, ipfsUpload } from '../helpers/upload/ipfs';
+import { Manifest } from 'lib/types'
+import { arweaveUpload } from './arweave'
+import { createCandyMachineV2, getFileExtension, getFileName, sleep } from './helpers'
 
-import { Manifest } from '../types'
-import { StorageType } from '../enums'
-import { Cache } from '../interfaces'
-import { sleep, getFileExtension, getFileName } from './helpers'
 // import { nftStorageUpload } from '../helpers/upload/nft-storage';
 // import { pinataUpload } from '../helpers/upload/pinata';
 // import { setCollection } from './set-collection';
@@ -98,7 +95,7 @@ export async function uploadV2({
     // rpcUrl: null | string;
 }): Promise<boolean | string> {
     // const savedContent = loadCache(cacheName, env);
-    let cacheContent: Partial<Cache> = {
+    let cacheContent: Partial<ICache> = {
         program: {
             uuid: '',
             candyMachine: '',
@@ -115,7 +112,7 @@ export async function uploadV2({
     //   cacheContent.items = {};
     // }
 
-    const dedupedAssetKeys = getAssetKeysNeedingUpload(cacheContent.items as Cache['items'], filesNames)
+    const dedupedAssetKeys = getAssetKeysNeedingUpload(cacheContent.items as ICache['items'], filesNames)
     console.log('dedupedAssetKeys', dedupedAssetKeys)
 
     let candyMachine =
@@ -255,7 +252,7 @@ export async function uploadV2({
                             }
                     }
                 } catch (err) {
-                    saveCache(cacheName, env, cacheContent as Cache)
+                    saveCache(cacheName, env, cacheContent as ICache)
                     console.error(err)
                 }
             })
@@ -298,7 +295,7 @@ export async function uploadV2({
  * Assets which should be uploaded either are not present in the Cache object,
  * or do not truthy value for the `link` property.
  */
-function getAssetKeysNeedingUpload(items: Cache['items'], files: string[]): AssetKey[] {
+function getAssetKeysNeedingUpload(items: ICache['items'], files: string[]): AssetKey[] {
     const all = [...new Set([...Object.keys(items), ...files])]
     const keyMap: any = {}
     const assets = all

@@ -2,9 +2,9 @@ import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { Spinner, Title, UpdateCreateCandyMachineForm } from 'components'
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants'
-import { FetchedCandyMachineConfig } from 'lib/interfaces'
-import { Account } from 'lib/types'
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
+import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
+import { Account } from 'lib/candy-machine/types'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -16,7 +16,7 @@ const CandyMachine: NextPage = () => {
 
     const anchorWallet = useAnchorWallet()
     const { connection } = useConnection()
-    const [candyMachineConfig, setCandyMachineConfig] = useState<FetchedCandyMachineConfig>()
+    const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
 
     const [isLoading, setIsLoading] = useState(false)
@@ -27,7 +27,7 @@ const CandyMachine: NextPage = () => {
     }: {
         account: Account
         connection: Connection
-    }): Promise<FetchedCandyMachineConfig | undefined> {
+    }): Promise<IFetchedCandyMachineConfig | undefined> {
         if (account && anchorWallet) {
             try {
                 setIsLoading(true)

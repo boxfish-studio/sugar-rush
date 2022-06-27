@@ -3,16 +3,17 @@ import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
 import { ActionButton, CheckConnectedWallet } from 'components'
 import { useForm, useRPC, useUploadCache, useUploadFiles } from 'hooks'
-import { StorageType } from 'lib/enums'
-import { CandyMachineConfig, FetchedCandyMachineConfig, Gatekeeper } from 'lib/interfaces'
-import { updateV2 } from 'lib/update/update'
-import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/upload/config'
-import { uploadV2 } from 'lib/upload/upload'
+import { updateV2 } from 'lib/candy-machine'
+import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
+import { StorageType } from 'lib/candy-machine/enums'
+import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
+import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/candy-machine/upload/config'
+import { uploadV2 } from 'lib/candy-machine/upload/upload'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
 import React, { FC, useState } from 'react'
 
 const UpdateCreateCandyMachineForm: FC<{
-    fetchedValues?: FetchedCandyMachineConfig
+    fetchedValues?: IFetchedCandyMachineConfig
     updateCandyMachine?: boolean
     candyMachinePubkey?: string | string[]
 }> = ({ fetchedValues, updateCandyMachine, candyMachinePubkey }) => {
@@ -84,10 +85,10 @@ const UpdateCreateCandyMachineForm: FC<{
         setIsInteractingWithCM(true)
         setStatus('')
         let candyMachine: string = ''
-        const config: CandyMachineConfig = {
+        const config: ICandyMachineConfig = {
             price: values.price,
             number: values['number-of-nfts'],
-            gatekeeper: values.captcha ? Gatekeeper : null,
+            gatekeeper: values.captcha ? DEFAULT_GATEKEEPER : null,
             solTreasuryAccount: values['treasury-account'],
             splTokenAccount: null,
             splToken: null,
@@ -207,10 +208,10 @@ const UpdateCreateCandyMachineForm: FC<{
             setIsInteractingWithCM(true)
             setStatus('')
 
-            const config: CandyMachineConfig = {
+            const config: ICandyMachineConfig = {
                 price: values.price,
                 number: values['number-of-nfts'],
-                gatekeeper: values.captcha ? Gatekeeper : null,
+                gatekeeper: values.captcha ? DEFAULT_GATEKEEPER : null,
                 solTreasuryAccount: values['treasury-account'],
                 splTokenAccount: null,
                 splToken: null,
