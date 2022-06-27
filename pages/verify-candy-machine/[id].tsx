@@ -4,14 +4,19 @@ import { useMintCandyMachine, useUploadCache, useVerifyCandyMachineV2 } from 'ho
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 const VerifyCandyMachine: NextPage = () => {
     const router = useRouter()
     const account = router.query.id
     const { cache, uploadCache } = useUploadCache()
     const { connected } = useWallet()
-    const { error, isLoading, verifyCandyMachine, message, connection, canMint } = useVerifyCandyMachineV2(cache)
-    const { isUserMinting, itemsRemaining, nftPrice, isActive, mintAccount, refreshCandyMachineState } = useMintCandyMachine(account as string);
+    const { error, isLoading, verifyCandyMachine, message, connection, shouldMint } = useVerifyCandyMachineV2(cache)
+    const { isUserMinting, itemsRemaining, nftPrice, isActive, mintAccount, refreshCandyMachineState, mintMessage } = useMintCandyMachine(account as string);
+
+    useEffect(() => {        
+        refreshCandyMachineState();
+    }, [connected, account])
   
     return (
         <div className='relative'>
@@ -60,23 +65,30 @@ const VerifyCandyMachine: NextPage = () => {
                         <ActionButton text='Verify Candy Machine' onClick={() => verifyCandyMachine({ account })} />
                     )}
                     {!error && message && <div className='text-[hsl(258,52%,56%)] text-center mt-6'>{message}</div>}
+                    {itemsRemaining === 0 && <div className='text-[hsl(258,52%,56%)] text-center mt-6'>All tokens have already been minted</div>}
+                    {!shouldMint && itemsRemaining !== 0 && <div className='text-red-500 text-center mt-6'>Important! Verify before Mint!</div>}
 
                     {!isLoading && error && <div className='text-red-500 text-center mt-6'>{error}</div>}
 
-                    {/* TODO: remove ! */}
-                    {!canMint && (
-                      <div className='border border-gray-500 mt-10 p-5 rounded-xl grid grid-cols-3 justify-items-center gap-5'>
+                    <div className={`border border-gray-500 mt-10 p-5 rounded-xl grid grid-cols-3 justify-items-center gap-5 
+                            ${ itemsRemaining === 0 ? 'opacity-50': ''}`}>
                         <span>Remaining: {itemsRemaining}</span>
                         <span>Price: {nftPrice}</span>
                         <span>Live: {isActive ? "Yes" : "No"}</span> 
-                        <span className='col-span-3'>
-                          <ActionButton text='Mint 1 token' isLoading={isUserMinting} onClick={() => mintAccount()} />
+                        <span className='col-span-3 disabled'>
+                            {itemsRemaining === 0 ? (
+                                <button className={`flex items-center justify-center px-4 py-2 mx-auto mt-4 text-white
+                                shadow-lg bg-[hsl(258,52%,65%)] rounded-xl group cursor-not-allowed`}
+                                disabled
+                                type="button"
+                                >
+                                Mint 1 token</button>
+                            ) : (
+                                <ActionButton text='Mint 1 token' isLoading={isUserMinting} onClick={() => mintAccount()} />
+                            )}
                         </span>
-
-                      <span>{message}</span>
-                        
-                      </div>
-                    )}
+                    </div>
+                    {!error && mintMessage && <div className='text-[hsl(258,52%,56%)] text-center mt-6'>{mintMessage}</div>}
                 </div>
             ) : (
                 <CheckConnectedWallet />

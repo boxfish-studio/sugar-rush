@@ -167,6 +167,6 @@ interface CandyMachineState {
 }
 
 export interface CollectionData {
-  mint: web3.PublicKey;
-  candyMachine: web3.PublicKey;
-}
+    mint: web3.PublicKey;
+    candyMachine: web3.PublicKey;
+  }

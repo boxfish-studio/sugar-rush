@@ -17,7 +17,7 @@ import { AnchorWallet } from '@solana/wallet-adapter-react'
 
 interface BlockhashAndFeeCalculator {
     blockhash: Blockhash
-    feeCalculator: FeeCalculator
+    lastValidBlockHeight: number;
 }
 
 export const sendTransactionWithRetryWithKeypair = async (
@@ -28,18 +28,11 @@ export const sendTransactionWithRetryWithKeypair = async (
     block?: BlockhashAndFeeCalculator,
     beforeSend?: () => void
 ) => {
-    console.log('sendTransactionWithRetryWithKeypair')
     const transaction = new Transaction()
-
     instructions.forEach((instruction) => transaction.add(instruction))
-
     transaction.recentBlockhash = (block || (await connection.getLatestBlockhash(commitment))).blockhash
-
     transaction.feePayer = wallet.publicKey
-    console.log('await signTransaction')
-
     await wallet.signTransaction(transaction)
-    console.log('signTransaction')
 
     if (beforeSend) {
         beforeSend()
@@ -47,7 +40,7 @@ export const sendTransactionWithRetryWithKeypair = async (
 
     const { txid, slot } = await sendSignedTransaction({
         connection,
-        signedTransaction: transaction,
+        signedTransaction: transaction
     })
 
     return { txid, slot }
@@ -64,14 +57,14 @@ export async function sendSignedTransaction({
     sentMessage?: string
     successMessage?: string
     timeout?: number
-}): Promise<{ txid: string; slot: number }> {
+}): Promise<{ txid: string; slot: number }> {  
     const rawTransaction = signedTransaction.serialize()
     const startTime = getUnixTs()
     let slot = 0
 
     let txid: TransactionSignature = await connection.sendRawTransaction(rawTransaction, {
         skipPreflight: true,
-    })
+    })    
 
     console.log('Started awaiting confirmation for', txid)
 
@@ -86,8 +79,7 @@ export async function sendSignedTransaction({
     })()
 
     try {
-        const confirmation = await awaitTransactionSignatureConfirmation(txid, timeout, connection, 'confirmed', true)
-
+        const confirmation = await awaitTransactionSignatureConfirmation(txid, timeout, connection, 'confirmed', true)        
         if (!confirmation) throw new Error('Timed out awaiting confirmation on transaction')
 
         if (confirmation.err) {
@@ -118,7 +110,7 @@ export async function sendSignedTransaction({
             }
             throw new Error(JSON.stringify(simulateResult.err))
         }
-        console.error('Got this far.')
+        console.error('Got this far.')        
         txid = simulateResult?.err as string
         // throw new Error('Transaction failed');
     } finally {
@@ -139,7 +131,7 @@ async function simulateTransaction(
     const signData = transaction.serializeMessage()
     const encodedTransaction = signData.toString('base64')
     const config: any = { encoding: 'base64', commitment }
-    const args = [encodedTransaction, config]
+    const args = [encodedTransaction, config]    
 
     // @ts-ignore
     const res = await connection._rpcRequest('simulateTransaction', args)
@@ -162,7 +154,7 @@ export async function awaitTransactionSignatureConfirmation(
         confirmations: 0,
         err: null,
     }
-    let subId = 0
+    let subId = 0    
     // eslint-disable-next-line no-async-promise-executor
     status = await new Promise(async (resolve, reject) => {
         setTimeout(() => {
@@ -234,7 +226,7 @@ export async function awaitTransactionSignatureConfirmation(
     done = true
     console.log('Returning status', status)
     return status
-}
+  }
 
 export enum SequenceType {
   Sequential,
@@ -257,10 +249,10 @@ export const sendTransactions = async (
 ): Promise<{ number: number; txs: { txid: string; slot: number }[] }> => {
   if (!wallet.publicKey) throw new Error("Wallet not connected");
 
-  const unsignedTxns: Transaction[] = beforeTransactions;
+  const unsignedTxns: Transaction[] = beforeTransactions;  
 
   if (!block) {
-    block = await connection.getRecentBlockhash(commitment);
+    block = await connection.getLatestBlockhash(commitment);
   }
 
   for (let i = 0; i < instructionSet.length; i++) {
@@ -271,7 +263,7 @@ export const sendTransactions = async (
       continue;
     }
 
-    let transaction = new Transaction();
+    let transaction = new Transaction();    
     instructions.forEach(instruction => transaction.add(instruction));
     transaction.recentBlockhash = block.blockhash;
     transaction.setSigners(
@@ -293,7 +285,7 @@ export const sendTransactions = async (
   );
   const fullySignedTransactions = unsignedTxns.filter(
     t => !t.signatures.find(sig => sig.publicKey.equals(wallet.publicKey)),
-  );
+  );  
   let signedTxns = await wallet.signAllTransactions(
     partiallySignedTransactions,
   );
@@ -305,46 +297,41 @@ export const sendTransactions = async (
     signedTxns.length,
     'vs handed in length',
     instructionSet.length,
-  );
+  );  
   for (let i = 0; i < signedTxns.length; i++) {
-    console.log("connection", connection);
-    console.log("signedTxns[i]", signedTxns[i]);
     
     const signedTxnPromise = sendSignedTransaction({
-      connection,
-      signedTransaction: signedTxns[i],
-    });
-
-    console.log("signedTxnPromise", signedTxnPromise);
-    
+        connection,
+        signedTransaction: signedTxns[i]
+    });    
 
     if (sequenceType !== SequenceType.Parallel) {
-      try {
-        await signedTxnPromise.then(({ txid, slot }) =>
-          successCallback(txid, i),
-        );
-        pendingTxns.push(signedTxnPromise);
-      } catch (e) {
-        console.log('Failed at txn index:', i);
-        console.log('Caught failure:', e);
-
-        failCallback(signedTxns[i], i);
-        if (sequenceType === SequenceType.StopOnFailure) {
-          return {
-            number: i,
-            txs: await Promise.all(pendingTxns),
-          };
+        try {
+          await signedTxnPromise.then(({ txid, slot }) =>
+            successCallback(txid, i),
+          );
+          pendingTxns.push(signedTxnPromise);
+        } catch (e) {
+          console.log('Failed at txn index:', i);
+          console.log('Caught failure:', e);
+  
+          failCallback(signedTxns[i], i);
+          if (sequenceType === SequenceType.StopOnFailure) {
+            return {
+              number: i,
+              txs: await Promise.all(pendingTxns),
+            };
+          }
         }
+      } else {
+        pendingTxns.push(signedTxnPromise);
       }
-    } else {
-      pendingTxns.push(signedTxnPromise);
     }
-  }
-
-  if (sequenceType !== SequenceType.Parallel) {
-    const result = await Promise.all(pendingTxns);
-    return { number: signedTxns.length, txs: result };
-  }
-
-  return { number: signedTxns.length, txs: await Promise.all(pendingTxns) };
+  
+    if (sequenceType !== SequenceType.Parallel) {
+      const result = await Promise.all(pendingTxns);
+      return { number: signedTxns.length, txs: result };
+    }
+  
+    return { number: signedTxns.length, txs: await Promise.all(pendingTxns) };
 };
