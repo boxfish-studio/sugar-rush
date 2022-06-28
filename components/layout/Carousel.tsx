@@ -3,8 +3,8 @@ import { FC } from 'react'
 import { Token } from 'lib/candy-machine/view/interfaces'
 
 const Carousel: FC<{
-    token: Token[]
-}> = ({ token }) => {
+    tokens: Token[]
+}> = ({ tokens }) => {
     Swiper.use([Navigation])
     new Swiper('.carousel', {
         slidesPerView: 1,
@@ -25,14 +25,19 @@ const Carousel: FC<{
         <>
             <link rel='stylesheet' href='https://unpkg.com/swiper/swiper-bundle.min.css' />
             <div className='container py-0 w-96 relative'>
-                <div className='carousel overflow-hidden md:flex md:justify-between'>
+                <div className='carousel overflow-hidden md:flex md:justify-between m-5'>
                     <div className='swiper-wrapper'>
-                        {token &&
-                            token.map((token, i) => (
+                        {tokens &&
+                            tokens.map((token, i) => (
                                 <div className='swiper-slide' key={i}>
                                     <div className='inline-block'>
-                                        <h2 className='text-grey-daylight'>{token.name}</h2>
                                         <img src={token.imageLink} alt={token.name} width='250' height='250'></img>
+                                    </div>
+                                    <div className='flex flex-col gap-y-10 pt-5'>
+                                        <h2 className='text-grey-daylight'>Name: {token.name}</h2>
+                                        <span>Description: {token.description}</span>
+                                        <span>Collection: {token.collection.toString()}</span>
+                                        <span>Symbol: {token.symbol}</span>
                                     </div>
                                 </div>
                             ))}
