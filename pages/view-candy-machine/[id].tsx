@@ -4,15 +4,8 @@ import { Title, CheckConnectedWallet, Carousel, Spinner } from 'components/layou
 import Head from 'next/head'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
-import {
-    CANDY_MACHINE_PROGRAM_V2_ID,
-    TOKEN_METADATA_PROGRAM_ID,
-    MAX_METADATA_LEN,
-    CREATOR_ARRAY_START,
-} from 'lib/candy-machine/constants'
 import { PublicKey } from '@solana/web3.js'
 import { useConnection } from '@solana/wallet-adapter-react'
-import bs58 from 'bs58'
 import { Token } from 'lib/candy-machine/view/interfaces'
 import { Metaplex } from '@metaplex-foundation/js'
 
