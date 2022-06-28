@@ -1,16 +1,15 @@
+import { AnchorProvider, BN, Program } from '@project-serum/anchor'
+import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
+import { Connection, PublicKey } from '@solana/web3.js'
+import { Spinner, Title, UpdateCreateCandyMachineForm, Carousel } from 'components'
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
+import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
+import { Account } from 'lib/candy-machine/types'
+import { Token } from 'lib/candy-machine/view/interfaces'
 import type { NextPage } from 'next'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Program, AnchorProvider, BN } from '@project-serum/anchor'
-import { PublicKey, Connection } from '@solana/web3.js'
-import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
-import { Carousel, Spinner, Title } from 'components/Layout'
-import { FetchedCandyMachineConfig, Token } from 'lib/interfaces'
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/constants'
-import Form from 'components/CreateCM/Form'
-import Head from 'next/head'
-import { Account } from 'lib/types'
-
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -18,22 +17,22 @@ const CandyMachine: NextPage = () => {
 
     const anchorWallet = useAnchorWallet()
     const { connection } = useConnection()
-    const [candyMachineConfig, setCandyMachineConfig] = useState<FetchedCandyMachineConfig>()
+    const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
     const [tokens, setTokens] = useState<Token[]>([])
     const [isLoading, setIsLoading] = useState(false)
 
-    async function viewTokens(e: React.ChangeEvent<HTMLInputElement>) {        
+    async function viewTokens(e: React.ChangeEvent<HTMLInputElement>) {
         if (!e.target.files || e.target.files.length == 0) {
             window.alert('No files uploaded')
             return
         }
-        let cacheData = await e.target.files[0].text();
-        let cacheDataJson = JSON.parse(cacheData);
+        let cacheData = await e.target.files[0].text()
+        let cacheDataJson = JSON.parse(cacheData)
         if (cacheDataJson?.program?.candyMachine === account) {
-            setTokens(Object.values(cacheDataJson.items));    
+            setTokens(Object.values(cacheDataJson.items))
         } else {
-            alert("This cache file is not from this candy machine")
+            alert('This cache file is not from this candy machine')
         }
     }
 
@@ -43,7 +42,7 @@ const CandyMachine: NextPage = () => {
     }: {
         account: Account
         connection: Connection
-    }): Promise<FetchedCandyMachineConfig | undefined> {
+    }): Promise<IFetchedCandyMachineConfig | undefined> {
         if (account && anchorWallet) {
             try {
                 setIsLoading(true)
@@ -114,25 +113,39 @@ const CandyMachine: NextPage = () => {
                 {!error && candyMachineConfig?.uuid && (
                     <div className='mt-5 flex flex-col text-center'>
                         <span className='mt-5'>
-                          There are {new BN(candyMachineConfig.itemsAvailable).toNumber() - new BN(candyMachineConfig.itemsRedeemed).toNumber()}{' '}
-                          unminted NFT.
+                            There are{' '}
+                            {new BN(candyMachineConfig.itemsAvailable).toNumber() -
+                                new BN(candyMachineConfig.itemsRedeemed).toNumber()}{' '}
+                            unminted NFT.
                         </span>
                         <span className='mt-2'>
                             {new BN(candyMachineConfig.itemsRedeemed).toNumber()} redeemed NFT.
                         </span>
-                        {new BN(candyMachineConfig.itemsAvailable).toNumber() - new BN(candyMachineConfig.itemsRedeemed).toNumber() !== 0 && 
-                          <>
-                            <label
-                                htmlFor='cache'
-                                className='m-8 px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-100 transition-all duration-300 ease-linear font-medium border border-gray-500 inline-block cursor-pointer'
-                            >
-                                Upload Cache file to view NFTs
-                            </label>
-                            <input type='file' id='cache' name='cache' className='w-full px-2 hidden' onChange={viewTokens} />
-                          </>
-                        }
-                        { tokens.length !== 0 && <Carousel token={tokens}/> }
-                        <Form fetchedValues={candyMachineConfig} updateCandyMachine candyMachinePubkey={account} />
+                        {new BN(candyMachineConfig.itemsAvailable).toNumber() -
+                            new BN(candyMachineConfig.itemsRedeemed).toNumber() !==
+                            0 && (
+                            <>
+                                <label
+                                    htmlFor='cache'
+                                    className='m-8 px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-100 transition-all duration-300 ease-linear font-medium border border-gray-500 inline-block cursor-pointer'
+                                >
+                                    Upload Cache file to view NFTs
+                                </label>
+                                <input
+                                    type='file'
+                                    id='cache'
+                                    name='cache'
+                                    className='w-full px-2 hidden'
+                                    onChange={viewTokens}
+                                />
+                            </>
+                        )}
+                        {tokens.length !== 0 && <Carousel token={tokens} />}
+                        <UpdateCreateCandyMachineForm
+                            fetchedValues={candyMachineConfig}
+                            updateCandyMachine
+                            candyMachinePubkey={account}
+                        />
                     </div>
                 )}
             </div>

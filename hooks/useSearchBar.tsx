@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const useSearchBar = (initialState: string[]) => {
     const searchRef = useRef<HTMLInputElement>(null)

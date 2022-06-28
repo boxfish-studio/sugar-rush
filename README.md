@@ -1,7 +1,13 @@
 <h1 align="center">
-  CANDY MACHINE DASHBOARD
+  <br>
+  <a href="http://boxfish.studio"><img src="doc/img/suggar-rush-gh-splash-thin-min.png" title="Sugar Rush. By Boxfish Studio"></a>
 </h1>
-<h2 align="center">from Boxfish.Studio</h2>
+
+<h2 align="center">
+  Sugar Rush
+</h2>
+
+<p align="center">The Solana Candymachine Management Dashboard, by <a href="https://boxfish.studio">Boxfish Studio</a></p>
 
 <p align="center">
     <a href="#About">About</a> ◈
