@@ -4,15 +4,8 @@ import { Title, CheckConnectedWallet, Carousel, Spinner } from 'components/layou
 import Head from 'next/head'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
-import {
-    CANDY_MACHINE_PROGRAM_V2_ID,
-    TOKEN_METADATA_PROGRAM_ID,
-    MAX_METADATA_LEN,
-    CREATOR_ARRAY_START,
-} from 'lib/candy-machine/constants'
 import { PublicKey } from '@solana/web3.js'
 import { useConnection } from '@solana/wallet-adapter-react'
-import bs58 from 'bs58'
 import { Token } from 'lib/candy-machine/view/interfaces'
 import { Metaplex } from '@metaplex-foundation/js'
 
@@ -32,14 +25,20 @@ const ViewCandyMachine: NextPage = () => {
         setTokens([])
         const metaplex = new Metaplex(connection)
         const nfts = await metaplex.nfts().findAllByCandyMachine(new PublicKey(account))
+        console.log('nfts', nfts)
 
         const result = []
         for (let i = 0; i < nfts.length; i++) {
             let fetchImage = await fetch(nfts[i].uri)
+
             let imageData = await fetchImage.json()
+            console.log('imageData', imageData)
             let tokenData = {
                 name: nfts[i].name,
                 imageLink: imageData.image,
+                description: imageData.description,
+                collection: imageData.collection,
+                symbol: imageData.symbol,
             }
             result.push(tokenData)
         }
