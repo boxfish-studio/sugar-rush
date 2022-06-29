@@ -21,7 +21,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
             return
         }
         if (account && anchorWallet && cache) {
-            const cacheContent: Cache = JSON.parse(await cache.text())
+            const cacheContent: ICache = JSON.parse(await cache.text())
             const cacheName = cacheContent.cacheName
             const env = cacheContent.env
             setMessage('')

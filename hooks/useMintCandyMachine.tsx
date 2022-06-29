@@ -16,6 +16,7 @@ const useMintCandyMachine = (account: string) => {
     const [itemsRemaining, setItemsRemaining] = useState(0)
     const [nftPrice, setNftPrice] = useState(0)
     const [isActive, setIsActive] = useState(false)
+    const [isCaptcha, setIsCaptcha] = useState(false)
     const [setupTxn, setSetupTxn] = useState<SetupState>()
     const [mintMessage, setMintMessage] = useState('')
     const [candyMachine, setCandyMachine] = useState<CandyMachineAccount>()
@@ -38,12 +39,14 @@ const useMintCandyMachine = (account: string) => {
         const itemsAvailable = state.data.itemsAvailable.toNumber()
         const itemsRedeemed = state.itemsRedeemed.toNumber()
         const itemsRemaining = itemsAvailable - itemsRedeemed
+        const captcha = !!state.data.gatekeeper
         let nftPrice = new BN(state.data.price).toNumber() / LAMPORTS_PER_SOL
         let active = new BN(state.goLiveDate).toNumber() < new Date().getTime() / 1000
 
         setItemsRemaining(itemsRemaining)
         setNftPrice(nftPrice)
         setIsActive(active)
+        setIsCaptcha(captcha)
 
         setCandyMachine({
             id: new PublicKey(account),
@@ -150,6 +153,7 @@ const useMintCandyMachine = (account: string) => {
         isActive,
         refreshCandyMachineState,
         mintMessage,
+        isCaptcha,
     }
 }
 
