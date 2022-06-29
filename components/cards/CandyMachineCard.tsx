@@ -4,14 +4,14 @@ import Link from 'next/link'
 import { FC, useState } from 'react'
 
 const CandyMachineCard: FC<{
-    accounts: string[]
-    setAccounts: React.Dispatch<React.SetStateAction<string[]>>
-}> = ({ accounts, setAccounts }) => {
-    const { searchResults, searchRef, setSearch } = useSearchBar(accounts)
+    candyMachineAccounts: string[]
+    setCandyMachineAccounts: React.Dispatch<React.SetStateAction<string[]>>
+}> = ({ candyMachineAccounts, setCandyMachineAccounts }) => {
+    const { searchResults, searchRef, setSearch } = useSearchBar(candyMachineAccounts)
     const [isOpen, setIsOpen] = useState(false)
     const [selectedAccount, setSelectedAccount] = useState('')
 
-    const { removeAccount } = useRemoveCandyMachineAccount(accounts, setAccounts)
+    const { removeAccount } = useRemoveCandyMachineAccount(candyMachineAccounts, setCandyMachineAccounts)
 
     return (
         <>

@@ -10,7 +10,7 @@ import { getAllNftsByCM } from 'lib/nft/actions'
 
 const ViewCandyMachine: NextPage = () => {
     const router = useRouter()
-    const account = router.query.id
+    const candyMachineAccount = router.query.id
     const { connected, publicKey } = useWallet()
     const [nfts, setNfts] = useState<Nft[]>([])
     const [isLoading, setIsLoading] = useState(false)
@@ -18,11 +18,11 @@ const ViewCandyMachine: NextPage = () => {
     const { connection } = useConnection()
 
     async function getNfts() {
-        if (!account) return
+        if (!candyMachineAccount) return
         setIsLoading(true)
         setMessage('')
         setNfts([])
-        const nfts = await getAllNftsByCM(account)
+        const nfts = await getAllNftsByCM(candyMachineAccount)
 
         setNfts(nfts)
         setIsLoading(false)
@@ -43,10 +43,10 @@ const ViewCandyMachine: NextPage = () => {
                 <div className='flex justify-center items-center flex-col text-center'>
                     <Title text='View Candy Machine Nfts' />
                     <span className='mt-8'>
-                        {account}{' '}
+                        {candyMachineAccount}{' '}
                         <a
                             className='text-blue-700'
-                            href={`https://solscan.io/account/${account}${
+                            href={`https://solscan.io/account/${candyMachineAccount}${
                                 connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
                             }`}
                             target='_blank'

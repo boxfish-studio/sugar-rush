@@ -3,11 +3,11 @@ import { useConnection } from '@solana/wallet-adapter-react'
 import { PublicKey } from '@solana/web3.js'
 import { Nft } from './interfaces'
 
-export async function getAllNftsByCM(account: string | string[]) {
+export async function getAllNftsByCM(candyMachineAccount: string | string[]) {
     const { connection } = useConnection()
 
     const metaplex = new Metaplex(connection)
-    const nftsAddresses = await metaplex.nfts().findAllByCandyMachine(new PublicKey(account))
+    const nftsAddresses = await metaplex.nfts().findAllByCandyMachine(new PublicKey(candyMachineAccount))
 
     const nfts: Nft[] = []
     for (let i = 0; i < nfts.length; i++) {

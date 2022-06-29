@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
-    const account = router.query.id
+    const candyMachineAccount = router.query.id
 
     const anchorWallet = useAnchorWallet()
     const { connection } = useConnection()
@@ -29,7 +29,7 @@ const CandyMachine: NextPage = () => {
         }
         let cacheData = await e.target.files[0].text()
         let cacheDataJson = JSON.parse(cacheData)
-        if (cacheDataJson?.program?.candyMachine === account) {
+        if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
             setNfts(Object.values(cacheDataJson.items))
         } else {
             alert('This cache file is not from this candy machine')
@@ -37,13 +37,13 @@ const CandyMachine: NextPage = () => {
     }
 
     async function fetchCandyMachine({
-        account,
+        candyMachineAccount,
         connection,
     }: {
-        account: Account
+        candyMachineAccount: Account
         connection: Connection
     }): Promise<IFetchedCandyMachineConfig | undefined> {
-        if (account && anchorWallet) {
+        if (candyMachineAccount && anchorWallet) {
             try {
                 setIsLoading(true)
                 const provider = new AnchorProvider(connection, anchorWallet, {
@@ -54,7 +54,7 @@ const CandyMachine: NextPage = () => {
 
                 const program = new Program(idl!, CANDY_MACHINE_PROGRAM_V2_ID, provider)
 
-                const state: any = await program.account.candyMachine.fetch(new PublicKey(account))
+                const state: any = await program.account.candyMachine.fetch(new PublicKey(candyMachineAccount))
 
                 state.data.solTreasuryAccount = state.wallet
                 state.data.itemsRedeemed = state.itemsRedeemed
@@ -71,9 +71,9 @@ const CandyMachine: NextPage = () => {
     }
 
     useEffect(() => {
-        fetchCandyMachine({ account, connection }).then(setCandyMachineConfig)
+        fetchCandyMachine({ candyMachineAccount, connection }).then(setCandyMachineConfig)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [account, connection, anchorWallet])
+    }, [candyMachineAccount, connection, anchorWallet])
 
     return (
         <div className='relative'>
@@ -86,11 +86,11 @@ const CandyMachine: NextPage = () => {
                 <Title text='Update Candy Machine' />
                 <div className='mt-8 flex flex-col text-center'>
                     <span className='break-all border border-slate-300 shadow-xl py-2 px-4 rounded-lg text-center'>
-                        {account}{' '}
+                        {candyMachineAccount}{' '}
                     </span>
                     <a
                         className='text-[hsl(258,52%,56%)] mt-4'
-                        href={`https://solscan.io/account/${account}?cluster=devnet`}
+                        href={`https://solscan.io/account/${candyMachineAccount}?cluster=devnet`}
                         target='_blank'
                         rel='noopener noreferrer'
                     >
@@ -103,7 +103,7 @@ const CandyMachine: NextPage = () => {
                         Error fetching candy machine config
                         <button
                             className='rounded-lg bg-slate-400 p-2 mt-4'
-                            onClick={() => fetchCandyMachine({ account, connection })}
+                            onClick={() => fetchCandyMachine({ candyMachineAccount, connection })}
                         >
                             Fetch again
                         </button>
@@ -144,7 +144,7 @@ const CandyMachine: NextPage = () => {
                         <UpdateCreateCandyMachineForm
                             fetchedValues={candyMachineConfig}
                             updateCandyMachine
-                            candyMachinePubkey={account}
+                            candyMachinePubkey={candyMachineAccount}
                         />
                     </div>
                 )}
