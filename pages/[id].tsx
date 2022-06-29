@@ -142,7 +142,7 @@ const CandyMachine: NextPage = () => {
                         )}
                         {nfts.length !== 0 && (
                             <Carousel
-                                data={nfts.map((nft) => ({
+                                carouselData={nfts.map((nft) => ({
                                     title: nft.name,
                                     image: nft.imageLink,
                                 }))}

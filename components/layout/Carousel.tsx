@@ -1,10 +1,11 @@
 import Swiper, { Navigation } from 'swiper'
 import { FC } from 'react'
 import { ICarousel } from 'lib/interfaces'
+import Image from 'next/image'
 
 const Carousel: FC<{
-    data: ICarousel[]
-}> = ({ data }) => {
+    carouselData: ICarousel[]
+}> = ({ carouselData }) => {
     Swiper.use([Navigation])
     new Swiper('.carousel', {
         slidesPerView: 1,
@@ -27,13 +28,16 @@ const Carousel: FC<{
             <div className='container py-0 w-96 relative'>
                 <div className='carousel overflow-hidden md:flex md:justify-between'>
                     <div className='swiper-wrapper'>
-                        {data &&
-                            data.map((data, i) => (
-                                <div className='swiper-slide' key={i}>
+                        {carouselData &&
+                            carouselData.map((data, i) => (
+                                <div className='swiper-slide flex flex-col' key={i}>
                                     <div className='inline-block'>
                                         <h1 className='text-grey-daylight'>{data.title}</h1>
-                                        <img src={data.image} alt={data.title} width='250' height='250'></img>
+                                        <Image src={data.image} alt={data.title} width={250} height={250} />
                                     </div>
+                                    <span>
+                                        {i + 1}/{carouselData.length}
+                                    </span>
                                 </div>
                             ))}
                     </div>

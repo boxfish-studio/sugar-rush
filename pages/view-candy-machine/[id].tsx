@@ -59,7 +59,7 @@ const ViewCandyMachine: NextPage = () => {
                         <span className='mt-8'>{message}</span>
                     ) : (
                         <Carousel
-                            data={nfts.map((nft) => ({
+                            carouselData={nfts.map((nft) => ({
                                 title: nft.name,
                                 image: nft.imageLink,
                             }))}
