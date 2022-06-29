@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 
 const VerifyCandyMachine: NextPage = () => {
     const router = useRouter()
-    const account = router.query.id
+    const candyMachineAccount = router.query.id
     const { cache, uploadCache } = useUploadCache()
     const { connected } = useWallet()
     const { error, isLoading, verifyCandyMachine, message, connection } = useVerifyCandyMachineV2(cache)
@@ -23,11 +23,11 @@ const VerifyCandyMachine: NextPage = () => {
                     <Title text='Verify Candy Machine' />
                     <div className='mt-8 flex flex-col text-center'>
                         <span className='break-all border border-slate-300 shadow-xl py-2 px-4 rounded-lg text-center'>
-                            {account}{' '}
+                            {candyMachineAccount}{' '}
                         </span>
                         <a
                             className='text-[hsl(258,52%,56%)] mt-4'
-                            href={`https://solscan.io/account/${account}${
+                            href={`https://solscan.io/account/${candyMachineAccount}${
                                 connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
                             }`}
                             target='_blank'
@@ -55,7 +55,10 @@ const VerifyCandyMachine: NextPage = () => {
                     {isLoading && <ActionButton text='Verifying Candy Machine...' isLoading />}
 
                     {!isLoading && (
-                        <ActionButton text='Verify Candy Machine' onClick={() => verifyCandyMachine({ account })} />
+                        <ActionButton
+                            text='Verify Candy Machine'
+                            onClick={() => verifyCandyMachine({ candyMachineAccount })}
+                        />
                     )}
                     {!error && message && <div className='text-[hsl(258,52%,56%)] text-center mt-6'>{message}</div>}
 

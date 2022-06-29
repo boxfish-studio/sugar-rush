@@ -17,7 +17,7 @@ const useRemoveCandyMachineAccount = (
     const anchorWallet = useAnchorWallet()
     const { rpcEndpoint } = useRPC()
 
-    const removeAccount = async (account: string) => {
+    const removeAccount = async (candyMachineAccount: string) => {
         if (!anchorWallet) return
         const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
             preflightCommitment: 'recent',
@@ -59,7 +59,7 @@ const useRemoveCandyMachineAccount = (
             }
         }
 
-        return await withdrawV2(anchorProgram, anchorWallet, new PublicKey(account))
+        return await withdrawV2(anchorProgram, anchorWallet, new PublicKey(candyMachineAccount))
     }
 
     return {

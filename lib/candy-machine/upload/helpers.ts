@@ -109,15 +109,15 @@ export async function createCandyMachineV2Account(
         8 +
         2 * (Math.floor(candyData.itemsAvailable.toNumber() / 8) + 1)
 
-    const account = anchor.web3.SystemProgram.createAccount({
+    const candyMachineAccount = anchor.web3.SystemProgram.createAccount({
         fromPubkey: payerWallet,
         newAccountPubkey: candyAccount,
         space: size,
         lamports: await anchorProgram.provider.connection.getMinimumBalanceForRentExemption(size),
         programId: CANDY_MACHINE_PROGRAM_V2_ID,
     })
-    console.log('account created', account)
-    return account
+    console.log('account created', candyMachineAccount)
+    return candyMachineAccount
 }
 
 export const getUnixTs = () => {

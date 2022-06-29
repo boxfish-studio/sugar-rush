@@ -1,10 +1,11 @@
 import Swiper, { Navigation } from 'swiper'
 import { FC } from 'react'
-import { Token } from 'lib/candy-machine/view/interfaces'
+import { ICarousel } from 'lib/interfaces'
+import Image from 'next/image'
 
 const Carousel: FC<{
-    tokens: Token[]
-}> = ({ tokens }) => {
+    carouselData: ICarousel[]
+}> = ({ carouselData }) => {
     Swiper.use([Navigation])
     new Swiper('.carousel', {
         slidesPerView: 1,
@@ -27,18 +28,16 @@ const Carousel: FC<{
             <div className='container py-0 w-96 relative'>
                 <div className='carousel overflow-hidden md:flex md:justify-between m-5'>
                     <div className='swiper-wrapper'>
-                        {tokens &&
-                            tokens.map((token, i) => (
-                                <div className='swiper-slide' key={i}>
+                        {carouselData &&
+                            carouselData.map((data, i) => (
+                                <div className='swiper-slide flex flex-col' key={i}>
                                     <div className='inline-block'>
-                                        <img src={token.imageLink} alt={token.name} width='250' height='250'></img>
+                                        <h1 className='text-grey-daylight'>{data.title}</h1>
+                                        <Image src={data.image} alt={data.title} width={250} height={250} />
                                     </div>
-                                    <div className='flex flex-col gap-y-10 pt-5'>
-                                        <h2 className='text-grey-daylight'>Name: {token.name}</h2>
-                                        <span>Description: {token.description}</span>
-                                        <span>Collection: {token.collection.toString()}</span>
-                                        <span>Symbol: {token.symbol}</span>
-                                    </div>
+                                    <span>
+                                        {i + 1}/{carouselData.length}
+                                    </span>
                                 </div>
                             ))}
                     </div>
