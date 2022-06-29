@@ -1,4 +1,4 @@
-export interface Token {
+export interface Nft {
     name: string
     imageLink: string
     link?: string

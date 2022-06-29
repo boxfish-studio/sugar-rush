@@ -5,7 +5,7 @@ import { Spinner, Title, UpdateCreateCandyMachineForm, Carousel } from 'componen
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Account } from 'lib/candy-machine/types'
-import { Token } from 'lib/candy-machine/view/interfaces'
+import { Nft } from 'lib/nft/interfaces'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
@@ -19,10 +19,10 @@ const CandyMachine: NextPage = () => {
     const { connection } = useConnection()
     const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
-    const [tokens, setTokens] = useState<Token[]>([])
+    const [nfts, setNfts] = useState<Nft[]>([])
     const [isLoading, setIsLoading] = useState(false)
 
-    async function viewTokens(e: React.ChangeEvent<HTMLInputElement>) {
+    async function viewNfts(e: React.ChangeEvent<HTMLInputElement>) {
         if (!e.target.files || e.target.files.length == 0) {
             window.alert('No files uploaded')
             return
@@ -30,7 +30,7 @@ const CandyMachine: NextPage = () => {
         let cacheData = await e.target.files[0].text()
         let cacheDataJson = JSON.parse(cacheData)
         if (cacheDataJson?.program?.candyMachine === account) {
-            setTokens(Object.values(cacheDataJson.items))
+            setNfts(Object.values(cacheDataJson.items))
         } else {
             alert('This cache file is not from this candy machine')
         }
@@ -136,11 +136,11 @@ const CandyMachine: NextPage = () => {
                                     id='cache'
                                     name='cache'
                                     className='w-full px-2 hidden'
-                                    onChange={viewTokens}
+                                    onChange={viewNfts}
                                 />
                             </>
                         )}
-                        {tokens.length !== 0 && <Carousel token={tokens} />}
+                        {nfts.length !== 0 && <Carousel token={nfts} />}
                         <UpdateCreateCandyMachineForm
                             fetchedValues={candyMachineConfig}
                             updateCandyMachine

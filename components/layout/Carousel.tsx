@@ -1,9 +1,9 @@
 import Swiper, { Navigation } from 'swiper'
 import { FC } from 'react'
-import { Token } from 'lib/candy-machine/view/interfaces'
+import { Nft } from 'lib/nft/interfaces'
 
 const Carousel: FC<{
-    token: Token[]
+    token: Nft[]
 }> = ({ token }) => {
     Swiper.use([Navigation])
     new Swiper('.carousel', {
