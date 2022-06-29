@@ -140,7 +140,14 @@ const CandyMachine: NextPage = () => {
                                 />
                             </>
                         )}
-                        {nfts.length !== 0 && <Carousel token={nfts} />}
+                        {nfts.length !== 0 && (
+                            <Carousel
+                                data={nfts.map((nft) => ({
+                                    title: nft.name,
+                                    image: nft.imageLink,
+                                }))}
+                            />
+                        )}
                         <UpdateCreateCandyMachineForm
                             fetchedValues={candyMachineConfig}
                             updateCandyMachine

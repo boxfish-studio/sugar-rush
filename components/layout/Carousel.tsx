@@ -1,10 +1,10 @@
 import Swiper, { Navigation } from 'swiper'
 import { FC } from 'react'
-import { Nft } from 'lib/nft/interfaces'
+import { ICarousel } from 'lib/interfaces'
 
 const Carousel: FC<{
-    token: Nft[]
-}> = ({ token }) => {
+    data: ICarousel[]
+}> = ({ data }) => {
     Swiper.use([Navigation])
     new Swiper('.carousel', {
         slidesPerView: 1,
@@ -27,12 +27,12 @@ const Carousel: FC<{
             <div className='container py-0 w-96 relative'>
                 <div className='carousel overflow-hidden md:flex md:justify-between'>
                     <div className='swiper-wrapper'>
-                        {token &&
-                            token.map((token, i) => (
+                        {data &&
+                            data.map((data, i) => (
                                 <div className='swiper-slide' key={i}>
                                     <div className='inline-block'>
-                                        <h2 className='text-grey-daylight'>{token.name}</h2>
-                                        <img src={token.imageLink} alt={token.name} width='250' height='250'></img>
+                                        <h1 className='text-grey-daylight'>{data.title}</h1>
+                                        <img src={data.image} alt={data.title} width='250' height='250'></img>
                                     </div>
                                 </div>
                             ))}

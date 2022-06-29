@@ -22,8 +22,7 @@ const ViewCandyMachine: NextPage = () => {
         setIsLoading(true)
         setMessage('')
         setNfts([])
-        const nfts = await getAllNftsByCM(candyMachineAccount)
-
+        const nfts = await getAllNftsByCM(candyMachineAccount, connection)
         setNfts(nfts)
         setIsLoading(false)
     }
@@ -56,7 +55,16 @@ const ViewCandyMachine: NextPage = () => {
                         </a>
                     </span>
                     {isLoading && <Spinner />}
-                    {message.length !== 0 ? <span className='mt-8'>{message}</span> : <Carousel token={nfts} />}
+                    {message.length !== 0 ? (
+                        <span className='mt-8'>{message}</span>
+                    ) : (
+                        <Carousel
+                            data={nfts.map((nft) => ({
+                                title: nft.name,
+                                image: nft.imageLink,
+                            }))}
+                        />
+                    )}
                 </div>
             ) : (
                 <CheckConnectedWallet />
