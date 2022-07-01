@@ -14,7 +14,6 @@ const Carousel: FC<{
     onClick?: (e: any) => void
     slideChange?: () => void
 }> = ({ carouselData, onClick, slideChange }) => {
-    console.log(carouselData)
     return (
         <>
             {carouselData.length !== 0 && (
