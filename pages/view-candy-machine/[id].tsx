@@ -11,8 +11,9 @@ import { getAllNftsByCM } from 'lib/nft/actions'
 const ViewCandyMachine: NextPage = () => {
     const router = useRouter()
     const candyMachineAccount = router.query.id
-    const { connected, publicKey } = useWallet()
+    const { connected } = useWallet()
     const [nfts, setNfts] = useState<Nft[]>([])
+    const [nftDetails, setNftDetails] = useState<Nft>()
     const [isLoading, setIsLoading] = useState(false)
     const [message, setMessage] = useState('')
     const { connection } = useConnection()
@@ -27,9 +28,24 @@ const ViewCandyMachine: NextPage = () => {
         setIsLoading(false)
     }
 
+    function onClickSlide(e: any) {
+        const nameNft = e.target.alt
+        console.log(nameNft)
+        if (nfts.length !== 0) {
+            const viewNft = nfts.filter((e) => e.name === nameNft)[0]
+            setNftDetails(viewNft)
+        } else {
+            setNftDetails(undefined)
+        }
+    }
+
+    function refresh() {
+        setNftDetails(undefined)
+    }
+
     useEffect(() => {
         getNfts()
-    }, [])
+    }, [candyMachineAccount, connection])
 
     return (
         <>
@@ -54,16 +70,32 @@ const ViewCandyMachine: NextPage = () => {
                             View in Solscan
                         </a>
                     </span>
-                    {isLoading && <Spinner />}
-                    {message.length !== 0 ? (
-                        <span className='mt-8'>{message}</span>
+                    {isLoading ? (
+                        <Spinner />
                     ) : (
-                        <Carousel
-                            carouselData={nfts.map((nft) => ({
-                                title: nft.name,
-                                image: nft.imageLink,
-                            }))}
-                        />
+                        <>
+                            <Carousel
+                                carouselData={nfts.map((nft) => ({
+                                    title: nft.name,
+                                    image: nft.imageLink,
+                                }))}
+                                onClick={onClickSlide}
+                                slideChange={refresh}
+                            />
+                            <span className='text-[hsl(258,52%,56%)] text-center mt-6'>
+                                Click the img to view Nft details
+                            </span>
+                        </>
+                    )}
+                    {message.length !== 0 && <span className='mt-8'>{message}</span>}
+                    {nftDetails && (
+                        <div className='flex flex-col gap-5 pt-7'>
+                            {nftDetails.symbol && <span>Symbol: {nftDetails.symbol}</span>}
+                            {nftDetails.description && <span>Description: {nftDetails.description}</span>}
+                            {nftDetails.collection.length && (
+                                <span>Collection: {nftDetails.collection.toString()}</span>
+                            )}
+                        </div>
                     )}
                 </div>
             ) : (

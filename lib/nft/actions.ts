@@ -13,6 +13,9 @@ export async function getAllNftsByCM(candyMachineAccount: string | string[], con
         let nft: Nft = {
             name: nftData.name,
             imageLink: nftData.image,
+            description: nftData.description,
+            symbol: nftData.symbol,
+            collection: nftData.collection,
         }
         nfts.push(nft)
     }
