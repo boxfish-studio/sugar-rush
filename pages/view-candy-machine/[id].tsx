@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Title, CheckConnectedWallet, Carousel, Spinner } from 'components/layout'
+import { Title, CheckConnectedWallet, Carousel, Spinner, NftDetails } from 'components/layout'
 import Head from 'next/head'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
@@ -23,16 +23,18 @@ const ViewCandyMachine: NextPage = () => {
         setIsLoading(true)
         setMessage('')
         setNfts([])
-        const nfts = await getAllNftsByCM(candyMachineAccount, connection)
+        let nfts = await getAllNftsByCM(candyMachineAccount, connection)
+        if (nfts.length === 0) setMessage('Assets not found')
         setNfts(nfts)
         setIsLoading(false)
     }
 
     function onClickSlide(e: any) {
         const nameNft = e.target.alt
-        console.log(nameNft)
         if (nfts.length !== 0) {
             const viewNft = nfts.filter((e) => e.name === nameNft)[0]
+            console.log(viewNft)
+
             setNftDetails(viewNft)
         } else {
             setNftDetails(undefined)
@@ -44,8 +46,10 @@ const ViewCandyMachine: NextPage = () => {
     }
 
     useEffect(() => {
-        getNfts()
-    }, [candyMachineAccount, connection])
+        if (connected) {
+            getNfts()
+        }
+    }, [candyMachineAccount, connection, connected])
 
     return (
         <>
@@ -74,29 +78,26 @@ const ViewCandyMachine: NextPage = () => {
                         <Spinner />
                     ) : (
                         <>
-                            <Carousel
-                                carouselData={nfts.map((nft) => ({
-                                    title: nft.name,
-                                    image: nft.imageLink,
-                                }))}
-                                onClick={onClickSlide}
-                                slideChange={refresh}
-                            />
-                            <span className='text-[hsl(258,52%,56%)] text-center mt-6'>
-                                Click the img to view Nft details
-                            </span>
+                            {message.length === 0 ? (
+                                <>
+                                    <Carousel
+                                        carouselData={nfts.map((nft) => ({
+                                            title: nft.name,
+                                            image: nft.image,
+                                        }))}
+                                        onClick={onClickSlide}
+                                        slideChange={refresh}
+                                    />
+                                    <span className='text-[hsl(258,52%,56%)] text-center mt-6'>
+                                        Click the img to view Nft details
+                                    </span>
+                                </>
+                            ) : (
+                                <span className='mt-8'>{message}</span>
+                            )}
                         </>
                     )}
-                    {message.length !== 0 && <span className='mt-8'>{message}</span>}
-                    {nftDetails && (
-                        <div className='flex flex-col gap-5 pt-7'>
-                            {nftDetails.symbol && <span>Symbol: {nftDetails.symbol}</span>}
-                            {nftDetails.description && <span>Description: {nftDetails.description}</span>}
-                            {nftDetails.collection.length && (
-                                <span>Collection: {nftDetails.collection.toString()}</span>
-                            )}
-                        </div>
-                    )}
+                    {nftDetails && <NftDetails nft={nftDetails} />}
                 </div>
             ) : (
                 <CheckConnectedWallet />
