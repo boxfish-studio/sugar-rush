@@ -33,8 +33,6 @@ const ViewCandyMachine: NextPage = () => {
         const nameNft = e.target.alt
         if (nfts.length !== 0) {
             const viewNft = nfts.filter((e) => e.name === nameNft)[0]
-            console.log(viewNft)
-
             setNftDetails(viewNft)
         } else {
             setNftDetails(undefined)

@@ -51,7 +51,7 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
             {nft.properties?.files &&
                 nft.properties.files?.map((atb, i) => {
                     return (
-                        <span>
+                        <span key={i}>
                             <strong>File</strong>: {atb.uri}
                         </span>
                     )
