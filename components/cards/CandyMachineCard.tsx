@@ -4,14 +4,14 @@ import Link from 'next/link'
 import { FC, useState } from 'react'
 
 const CandyMachineCard: FC<{
-    accounts: string[]
-    setAccounts: React.Dispatch<React.SetStateAction<string[]>>
-}> = ({ accounts, setAccounts }) => {
-    const { searchResults, searchRef, setSearch } = useSearchBar(accounts)
+    candyMachineAccounts: string[]
+    setCandyMachineAccounts: React.Dispatch<React.SetStateAction<string[]>>
+}> = ({ candyMachineAccounts, setCandyMachineAccounts }) => {
+    const { searchResults, searchRef, setSearch } = useSearchBar(candyMachineAccounts)
     const [isOpen, setIsOpen] = useState(false)
     const [selectedAccount, setSelectedAccount] = useState('')
 
-    const { removeAccount } = useRemoveCandyMachineAccount(accounts, setAccounts)
+    const { removeAccount } = useRemoveCandyMachineAccount(candyMachineAccounts, setCandyMachineAccounts)
 
     return (
         <>
@@ -48,6 +48,11 @@ const CandyMachineCard: FC<{
                             <Link href={`/verify-candy-machine/${account}`}>
                                 <a className='mt-4 md:mt-8 px-4 py-2 text-white transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-[hsl(258,52%,65%)] rounded-xl'>
                                     Verify
+                                </a>
+                            </Link>
+                            <Link href={`/view-candy-machine/${account}`}>
+                                <a className='mt-4 md:mt-8 px-4 py-2 text-white transition-all duration-300 ease-linear bg-[hsl(258,52%,56%)] shadow-lg cursor-pointer hover:bg-[hsl(258,52%,65%)] rounded-xl'>
+                                    View
                                 </a>
                             </Link>
                         </div>
