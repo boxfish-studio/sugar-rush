@@ -1,3 +1,5 @@
+import { PublicKey } from '@solana/web3.js'
+
 export interface Nft {
     name: string
     image: string
@@ -11,6 +13,7 @@ export interface Nft {
     collection?: string | ICollectionNft
     creators?: ICreatorsNft[]
     seller_fee_basis_points?: number
+    mintAddress: PublicKey
 }
 
 interface IAtributesNft {
