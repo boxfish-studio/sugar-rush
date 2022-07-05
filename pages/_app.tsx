@@ -14,7 +14,7 @@ import { clusterApiUrl } from '@solana/web3.js'
 import { Navbar, Wallet } from 'components'
 import type { AppProps } from 'next/app'
 import React, { useMemo } from 'react'
-import '../styles/globals.css'
+import '../styles/globals.scss'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const network = WalletAdapterNetwork.Devnet

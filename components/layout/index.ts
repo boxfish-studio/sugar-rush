@@ -1,8 +1,0 @@
-export { default as Navbar } from './Navbar'
-export { default as Wallet } from './Wallet'
-export { default as Spinner } from './Spinner'
-export { default as Title } from './Title'
-export { default as CheckConnectedWallet } from './CheckConnectedWallet'
-export { default as Modal } from './Modal'
-export { default as ActionButton } from './ActionButton'
-export { default as Carousel } from './Carousel'
