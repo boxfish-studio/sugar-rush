@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+@import './wallet-adapter.scss';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    font-family: 'Inter', sans-serif;
+    @apply text-base;
+}
+
+body {
+    @apply min-h-screen;
+    @apply m-0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    @apply font-bold;
+}
+h1 {
+    @apply text-3xl;
+}
+h2 {
+    @apply text-2xl;
+} 
+h3 {
+    @apply text-xl;
+}
+h4, h5, h6 {
+    @apply text-lg;
+}
+
+a {
+    text-decoration: none;
+    @apply text-blue-regular;
+}

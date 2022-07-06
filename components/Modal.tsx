@@ -1,7 +1,7 @@
 import { useConnection } from '@solana/wallet-adapter-react'
-import { ActionButton } from 'components'
+import { Button } from 'components'
 import { Dispatch, FC, SetStateAction, useState } from 'react'
-import styles from 'styles/Modal.module.css'
+import styles from 'styles/modules/Modal.module.scss'
 
 const Modal: FC<{
     isOpen: boolean
@@ -108,7 +108,7 @@ const Modal: FC<{
                                         </span>
                                     </>
                                 )}{' '}
-                                {isLoading && <ActionButton text='Removing account...' isLoading={true} />}
+                                {isLoading && <Button text='Removing account...' isLoading={true} />}
                             </span>
                         </span>
                     </span>
