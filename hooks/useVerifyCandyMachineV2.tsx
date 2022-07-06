@@ -15,13 +15,14 @@ const useVerifyCandyMachineV2 = (cache: File) => {
     const [isLoading, setIsLoading] = useState(false)
     const [shouldMint, setShouldMint] = useState(false)
 
-    async function verifyCandyMachine({ account }: { account: Account }) {
+    async function verifyCandyMachine({ candyMachineAccount }: { candyMachineAccount: Account }) {
         if (!cache) {
             setError('Upload a cache file.')
             return
         }
-        if (account && anchorWallet && cache) {
+        if (candyMachineAccount && anchorWallet && cache) {
             const cacheContent: ICache = JSON.parse(await cache.text())
+            if (cacheContent.program?.candyMachine !== candyMachineAccount) return
             const cacheName = cacheContent.cacheName
             const env = cacheContent.env
             setMessage('')
@@ -38,9 +39,13 @@ const useVerifyCandyMachineV2 = (cache: File) => {
 
                 const program = new Program(idl!, CANDY_MACHINE_PROGRAM_V2_ID, provider)
 
-                const candyMachineInfo = await program.provider.connection.getAccountInfo(new PublicKey(account))
+                const candyMachineInfo = await program.provider.connection.getAccountInfo(
+                    new PublicKey(candyMachineAccount)
+                )
 
-                const candyMachineObject: any = await program.account.candyMachine.fetch(new PublicKey(account))
+                const candyMachineObject: any = await program.account.candyMachine.fetch(
+                    new PublicKey(candyMachineAccount)
+                )
                 let isGood = true
 
                 const keys = Object.keys(cacheContent.items)
@@ -49,7 +54,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
 
                 if (keys.length > 0) {
                     setMessage(`Checking ${keys.length} items that have yet to be checked...`)
-                    if (account && anchorWallet && cache) {
+                    if (candyMachineAccount && anchorWallet && cache) {
                         const cacheContent: ICache = JSON.parse(await cache.text())
                         const cacheName = cacheContent.cacheName
                         const env = cacheContent.env
@@ -68,11 +73,11 @@ const useVerifyCandyMachineV2 = (cache: File) => {
                             const program = new Program(idl!, CANDY_MACHINE_PROGRAM_V2_ID, provider)
 
                             const candyMachineInfo = await program.provider.connection.getAccountInfo(
-                                new PublicKey(account)
+                                new PublicKey(candyMachineAccount)
                             )
 
                             const candyMachineObject: any = await program.account.candyMachine.fetch(
-                                new PublicKey(account)
+                                new PublicKey(candyMachineAccount)
                             )
                             let isGood = true
 
