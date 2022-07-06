@@ -43,16 +43,29 @@ const ViewCandyMachine: NextPage = () => {
                     <Title text='View Candy Machine Nfts' />
                     <span className='mt-8'>
                         {candyMachineAccount}{' '}
-                        <a
-                            className='text-blue-700'
-                            href={`https://solscan.io/account/${candyMachineAccount}${
-                                connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                            }`}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                        >
-                            View in Solscan
-                        </a>
+                        <div className='mt-5'>
+                            <a
+                                className='text-blue-700 mt-4 mr-2'
+                                href={`https://solscan.io/account/${candyMachineAccount}${
+                                    connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
+                                }/`}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                            >
+                                View in Solscan
+                            </a>
+                            -
+                            <a
+                                className='text-blue-700 mt-4 ml-2'
+                                href={`https://solana.fm/address/${candyMachineAccount}${
+                                    connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet-solana' : ''
+                                }/`}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                            >
+                                View in Solana.fm
+                            </a>
+                        </div>
                     </span>
                     {isLoading && <Spinner />}
                     {message.length !== 0 ? (

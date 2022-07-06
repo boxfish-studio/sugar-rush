@@ -50,36 +50,61 @@ const Modal: FC<{
                             <span className={styles.line} />
                         </button>
                         <span className={`flex flex-col ${styles.text}`}>
-                            <a
-                                className='text-blue-700 hover:underline my-3'
-                                href={`https://solscan.io/account/${account}${
-                                    connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                                }`}
-                                target='_blank'
-                                rel='noopener noreferrer'
-                            >
-                                View in Solscan
-                            </a>
+                            <div className='mt-5'>
+                                <a
+                                    className='text-blue-700 hover:underline my-3 mt-4 mr-2'
+                                    href={`https://solscan.io/account/${account}${
+                                        connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
+                                    }/`}
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                >
+                                    View in Solscan
+                                </a>
+                                -
+                                <a
+                                    className='text-blue-700 hover:underline my-3 mt-4 ml-2'
+                                    href={`https://solana.fm/address/${account}${
+                                        connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet-solana' : ''
+                                    }/`}
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                >
+                                    View in Solana.fm
+                                </a>
+                            </div>
                             <h1 className='text-red-500 text-xl'>
                                 <span className='font-bold'>WARNING!</span> You are attempting to remove an account from
                                 the Candy Machine. This means all the unminted NFTs will be gone forever. This will
                                 refund the SOL locked from the account to your wallet.
                             </h1>
 
-                            <span className='flex flex-col  justify-center items-center mt-6'>
+                            <span className='flex flex-col  justify-center items-center'>
                                 {!isLoading && tx && !error && (
                                     <>
                                         <span className='flex flex-col justify-center items-center mt-6'>
                                             Successfully closed account - Reedemed {tx.balanceChange.toFixed(4)} SOL
                                             <a
-                                                className='text-blue-700 hover:underline my-3'
+                                                className='text-blue-700 hover:underline my-1'
                                                 href={`https://solscan.io/tx/${tx.txid}${
                                                     connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
+                                                }/`}
+                                                target='_blank'
+                                                rel='noopener noreferrer'
+                                            >
+                                                Check the details of the transaction in Solscan
+                                            </a>
+                                            <a
+                                                className='text-blue-700 hover:underline my-1'
+                                                href={`https://solana.fm/tx/${tx.txid}${
+                                                    connection.rpcEndpoint.includes('devnet')
+                                                        ? '?cluster=devnet-solana'
+                                                        : ''
                                                 }`}
                                                 target='_blank'
                                                 rel='noopener noreferrer'
                                             >
-                                                Check the details of the transaction in solscan
+                                                Check the details of the transaction in Solana.fm
                                             </a>
                                         </span>
                                     </>

@@ -25,16 +25,29 @@ const VerifyCandyMachine: NextPage = () => {
                         <span className='break-all border border-slate-300 shadow-xl py-2 px-4 rounded-lg text-center'>
                             {candyMachineAccount}{' '}
                         </span>
-                        <a
-                            className='text-[hsl(258,52%,56%)] mt-4'
-                            href={`https://solscan.io/account/${candyMachineAccount}${
-                                connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                            }`}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                        >
-                            View in Solscan
-                        </a>
+                        <div className='mt-5'>
+                            <a
+                                className='text-[hsl(258,52%,56%)] mt-4 mr-2'
+                                href={`https://solscan.io/account/${candyMachineAccount}${
+                                    connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
+                                }/`}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                            >
+                                View in Solscan
+                            </a>
+                            -
+                            <a
+                                className='text-[hsl(258,52%,56%)] mt-4 ml-2'
+                                href={`https://solana.fm/address/${candyMachineAccount}${
+                                    connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet-solana' : ''
+                                }/`}
+                                target='_blank'
+                                rel='noopener noreferrer'
+                            >
+                                View in Solana.fm
+                            </a>
+                        </div>
                     </div>
                     <div className='flex flex-col justify-center items-center gap-3'>
                         <label
