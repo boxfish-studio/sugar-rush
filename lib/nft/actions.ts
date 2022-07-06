@@ -199,7 +199,7 @@ export async function getAllNftsByCM(candyMachineAccount: string | string[], con
     return nfts
 }
 
-export async function updateNft(nft: Nft, connection: Connection, wallet: WalletContextState) {
+export async function updateNft(nft: Nft, newValues: any, connection: Connection, wallet: WalletContextState) {
     if (!connection || !wallet) return
     const metaplex = new Metaplex(connection)
     metaplex.use(walletAdapterIdentity(wallet))
@@ -209,6 +209,8 @@ export async function updateNft(nft: Nft, connection: Connection, wallet: Wallet
     if (!nft.mintAddress) return
     const nftData = await metaplex.nfts().findByMint(nft.mintAddress)
     console.log('nftData', nftData)
+    console.log('newValues', newValues)
+
     // console.log(data);
     // const parseDataToUpdateNft: UpdateNftInput = Object.values(JSON.parse(data).items).map((nft: any) => {
     //     return {
@@ -219,19 +221,19 @@ export async function updateNft(nft: Nft, connection: Connection, wallet: Wallet
     //     }
     // })
 
-    const { uri: newUri } = await metaplex.nfts().uploadMetadata({
-        ...nftData.metadata,
-        name: 'BOX #5',
-        description: 'Number 5 of boxfish collection',
-        symbol: 'BOX5',
-    })
+    // const { uri: newUri } = await metaplex.nfts().uploadMetadata({
+    //     ...nftData.metadata,
+    //     name: 'BOX #5',
+    //     description: 'Number 5 of boxfish collection',
+    //     symbol: 'BOX5',
+    // })
 
-    const { nft: nftUpdated, transactionId: txId } = await metaplex.nfts().update(nftData, {
-        uri: newUri,
-        name: 'BOX #5',
-        symbol: 'BOX5',
-    })
+    // const { nft: nftUpdated, transactionId: txId } = await metaplex.nfts().update(nftData, {
+    //     uri: newUri,
+    //     name: 'BOX #5',
+    //     symbol: 'BOX5',
+    // })
 
-    console.log('nftUpdated', nftUpdated)
-    console.log('txId', txId)
+    // console.log('nftUpdated', nftUpdated)
+    // console.log('txId', txId)
 }

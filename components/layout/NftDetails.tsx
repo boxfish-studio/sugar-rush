@@ -11,13 +11,22 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
 
     async function onClickUpdateNft() {
         console.log('values', values)
+        console.log('initialState', initialState)
         console.log('nft', nft)
-        console.log('connection', connection)
-        console.log('wallet.connected', wallet.connected)
 
-        // if (nft && connection && wallet.connected) await updateNft(nft, connection, wallet)
+        if (nft && connection && wallet.connected) await updateNft(nft, values, connection, wallet)
     }
-    const { onChange, onSubmit, values } = useForm(onClickUpdateNft, null)
+
+    const initialState = {
+        name: nft.name,
+        symbol: nft.symbol,
+        description: nft.description,
+        animation_url: nft.animation_url,
+        external_url: nft.external_url,
+        seller_fee_basis_points: nft.seller_fee_basis_points,
+    }
+
+    const { onChange, onSubmit, values } = useForm(onClickUpdateNft, initialState)
 
     // Data to change
     // UpdateNftInput {
@@ -40,59 +49,43 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
         <form className='flex flex-col items-center h-auto justify-center mt-4' onSubmit={onSubmit}>
             <div className='create-form flex flex-col p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>
                 {nft.name && (
-                    <>
-                        <label htmlFor={'name'} className='my-3 font-medium'>
-                            {'name'}
-                        </label>
-                        <input onChange={onChange} className='w-full p-2' type={'text'} defaultValue={nft.name} />
-                    </>
+                    <FormInput id='name' text='NFT Name' type='text' onChange={onChange} defaultValue={nft.name} />
                 )}
                 {nft.symbol && (
-                    <>
-                        <label htmlFor={'symbol'} className='my-3 font-medium'>
-                            {'symbol'}
-                        </label>
-                        <input onChange={onChange} className='w-full p-2' type={'text'} defaultValue={nft.symbol} />
-                    </>
+                    <FormInput
+                        id='symbol'
+                        text='NFT Symbol'
+                        type='text'
+                        onChange={onChange}
+                        defaultValue={nft.symbol}
+                    />
                 )}
                 {nft.description && (
-                    <>
-                        <label htmlFor={'description'} className='my-3 font-medium'>
-                            {'description'}
-                        </label>
-                        <input
-                            onChange={onChange}
-                            className='w-full p-2'
-                            type={'text'}
-                            defaultValue={nft.description}
-                        />
-                    </>
+                    <FormInput
+                        id='description'
+                        text='NFT Description'
+                        type='text'
+                        onChange={onChange}
+                        defaultValue={nft.description}
+                    />
                 )}
                 {nft.animation_url && (
-                    <>
-                        <label htmlFor={'animation_url'} className='my-3 font-medium'>
-                            {'animation_url'}
-                        </label>
-                        <input
-                            onChange={onChange}
-                            className='w-full p-2'
-                            type={'text'}
-                            defaultValue={nft.animation_url}
-                        />
-                    </>
+                    <FormInput
+                        id='animation_url'
+                        text='NFT Animation Url'
+                        type='text'
+                        onChange={onChange}
+                        defaultValue={nft.animation_url}
+                    />
                 )}
                 {nft.external_url && (
-                    <>
-                        <label htmlFor={'external_url'} className='my-3 font-medium'>
-                            {'external_url'}
-                        </label>
-                        <input
-                            onChange={onChange}
-                            className='w-full p-2'
-                            type={'text'}
-                            defaultValue={nft.external_url}
-                        />
-                    </>
+                    <FormInput
+                        id='external_url'
+                        text='NFT External Url'
+                        type='text'
+                        onChange={onChange}
+                        defaultValue={nft.external_url}
+                    />
                 )}
                 {/* {nft.attributes &&
                     nft.attributes.map((atb, i) => {
@@ -130,20 +123,23 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
                         )
                     })} */}
                 {nft.category && (
-                    <>
-                        <label htmlFor={'category'} className='my-3 font-medium'>
-                            {'category'}
-                        </label>
-                        <input disabled className='w-full p-2' type={'text'} defaultValue={nft.category} />
-                    </>
+                    <FormInput
+                        id='category'
+                        text='NFT Category'
+                        type='text'
+                        onChange={onChange}
+                        defaultValue={nft.category}
+                    />
                 )}
                 {nft.collection && typeof nft?.collection === 'string' && (
-                    <>
-                        <label htmlFor={'collection'} className='my-3 font-medium'>
-                            {'collection'}
-                        </label>
-                        <input disabled className='w-full p-2' type={'text'} defaultValue={nft.collection} />
-                    </>
+                    <FormInput
+                        id='collection'
+                        text='NFT Collection'
+                        type='text'
+                        onChange={onChange}
+                        disabled
+                        defaultValue={nft.collection}
+                    />
                 )}
                 {/* {nft.collection && typeof nft?.collection === 'object' && (
                     <span>
@@ -152,21 +148,62 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
                     </span>
                 )} */}
                 {nft.seller_fee_basis_points && (
-                    <>
-                        <label htmlFor={'seller_fee_basis_points'} className='my-3 font-medium'>
-                            {'seller_fee_basis_points'}
-                        </label>
-                        <input
-                            onChange={onChange}
-                            className='w-full p-2'
-                            type={'text'}
-                            defaultValue={nft.seller_fee_basis_points}
-                        />
-                    </>
+                    <FormInput
+                        id='seller_fee_basis_points'
+                        text='NFT Seller Fee Basis Points'
+                        type='number'
+                        onChange={onChange}
+                        defaultValue={nft.seller_fee_basis_points}
+                    />
                 )}
                 <ActionButton text='Update NFT' type='submit' />
             </div>
         </form>
+    )
+}
+
+interface Input {
+    id: string
+    text: string
+    type: string
+    defaultValue?: string | number
+    defaultChecked?: boolean
+    required?: boolean
+    disabled?: boolean
+    value?: string | number
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+const FormInput: FC<Input> = ({
+    id,
+    text,
+    type,
+    defaultValue,
+    defaultChecked,
+    value,
+    required,
+    disabled,
+    onChange,
+}) => {
+    return (
+        <>
+            <label htmlFor={id} className='my-3 font-medium'>
+                {text}
+            </label>
+            <input
+                className='w-full p-2'
+                id={id}
+                type={type}
+                step='any'
+                name={id}
+                defaultValue={defaultValue}
+                defaultChecked={defaultChecked}
+                value={value}
+                required={required}
+                onChange={onChange}
+                disabled={disabled}
+            />
+        </>
     )
 }
 
