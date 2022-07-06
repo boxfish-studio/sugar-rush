@@ -65,7 +65,6 @@ const CandyMachine: NextPage = () => {
 
                 state.data.solTreasuryAccount = state.wallet
                 state.data.itemsRedeemed = state.itemsRedeemed
-                console.log('candyMachineConfig: ', state)
                 setIsLoading(false)
 
                 return state.data
