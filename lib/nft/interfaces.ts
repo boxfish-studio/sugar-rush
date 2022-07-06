@@ -13,7 +13,7 @@ export interface Nft {
     collection?: string | ICollectionNft
     creators?: ICreatorsNft[]
     seller_fee_basis_points?: number
-    mintAddress: PublicKey
+    mintAddress?: PublicKey
 }
 
 interface IAtributesNft {

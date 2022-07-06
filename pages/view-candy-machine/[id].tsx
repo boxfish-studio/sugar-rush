@@ -29,10 +29,6 @@ const ViewCandyMachine: NextPage = () => {
         setIsLoading(false)
     }
 
-    async function onClickUpdateNft() {
-        if (selectNft && connection && wallet.connected) await updateNft(selectNft, connection, wallet)
-    }
-
     function onClickSlide(e: any) {
         const nameNft = e.target.alt
         if (nfts.length !== 0) {
@@ -102,7 +98,6 @@ const ViewCandyMachine: NextPage = () => {
                     {selectNft && (
                         <>
                             <NftDetails nft={selectNft} />
-                            <button onClick={onClickUpdateNft}>Do you want to update the NFT?</button>
                         </>
                     )}
                 </div>
