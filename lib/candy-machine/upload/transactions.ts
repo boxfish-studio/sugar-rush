@@ -243,7 +243,7 @@ export const sendTransactions = async (
     commitment: Commitment = 'singleGossip',
     successCallback: (txid: string, ind: number) => void = (txid, ind) => {},
     failCallback: (reason: string, ind: number) => boolean = (txid, ind) => false,
-    block?: BlockhashAndFeeCalculator,
+    block?: IBlockhashAndFeeCalculator,
     beforeTransactions: Transaction[] = [],
     afterTransactions: Transaction[] = []
 ): Promise<{ number: number; txs: { txid: string; slot: number }[] }> => {
