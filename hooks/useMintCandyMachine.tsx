@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/mint/constants'
 import { DEFAULT_TIMEOUT } from 'lib/constants'
 import { SetupState, CandyMachineAccount } from 'lib/candy-machine/interfaces'
-import { createAccountsForMint, mintOneToken } from 'lib/candy-machine/mint/mint'
+import { createAccountsForMint, mintOneNft } from 'lib/candy-machine/mint/mint'
 
 const useMintCandyMachine = (account: string) => {
     const anchorWallet = useAnchorWallet()
@@ -99,7 +99,7 @@ const useMintCandyMachine = (account: string) => {
                 return
             }
 
-            let mintResult = await mintOneToken(
+            let mintResult = await mintOneNft(
                 candyMachine,
                 wallet.publicKey,
                 beforeTransactions,

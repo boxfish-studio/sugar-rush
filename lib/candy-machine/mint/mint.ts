@@ -93,7 +93,7 @@ type MintResult = {
     metadataKey: web3.PublicKey
 }
 
-export const mintOneToken = async (
+export const mintOneNft = async (
     candyMachine: CandyMachineAccount | undefined,
     payer: web3.PublicKey,
     beforeTransactions: Transaction[] = [],

@@ -79,7 +79,7 @@ const VerifyCandyMachine: NextPage = () => {
                     {!error && message && <div className='text-[hsl(258,52%,56%)] text-center mt-6'>{message}</div>}
                     {itemsRemaining === 0 && (
                         <div className='text-[hsl(258,52%,56%)] text-center mt-6'>
-                            All tokens have already been minted
+                            All NFTs have already been minted
                         </div>
                     )}
 
@@ -105,11 +105,11 @@ const VerifyCandyMachine: NextPage = () => {
                                             disabled
                                             type='button'
                                         >
-                                            Mint 1 token
+                                            Mint 1 NFT
                                         </button>
                                     ) : (
                                         <Button
-                                            text='Mint 1 token'
+                                            text='Mint 1 NFT'
                                             isLoading={isUserMinting}
                                             onClick={() => mintAccount()}
                                         />
