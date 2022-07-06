@@ -18,7 +18,7 @@ const useMintCandyMachine = (account: string) => {
     const [isActive, setIsActive] = useState(false)
     const [isCaptcha, setIsCaptcha] = useState(false)
     const [setupTxn, setSetupTxn] = useState<SetupState>()
-    const [mintMessage, setMintMessage] = useState('')
+    const [mintMessage, setMintMessage] = useState({ error: false, message: '' })
     const [candyMachine, setCandyMachine] = useState<CandyMachineAccount>()
 
     const { connection } = useConnection()
@@ -130,13 +130,15 @@ const useMintCandyMachine = (account: string) => {
                 setIsActive((candyMachine.state.isActive = remaining > 0))
                 candyMachine.state.isSoldOut = remaining === 0
                 setSetupTxn(undefined)
-                setMintMessage('Congratulations! Mint succeeded!')
+                setMintMessage({ error: false, message: 'Congratulations! Mint succeeded!' })
             } else if (status && !status.err) {
-                setMintMessage(
-                    'Mint likely failed! Anti-bot SOL 0.01 fee potentially charged! Check the explorer to confirm the mint failed and if so, make sure you are eligible to mint before trying again.'
-                )
+                setMintMessage({
+                    error: true,
+                    message:
+                        'Mint likely failed! Anti-bot SOL 0.01 fee potentially charged! Check the explorer to confirm the mint failed and if so, make sure you are eligible to mint before trying again.',
+                })
             } else {
-                setMintMessage('Mint failed! Please try again!')
+                setMintMessage({ error: true, message: 'Mint failed! Please try again!' })
             }
         } catch (err) {
             console.log(err)

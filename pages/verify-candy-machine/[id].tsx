@@ -124,7 +124,13 @@ const VerifyCandyMachine: NextPage = () => {
                     )}
 
                     {!error && mintMessage && (
-                        <div className='text-[hsl(258,52%,56%)] text-center mt-6'>{mintMessage}</div>
+                        <div
+                            className={`${
+                                mintMessage.error ? 'text-red-500' : 'text-[hsl(258,52%,56%)]'
+                            } text-center mt-6 w-2/4`}
+                        >
+                            {mintMessage.message}
+                        </div>
                     )}
                 </div>
             ) : (
