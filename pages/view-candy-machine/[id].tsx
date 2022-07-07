@@ -2,11 +2,15 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Title, CheckConnectedWallet, Carousel, Spinner, NftDetails } from 'components'
 import Head from 'next/head'
-import { useWallet } from '@solana/wallet-adapter-react'
+import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
 import { useConnection } from '@solana/wallet-adapter-react'
 import { Nft } from 'lib/nft/interfaces'
-import { getAllNftsByCM, updateNft } from 'lib/nft/actions'
+import { getAllNftsByCM } from 'lib/nft/actions'
+import { AnchorProvider, Program } from '@project-serum/anchor'
+import { useRPC } from 'hooks'
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
+import { PublicKey } from '@solana/web3.js'
 
 const ViewCandyMachine: NextPage = () => {
     const router = useRouter()
@@ -15,8 +19,11 @@ const ViewCandyMachine: NextPage = () => {
     const [nfts, setNfts] = useState<Nft[]>([])
     const [selectNft, setSelectNft] = useState<Nft>()
     const [isLoading, setIsLoading] = useState(false)
+    const [isMutable, setIsMutable] = useState(false)
     const [message, setMessage] = useState('')
     const { connection } = useConnection()
+    const anchorWallet = useAnchorWallet()
+    const { rpcEndpoint } = useRPC()
 
     async function getNfts() {
         if (!candyMachineAccount) return
@@ -43,9 +50,24 @@ const ViewCandyMachine: NextPage = () => {
         setSelectNft(undefined)
     }
 
+    async function checkMutable() {
+        if (!anchorWallet || !wallet.publicKey || !candyMachineAccount) return
+        const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+            preflightCommitment: 'recent',
+        })
+
+        const idl = await Program.fetchIdl(CANDY_MACHINE_PROGRAM_V2_ID, provider)
+
+        const program = new Program(idl!, CANDY_MACHINE_PROGRAM_V2_ID, provider)
+        const state: any = await program.account.candyMachine.fetch(new PublicKey(candyMachineAccount))
+        const mutable = !!state.data.isMutable
+        setIsMutable(mutable)
+    }
+
     useEffect(() => {
         if (wallet.connected) {
             getNfts()
+            checkMutable()
         }
     }, [candyMachineAccount, connection, wallet.connected])
 
@@ -97,7 +119,7 @@ const ViewCandyMachine: NextPage = () => {
                     )}
                     {selectNft && (
                         <>
-                            <NftDetails nft={selectNft} />
+                            <NftDetails nft={selectNft} isMutable={isMutable} />
                         </>
                     )}
                 </div>

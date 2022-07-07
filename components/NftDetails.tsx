@@ -5,7 +5,7 @@ import { Nft } from 'lib/nft/interfaces'
 import { FC, useState } from 'react'
 import Button from './Button'
 
-const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
+const NftDetails: FC<{ nft: Nft; isMutable: boolean }> = ({ nft, isMutable }) => {
     const wallet = useWallet()
     const { connection } = useConnection()
     const [nftUpdated, setNftUpdated] = useState({ error: false, message: '' })
@@ -48,7 +48,7 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
 
     return (
         <form className='flex flex-col items-center h-auto justify-center mt-4' onSubmit={onSubmit}>
-            <div className='create-form flex flex-col p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>
+            <div className='flex flex-col p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>
                 {nft.name && (
                     <FormInput id='name' text='NFT Name' type='text' onChange={onChange} defaultValue={nft.name} />
                 )}
@@ -207,7 +207,7 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
                         defaultValue={nft.seller_fee_basis_points}
                     />
                 )}
-                <Button text='Update NFT' type='submit' />
+                {isMutable && <Button text='Update NFT' type='submit' />}
                 {nftUpdated.message.length !== 0 && nftUpdated.error && (
                     <div className='text-red-500 text-center mt-6'>{nftUpdated.message}</div>
                 )}
