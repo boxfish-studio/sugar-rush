@@ -3,7 +3,7 @@ import { useForm } from 'hooks'
 import { updateNft } from 'lib/nft/actions'
 import { Nft } from 'lib/nft/interfaces'
 import { FC, useState } from 'react'
-import ActionButton from './ActionButton'
+import Button from './Button'
 
 const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
     const wallet = useWallet()
@@ -207,7 +207,7 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
                         defaultValue={nft.seller_fee_basis_points}
                     />
                 )}
-                <ActionButton text='Update NFT' type='submit' />
+                <Button text='Update NFT' type='submit' />
                 {nftUpdated.message.length !== 0 && nftUpdated.error && (
                     <div className='text-red-500 text-center mt-6'>{nftUpdated.message}</div>
                 )}

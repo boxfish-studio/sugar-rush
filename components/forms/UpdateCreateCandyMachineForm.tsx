@@ -1,7 +1,7 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
-import { ActionButton, CheckConnectedWallet } from 'components'
+import { Button, CheckConnectedWallet } from 'components'
 import { useForm, useRPC, useUploadCache, useUploadFiles } from 'hooks'
 import { updateV2 } from 'lib/candy-machine'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
@@ -304,7 +304,7 @@ const UpdateCreateCandyMachineForm: FC<{
     }
     return (
         <form className='flex flex-col items-center h-auto justify-center mt-4' onSubmit={onSubmit}>
-            <div className='create-form flex flex-col p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>
+            <div className='flex flex-col p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>
                 <FormInput
                     id='price'
                     text='Price of each NFT (SOL)'
@@ -431,19 +431,13 @@ const UpdateCreateCandyMachineForm: FC<{
                     <span className='text-red-500 border border-red-500 mt-3 p-3 rounded-xl'>{errorMessage}</span>
                 )}
 
-                {updateCandyMachine && !isInteractingWithCM && (
-                    <ActionButton text='Update Candy Machine' type='submit' />
-                )}
-                {!updateCandyMachine && !isInteractingWithCM && (
-                    <ActionButton text='Create Candy Machine' type='submit' />
-                )}
+                {updateCandyMachine && !isInteractingWithCM && <Button text='Update Candy Machine' type='submit' />}
+                {!updateCandyMachine && !isInteractingWithCM && <Button text='Create Candy Machine' type='submit' />}
 
-                {updateCandyMachine && isInteractingWithCM && (
-                    <ActionButton text='Updating Candy Machine...' isLoading />
-                )}
+                {updateCandyMachine && isInteractingWithCM && <Button text='Updating Candy Machine...' isLoading />}
                 {!updateCandyMachine && isInteractingWithCM && (
                     <>
-                        <ActionButton text='Creating Candy Machine...' isLoading />
+                        <Button text='Creating Candy Machine...' isLoading />
                         <span className='text-red-500 text-center mt-6 w-full md:w-1/2 my-3'>
                             IMPORTANT! Make sure to save the Cache file that will be downloaded at the end! Without it,
                             you will not be able to update your Candy Machine.
