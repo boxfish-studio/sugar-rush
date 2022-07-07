@@ -2,19 +2,37 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { useForm } from 'hooks'
 import { updateNft } from 'lib/nft/actions'
 import { Nft } from 'lib/nft/interfaces'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import ActionButton from './ActionButton'
 
 const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
     const wallet = useWallet()
     const { connection } = useConnection()
+    const [nftUpdated, setNftUpdated] = useState({ error: false, message: '' })
 
     async function onClickUpdateNft() {
-        console.log('values', values)
-        console.log('initialState', initialState)
-        console.log('nft', nft)
+        const valuesData = Object.entries(values)
+        const initialStateData = Object.values(initialState)
+        let modifiedValues = []
 
-        if (nft && connection && wallet.connected) await updateNft(nft, values, connection, wallet)
+        for (let i = 0; i < Object.keys(initialState).length; i++) {
+            if (valuesData[i][1] !== initialStateData[i]) {
+                modifiedValues.push(valuesData[i])
+            }
+        }
+        if (modifiedValues.length === 0) {
+            setNftUpdated({ error: true, message: 'No changes made' })
+        }
+
+        if (nft?.mintAddress && connection && wallet.connected && modifiedValues.length > 0) {
+            setNftUpdated({ error: false, message: '' })
+            let responseUpdateNft = await updateNft(nft.mintAddress, modifiedValues, connection, wallet)
+            if (responseUpdateNft === 'NFT mint address not provided') {
+                setNftUpdated({ error: true, message: responseUpdateNft })
+            } else {
+                setNftUpdated({ error: false, message: responseUpdateNft })
+            }
+        }
     }
 
     const initialState = {
@@ -27,23 +45,6 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
     }
 
     const { onChange, onSubmit, values } = useForm(onClickUpdateNft, initialState)
-
-    // Data to change
-    // UpdateNftInput {
-    //     nft: Nft;
-    //     name?: string;
-    //     symbol?: string;
-    //     uri?: string;
-    //     sellerFeeBasisPoints?: number;
-    //     creators?: Creator[];
-    //     collection?: Collection;
-    //     uses?: Uses;
-    //     newUpdateAuthority?: PublicKey;
-    //     primarySaleHappened?: boolean;
-    //     isMutable?: boolean;
-    //     updateAuthority?: Signer;
-    //     confirmOptions?: ConfirmOptions;
-    // }
 
     return (
         <form className='flex flex-col items-center h-auto justify-center mt-4' onSubmit={onSubmit}>
@@ -66,6 +67,7 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
                         text='NFT Description'
                         type='text'
                         onChange={onChange}
+                        disabled
                         defaultValue={nft.description}
                     />
                 )}
@@ -87,47 +89,83 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
                         defaultValue={nft.external_url}
                     />
                 )}
-                {/* {nft.attributes &&
+                {nft.attributes &&
                     nft.attributes.map((atb, i) => {
                         return (
-                            <div key={i}>
-                                <label htmlFor={"Attributte-"} className='my-3 font-medium'>
-                                    {`Attributte - ${i}`}
-                                </label>
-                                <input className='w-full p-2' type={'text'} defaultValue={{i} + ":" + {atb.trait_type} + "-" + {atb.value}} />
-                            </div>
+                            <>
+                                <div className='w-full p-2' key={i}>
+                                    <FormInput
+                                        id={`attribute-${i}-trait_type`}
+                                        text={`Attributte - ${i}: Trait Type`}
+                                        type='text'
+                                        onChange={onChange}
+                                        disabled
+                                        defaultValue={`${atb.trait_type}`}
+                                    />
+                                    <FormInput
+                                        id={`attribute-${i}-value`}
+                                        text={`Attributte - ${i}: Value`}
+                                        type='text'
+                                        onChange={onChange}
+                                        disabled
+                                        defaultValue={`${atb.value}`}
+                                    />
+                                </div>
+                            </>
                         )
                     })}
                 {nft.creators &&
                     nft.creators.map((atb, i) => {
                         return (
-                            <span key={i}>
-                                <strong>Creator Address</strong>: {atb.address}
-                            </span>
+                            <div className='w-full p-2' key={i}>
+                                <FormInput
+                                    id={`creators-${i}`}
+                                    text={`Creator - ${i}`}
+                                    type='text'
+                                    onChange={onChange}
+                                    disabled
+                                    defaultValue={`${atb.address}`}
+                                />
+                            </div>
                         )
                     })}
                 {nft.properties?.creators &&
                     nft.properties.creators?.map((atb, i) => {
                         return (
-                            <span key={i}>
-                                <strong>Creator Address</strong>: {atb.address}
-                            </span>
+                            <div className='w-full p-2' key={i}>
+                                <FormInput
+                                    id={`creator-${i}`}
+                                    text={`Creator - ${i}`}
+                                    type='text'
+                                    onChange={onChange}
+                                    disabled
+                                    defaultValue={`${atb.address}`}
+                                />
+                            </div>
                         )
                     })}
                 {nft.properties?.files &&
                     nft.properties.files?.map((atb, i) => {
                         return (
-                            <span key={i}>
-                                <strong>File</strong>: {atb.uri}
-                            </span>
+                            <div className='w-full p-2' key={i}>
+                                <FormInput
+                                    id={`file-${i}`}
+                                    text={`File - ${i}`}
+                                    type='text'
+                                    onChange={onChange}
+                                    disabled
+                                    defaultValue={`${atb.uri}`}
+                                />
+                            </div>
                         )
-                    })} */}
+                    })}
                 {nft.category && (
                     <FormInput
                         id='category'
                         text='NFT Category'
                         type='text'
                         onChange={onChange}
+                        disabled
                         defaultValue={nft.category}
                     />
                 )}
@@ -141,12 +179,25 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
                         defaultValue={nft.collection}
                     />
                 )}
-                {/* {nft.collection && typeof nft?.collection === 'object' && (
-                    <span>
-                        <strong>Collection Name</strong>: {nft.collection.name} / <strong>Family</strong>:{' '}
-                        {nft.collection.family}
-                    </span>
-                )} */}
+                {nft.collection && typeof nft?.collection === 'object' && (
+                    <>
+                        <FormInput
+                            id='collection'
+                            text='NFT Collection Name'
+                            type='text'
+                            onChange={onChange}
+                            defaultValue={nft.collection.name}
+                        />
+                        <FormInput
+                            id='collection'
+                            text='NFT Collection Family'
+                            type='text'
+                            onChange={onChange}
+                            disabled
+                            defaultValue={nft.collection.family}
+                        />
+                    </>
+                )}
                 {nft.seller_fee_basis_points && (
                     <FormInput
                         id='seller_fee_basis_points'
@@ -157,6 +208,12 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
                     />
                 )}
                 <ActionButton text='Update NFT' type='submit' />
+                {nftUpdated.message.length !== 0 && nftUpdated.error && (
+                    <div className='text-red-500 text-center mt-6'>{nftUpdated.message}</div>
+                )}
+                {nftUpdated.message.length !== 0 && !nftUpdated.error && (
+                    <div className='text-[hsl(258,52%,56%)] text-center mt-6'>{nftUpdated.message}</div>
+                )}
             </div>
         </form>
     )
