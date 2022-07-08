@@ -55,7 +55,7 @@ const Modal: FC<{
                                     className='text-blue-700 hover:underline my-3 mt-4 mr-2'
                                     href={`https://solscan.io/account/${account}${
                                         connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                                    }/`}
+                                    }`}
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
@@ -66,7 +66,7 @@ const Modal: FC<{
                                     className='text-blue-700 hover:underline my-3 mt-4 ml-2'
                                     href={`https://solana.fm/address/${account}${
                                         connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet-solana' : ''
-                                    }/`}
+                                    }`}
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
@@ -88,7 +88,7 @@ const Modal: FC<{
                                                 className='text-blue-700 hover:underline my-1'
                                                 href={`https://solscan.io/tx/${tx.txid}${
                                                     connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                                                }/`}
+                                                }`}
                                                 target='_blank'
                                                 rel='noopener noreferrer'
                                             >
