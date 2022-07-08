@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { Title, CheckConnectedWallet, Carousel, Spinner, NftDetails } from 'components'
+import { Title, CheckConnectedWallet, Carousel, Spinner, NftDetails, ExplorerLinks } from 'components'
 import Head from 'next/head'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
@@ -61,16 +61,12 @@ const ViewCandyMachine: NextPage = () => {
                     <Title text='View Candy Machine Nfts' />
                     <span className='mt-8'>
                         {candyMachineAccount}{' '}
-                        <a
-                            className='text-blue-700'
-                            href={`https://solscan.io/account/${candyMachineAccount}${
-                                connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                            }`}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                        >
-                            View in Solscan
-                        </a>
+                        <ExplorerLinks
+                            type='account'
+                            value={candyMachineAccount as string}
+                            connection={connection}
+                            text={'View'}
+                        />
                     </span>
                     {isLoading ? (
                         <Spinner />
