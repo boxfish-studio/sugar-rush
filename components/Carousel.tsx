@@ -1,50 +1,55 @@
-import Swiper, { Navigation } from 'swiper'
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { ICarousel } from 'lib/interfaces'
 import Image from 'next/image'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Pagination, EffectCoverflow, Navigation } from 'swiper'
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/effect-coverflow'
+import 'swiper/css/pagination'
+import 'swiper/css/navigation'
 
 const Carousel: FC<{
     carouselData: ICarousel[]
-}> = ({ carouselData }) => {
-    Swiper.use([Navigation])
-    new Swiper('.carousel', {
-        slidesPerView: 1,
-        spaceBetween: 100,
-        loop: false,
-        updateOnWindowResize: true,
-        // noSwiping: false,
-        allowSlideNext: true,
-        allowSlidePrev: true,
-        observer: true,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-    })
-
+    onClick?: (e: any) => void
+    slideChange?: () => void
+}> = ({ carouselData, onClick, slideChange }) => {
     return (
         <>
-            <link rel='stylesheet' href='https://unpkg.com/swiper/swiper-bundle.min.css' />
-            <div className='container py-0 w-96 relative'>
-                <div className='carousel overflow-hidden md:flex md:justify-between'>
-                    <div className='swiper-wrapper'>
+            {carouselData.length !== 0 && (
+                <>
+                    <Swiper
+                        pagination={{
+                            type: 'fraction',
+                        }}
+                        effect={'coverflow'}
+                        grabCursor={true}
+                        centeredSlides={true}
+                        slidesPerView={'auto'}
+                        coverflowEffect={{
+                            rotate: 50,
+                            stretch: 0,
+                            depth: 100,
+                            modifier: 1,
+                            slideShadows: false,
+                        }}
+                        navigation={true}
+                        modules={[EffectCoverflow, Pagination, Navigation]}
+                        onSlideChange={() => {
+                            slideChange && slideChange()
+                        }}
+                        className='w-2/3 h-full'
+                    >
                         {carouselData &&
                             carouselData.map((data, i) => (
-                                <div className='swiper-slide flex flex-col' key={i}>
-                                    <div className='inline-block'>
-                                        <h1 className='text-grey-daylight'>{data.title}</h1>
-                                        <Image src={data.image} alt={data.title} width={250} height={250} />
-                                    </div>
-                                    <span>
-                                        {i + 1}/{carouselData.length}
-                                    </span>
-                                </div>
+                                <SwiperSlide key={i} onClick={onClick} className='bg-center bg-cover w-80'>
+                                    <h1 className='text-grey-daylight'>{data.title}</h1>
+                                    <Image src={data.image} alt={data.title} width={250} height={250} />
+                                </SwiperSlide>
                             ))}
-                    </div>
-                </div>
-                <button className='swiper-button-prev inset-y-0 left-0' />
-                <button className='swiper-button-next inset-y-0 right-0' />
-            </div>
+                    </Swiper>
+                </>
+            )}
         </>
     )
 }

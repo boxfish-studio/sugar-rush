@@ -15,6 +15,8 @@ import { Navbar, Wallet } from 'components'
 import type { AppProps } from 'next/app'
 import React, { useMemo } from 'react'
 import '../styles/globals.scss'
+import { ThemeProvider } from 'styled-components'
+import { theme } from '@primer/react'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const network = WalletAdapterNetwork.Devnet
@@ -33,16 +35,22 @@ function MyApp({ Component, pageProps }: AppProps) {
         [network]
     )
 
+    const customTheme = {
+        // Custom Theme
+    }
+
     return (
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets}>
-                <Navbar />
-                <WalletModalProvider>
-                    <Wallet />
-                    <Component {...pageProps} />
-                </WalletModalProvider>
-            </WalletProvider>
-        </ConnectionProvider>
+        <ThemeProvider theme={Object.assign({}, theme, customTheme)}>
+            <ConnectionProvider endpoint={endpoint}>
+                <WalletProvider wallets={wallets}>
+                    <Navbar />
+                    <WalletModalProvider>
+                        <Wallet />
+                        <Component {...pageProps} />
+                    </WalletModalProvider>
+                </WalletProvider>
+            </ConnectionProvider>
+        </ThemeProvider>
     )
 }
 

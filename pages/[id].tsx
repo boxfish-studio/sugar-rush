@@ -30,7 +30,14 @@ const CandyMachine: NextPage = () => {
         let cacheData = await e.target.files[0].text()
         let cacheDataJson = JSON.parse(cacheData)
         if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
-            setNfts(Object.values(cacheDataJson.items))
+            const nfts = Object.values(cacheDataJson.items).map((nft: any) => {
+                return {
+                    image: nft.imageLink,
+                    name: nft.name,
+                }
+            })
+
+            setNfts(nfts)
         } else {
             alert('This cache file is not from this candy machine')
         }
@@ -58,7 +65,6 @@ const CandyMachine: NextPage = () => {
 
                 state.data.solTreasuryAccount = state.wallet
                 state.data.itemsRedeemed = state.itemsRedeemed
-                console.log('candyMachineConfig: ', state)
                 setIsLoading(false)
 
                 return state.data
@@ -142,7 +148,7 @@ const CandyMachine: NextPage = () => {
                             <Carousel
                                 carouselData={nfts.map((nft) => ({
                                     title: nft.name,
-                                    image: nft.imageLink,
+                                    image: nft.image,
                                 }))}
                             />
                         )}
