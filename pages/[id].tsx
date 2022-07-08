@@ -1,7 +1,7 @@
 import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey } from '@solana/web3.js'
-import { Spinner, Title, UpdateCreateCandyMachineForm, Carousel } from 'components'
+import { Spinner, Title, UpdateCreateCandyMachineForm, Carousel, ExplorerLinks } from 'components'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Account } from 'lib/candy-machine/types'
@@ -88,29 +88,12 @@ const CandyMachine: NextPage = () => {
                     <span className='break-all border border-slate-300 shadow-xl py-2 px-4 rounded-lg text-center'>
                         {candyMachineAccount}{' '}
                     </span>
-                    <div className='mt-5'>
-                        <a
-                            className='text-[hsl(258,52%,56%)] mt-4 mr-2'
-                            href={`https://solscan.io/account/${candyMachineAccount}${
-                                connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                            }`}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                        >
-                            View in Solscan
-                        </a>
-                        -
-                        <a
-                            className='text-[hsl(258,52%,56%)] mt-4 ml-2'
-                            href={`https://solana.fm/address/${candyMachineAccount}${
-                                connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet-solana' : ''
-                            }`}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                        >
-                            View in Solana.fm
-                        </a>
-                    </div>
+                    <ExplorerLinks
+                        type='account'
+                        value={candyMachineAccount as string}
+                        connection={connection}
+                        text={'View'}
+                    />
                 </div>
                 {isLoading && <Spinner />}
                 {error && (
