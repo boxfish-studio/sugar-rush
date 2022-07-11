@@ -11,7 +11,7 @@ import {
     TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
 import { clusterApiUrl } from '@solana/web3.js'
-import { Navbar, Wallet } from 'components'
+import { Navbar, Wallet, TopActions } from 'components'
 import type { AppProps } from 'next/app'
 import { useMemo } from 'react'
 import { RecoilRoot } from 'recoil'
@@ -22,7 +22,6 @@ import { theme } from '@primer/react'
 function MyApp({ Component, pageProps }: AppProps) {
     const network = WalletAdapterNetwork.Devnet
     const endpoint = useMemo(() => clusterApiUrl(network), [network])
-
     const wallets = useMemo(
         () => [
             new PhantomWalletAdapter(),
@@ -48,6 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <RecoilRoot>
                         <WalletModalProvider>
                             <Wallet />
+                            <TopActions />
                             <Component {...pageProps} />
                         </WalletModalProvider>
                     </RecoilRoot>
