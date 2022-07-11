@@ -43,9 +43,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={Object.assign({}, theme, customTheme)}>
             <ConnectionProvider endpoint={endpoint}>
                 <WalletProvider wallets={wallets}>
-                    <Navbar />
                     <WalletModalProvider>
-                        <Wallet />
+                        <Navbar />
                         <Component {...pageProps} />
                     </WalletModalProvider>
                 </WalletProvider>
