@@ -13,7 +13,8 @@ import {
 import { clusterApiUrl } from '@solana/web3.js'
 import { Navbar, Wallet } from 'components'
 import type { AppProps } from 'next/app'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
+import { RecoilRoot } from 'recoil'
 import '../styles/globals.scss'
 import { ThemeProvider } from 'styled-components'
 import { theme } from '@primer/react'
@@ -44,10 +45,12 @@ function MyApp({ Component, pageProps }: AppProps) {
             <ConnectionProvider endpoint={endpoint}>
                 <WalletProvider wallets={wallets}>
                     <Navbar />
-                    <WalletModalProvider>
-                        <Wallet />
-                        <Component {...pageProps} />
-                    </WalletModalProvider>
+                    <RecoilRoot>
+                        <WalletModalProvider>
+                            <Wallet />
+                            <Component {...pageProps} />
+                        </WalletModalProvider>
+                    </RecoilRoot>
                 </WalletProvider>
             </ConnectionProvider>
         </ThemeProvider>

@@ -42,3 +42,13 @@ a {
     text-decoration: none;
     @apply text-blue-regular;
 }
+
+.searchbox-candymachine {
+    background: url(/magnifying-glass.svg) no-repeat 9px 50%;
+    max-width: 184px;
+    padding-left: 28px;
+}
+
+.top-actions-bar{
+    gap: 1rem;
+}
