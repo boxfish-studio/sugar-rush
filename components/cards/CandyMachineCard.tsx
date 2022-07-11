@@ -13,7 +13,7 @@ const CandyMachineCard: FC<{
     const [selectedAccount, setSelectedAccount] = useState('')
 
     const searchResults = candyMachineAccounts.filter((account) => {
-        return account.toLowerCase().includes(searchInput.toLowerCase())
+        return account.toLowerCase().includes(searchInput.trim().toLowerCase())
     })
 
     const { removeAccount } = useRemoveCandyMachineAccount(candyMachineAccounts, setCandyMachineAccounts)
