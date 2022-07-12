@@ -1,7 +1,5 @@
 import { FC, useState, useEffect } from 'react'
 import Image from 'next/image'
-import logo from '../doc/img/logo.png'
-import burger from '../doc/img/burger.svg'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { Button, NavList, Tooltip, Breadcrumbs } from '@primer/react'
 import { useRouter } from 'next/router'
@@ -53,7 +51,7 @@ const Navbar: FC = () => {
                     } width-full`}
                 >
                     <div className='d-flex'>
-                        <Image src={logo} alt='logo' width={29} height={21} />
+                        <Image src='/logo.png' alt='logo' width={29} height={21} />
                         <h4 className='ml-2' style={{ color: 'white' }}>
                             Sugar rush
                         </h4>
@@ -91,9 +89,9 @@ const Navbar: FC = () => {
                                 sx={{ background: 'transparent', border: 0 }}
                             >
                                 {open ? (
-                                    <Image src={burger} alt='logo' width={21} height={21} />
+                                    <Image src='/burger.svg' alt='logo' width={21} height={21} />
                                 ) : (
-                                    <Image src={burger} alt='logo' width={21} height={21} />
+                                    <Image src='/burger.svg' alt='logo' width={21} height={21} />
                                 )}
                             </Button>
                             {open && (
