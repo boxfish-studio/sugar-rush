@@ -16,7 +16,7 @@ import type { AppProps } from 'next/app'
 import React, { useMemo } from 'react'
 import '../styles/globals.scss'
 import { ThemeProvider } from 'styled-components'
-import { theme } from '@primer/react'
+import { Box, theme } from '@primer/react'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const network = WalletAdapterNetwork.Devnet
@@ -46,7 +46,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <Navbar />
                     <WalletModalProvider>
                         <Wallet />
-                        <Component {...pageProps} />
+                        <Box className='container-xl p-responsive'>
+                            <Component {...pageProps} />
+                        </Box>
                     </WalletModalProvider>
                 </WalletProvider>
             </ConnectionProvider>
