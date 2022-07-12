@@ -15,7 +15,7 @@ import { Navbar, Wallet } from 'components'
 import type { AppProps } from 'next/app'
 import { useMemo } from 'react'
 import '../styles/globals.scss'
-import { theme, ThemeProvider } from '@primer/react'
+import { theme, ThemeProvider, Box } from '@primer/react'
 import deepmerge from 'deepmerge'
 import AppWrapper from 'components/AppWrapper'
 
@@ -45,7 +45,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <WalletModalProvider>
                         <Wallet />
                         <AppWrapper>
-                            <Component {...pageProps} />
+                            <Box className='container-xl p-responsive'>
+                                <Component {...pageProps} />
+                            </Box>
                         </AppWrapper>
                     </WalletModalProvider>
                 </WalletProvider>
