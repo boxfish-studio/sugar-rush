@@ -15,8 +15,8 @@ import { Navbar, Wallet } from 'components'
 import type { AppProps } from 'next/app'
 import React, { useMemo } from 'react'
 import '../styles/globals.scss'
-import { ThemeProvider } from 'styled-components'
-import { theme } from '@primer/react'
+import { theme, ThemeProvider } from '@primer/react'
+import deepmerge from 'deepmerge'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const network = WalletAdapterNetwork.Devnet
@@ -34,13 +34,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         ],
         [network]
     )
-
-    const customTheme = {
-        // Custom Theme
-    }
+    const customTheme = deepmerge(theme, {})
 
     return (
-        <ThemeProvider theme={Object.assign({}, theme, customTheme)}>
+        // @ts-ignore
+        <ThemeProvider theme={customTheme}>
             <ConnectionProvider endpoint={endpoint}>
                 <WalletProvider wallets={wallets}>
                     <Navbar />
