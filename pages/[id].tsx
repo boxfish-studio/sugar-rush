@@ -1,7 +1,7 @@
 import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey } from '@solana/web3.js'
-import { Spinner, Title, UpdateCreateCandyMachineForm, Carousel } from 'components'
+import { Spinner, Title, UpdateCreateCandyMachineForm, Carousel, ExplorerLinks } from 'components'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Account } from 'lib/candy-machine/types'
@@ -94,14 +94,12 @@ const CandyMachine: NextPage = () => {
                     <span className='break-all border border-slate-300 shadow-xl py-2 px-4 rounded-lg text-center'>
                         {candyMachineAccount}{' '}
                     </span>
-                    <a
-                        className='text-[hsl(258,52%,56%)] mt-4'
-                        href={`https://solscan.io/account/${candyMachineAccount}?cluster=devnet`}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                    >
-                        View in Solscan
-                    </a>
+                    <ExplorerLinks
+                        type='account'
+                        value={candyMachineAccount as string}
+                        connection={connection}
+                        text={'View'}
+                    />
                 </div>
                 {isLoading && <Spinner />}
                 {error && (

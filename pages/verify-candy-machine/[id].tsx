@@ -1,5 +1,5 @@
 import { useWallet } from '@solana/wallet-adapter-react'
-import { Button, CheckConnectedWallet, Title } from 'components'
+import { Button, CheckConnectedWallet, ExplorerLinks, Title } from 'components'
 import { useUploadCache, useVerifyCandyMachineV2, useMintCandyMachine } from 'hooks'
 import type { NextPage } from 'next'
 import Head from 'next/head'
@@ -41,16 +41,12 @@ const VerifyCandyMachine: NextPage = () => {
                         <span className='break-all border border-slate-300 shadow-xl py-2 px-4 rounded-lg text-center'>
                             {candyMachineAccount}{' '}
                         </span>
-                        <a
-                            className='text-[hsl(258,52%,56%)] mt-4'
-                            href={`https://solscan.io/account/${candyMachineAccount}${
-                                connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                            }`}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                        >
-                            View in Solscan
-                        </a>
+                        <ExplorerLinks
+                            type='account'
+                            value={candyMachineAccount as string}
+                            connection={connection}
+                            text={'View'}
+                        />
                     </div>
                     <div className='flex flex-col justify-center items-center gap-3'>
                         <label
