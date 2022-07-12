@@ -1,15 +1,8 @@
-import { useWallet } from '@solana/wallet-adapter-react'
-import { CheckConnectedWallet, Title, UpdateCreateCandyMachineForm } from 'components'
+import { Title, UpdateCreateCandyMachineForm } from 'components'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
 const CreateCandyMachine: NextPage = () => {
-    const { publicKey } = useWallet()
-
-    if (!publicKey) {
-        return <CheckConnectedWallet />
-    }
-
     return (
         <>
             <Head>

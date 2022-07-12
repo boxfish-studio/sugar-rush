@@ -1,7 +1,7 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
-import { Button, CheckConnectedWallet } from 'components'
+import { Button } from 'components'
 import { useForm, useRPC, useUploadCache, useUploadFiles } from 'hooks'
 import { updateV2 } from 'lib/candy-machine'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
@@ -17,7 +17,7 @@ const UpdateCreateCandyMachineForm: FC<{
     updateCandyMachine?: boolean
     candyMachinePubkey?: string | string[]
 }> = ({ fetchedValues, updateCandyMachine, candyMachinePubkey }) => {
-    const { publicKey, connected } = useWallet()
+    const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { rpcEndpoint } = useRPC()
 
@@ -299,9 +299,7 @@ const UpdateCreateCandyMachineForm: FC<{
             setStatus('Candy Machine update was not successful, please re-run.')
         }
     }
-    if (!connected) {
-        return <CheckConnectedWallet />
-    }
+
     return (
         <form className='flex flex-col items-center h-auto justify-center mt-4' onSubmit={onSubmit}>
             <div className='flex flex-col p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>

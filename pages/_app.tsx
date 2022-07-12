@@ -13,15 +13,15 @@ import {
 import { clusterApiUrl } from '@solana/web3.js'
 import { Navbar, Wallet } from 'components'
 import type { AppProps } from 'next/app'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import '../styles/globals.scss'
-import { theme, ThemeProvider, Box } from '@primer/react'
+import { theme, ThemeProvider } from '@primer/react'
 import deepmerge from 'deepmerge'
+import AppWrapper from 'components/AppWrapper'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const network = WalletAdapterNetwork.Devnet
     const endpoint = useMemo(() => clusterApiUrl(network), [network])
-
     const wallets = useMemo(
         () => [
             new PhantomWalletAdapter(),
@@ -44,9 +44,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <Navbar />
                     <WalletModalProvider>
                         <Wallet />
-                        <Box className='container-xl p-responsive'>
+                        <AppWrapper>
                             <Component {...pageProps} />
-                        </Box>
+                        </AppWrapper>
                     </WalletModalProvider>
                 </WalletProvider>
             </ConnectionProvider>

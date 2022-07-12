@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useWallet } from '@solana/wallet-adapter-react'
-import { CandyMachineCard, CheckConnectedWallet, Spinner, Title } from 'components'
+import { CandyMachineCard, Spinner, Title } from 'components'
 import { useRPC } from 'hooks'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import type { NextPage } from 'next'
@@ -51,10 +51,6 @@ const ManageCandyMachines: NextPage = () => {
                 setIsLoading(false)
             })
     }, [connected])
-
-    if (!connected) {
-        return <CheckConnectedWallet />
-    }
 
     return (
         <>
