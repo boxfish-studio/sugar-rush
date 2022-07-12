@@ -29,7 +29,7 @@ const Navbar: FC = () => {
 
     return (
         <nav
-            className='color-bg-emphasis color-fg-subtle position-fixed top-0 left-0 z-10 width-full d-flex flex-row'
+            className='color-bg-emphasis color-fg-subtle position-fixed top-0 left-0 z-10 width-full d-flex flex-row color-fg-on-emphasis'
             style={{ height: '70px' }}
         >
             <div className='d-flex width-full container-xl p-responsive py-4 flex-justify-between flex-items-center'>
@@ -39,20 +39,19 @@ const Navbar: FC = () => {
                 >
                     <div className='d-flex flex-shrink-0'>
                         <Image src='/logo.png' alt='logo' width={29} height={21} />
-                        <h4 className='ml-2' style={{ color: 'white' }}>
-                            Sugar rush
-                        </h4>
+                        <h4 className='ml-2'>Sugar rush</h4>
                     </div>
 
-                    <Breadcrumbs className='d-none d-md-flex flex-row ml-3' sx={{ color: 'white' }}>
+                    <Breadcrumbs className='d-none d-md-flex flex-row ml-3'>
                         {NAVBAR_ELEMENTS.map((element) => {
                             return (
                                 <Link href={element.url} key={element.url}>
                                     <Breadcrumbs.Item
                                         href={element.url}
                                         key={element.url}
-                                        sx={{ color: 'white' }}
-                                        className={router.asPath === element.url ? 'text-bold' : ''}
+                                        className={`${
+                                            router.asPath === element.url ? 'text-bold' : ''
+                                        } color-fg-on-emphasis`}
                                     >
                                         {element.title}
                                     </Breadcrumbs.Item>
@@ -61,11 +60,10 @@ const Navbar: FC = () => {
                         })}
                     </Breadcrumbs>
                     <div className='d-md-none'>
-                        <Button
-                            aria-haspopup='true'
-                            aria-expanded={open}
+                        <div
                             onClick={() => setOpen(!open)}
-                            sx={{ background: 'transparent', border: 0 }}
+                            className='ml-2 d-flex flex-justify-center flex-items-center'
+                            style={{ cursor: 'pointer' }}
                         >
                             <Image
                                 src='/down-arrow.svg'
@@ -77,7 +75,7 @@ const Navbar: FC = () => {
                                     transition: 'transform 0.2s linear',
                                 }}
                             />
-                        </Button>
+                        </div>
                     </div>
                     {open && (
                         <NavList
@@ -90,8 +88,9 @@ const Navbar: FC = () => {
                                         <NavList.Item
                                             key={element.url}
                                             href={element.url}
-                                            sx={{ color: 'white' }}
-                                            className={router.asPath === element.url ? 'text-bold' : ''}
+                                            className={`${
+                                                router.asPath === element.url ? 'text-bold' : ''
+                                            } color-fg-on-emphasis`}
                                         >
                                             {element.title}
                                         </NavList.Item>
