@@ -1,15 +1,10 @@
 import { FC, useState } from 'react'
 import Image from 'next/image'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
-import { Button, NavList, Breadcrumbs } from '@primer/react'
+import { NavList, Breadcrumbs } from '@primer/react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-interface INavbarElement {
-    title: string
-    url: string
-    tooltip?: string
-    disabled?: boolean
-}
+import { INavbarElement } from 'lib/interfaces'
 
 const Navbar: FC = () => {
     const router = useRouter()
@@ -18,12 +13,10 @@ const Navbar: FC = () => {
         {
             title: 'Dashboard',
             url: '/',
-            tooltip: 'Dashboard',
         },
         {
             title: 'Candy Machines',
             url: '/create-candy-machine',
-            tooltip: 'Candy Machines',
         },
     ]
 
@@ -88,6 +81,7 @@ const Navbar: FC = () => {
                                         <NavList.Item
                                             key={element.url}
                                             href={element.url}
+                                            onClick={() => setOpen(!open)}
                                             className={`${
                                                 router.asPath === element.url ? 'text-bold' : ''
                                             } color-fg-on-emphasis`}
