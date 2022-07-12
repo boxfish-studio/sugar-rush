@@ -1,13 +1,13 @@
 import { useWallet } from '@solana/wallet-adapter-react'
 import CheckConnectedWallet from './CheckConnectedWallet'
 
-function AppWrapper({ children }: { children: any }) {
+function AppWrapper({ children }: { children: JSX.Element }) {
     const { publicKey } = useWallet()
 
-    if (publicKey) {
-        return children
+    if (!publicKey) {
+        return <CheckConnectedWallet />
     }
-    return <CheckConnectedWallet />
+    return children
 }
 
 export default AppWrapper
