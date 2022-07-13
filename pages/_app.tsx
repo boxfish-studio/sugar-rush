@@ -11,12 +11,12 @@ import {
     TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
 import { clusterApiUrl } from '@solana/web3.js'
-import { Navbar, Wallet, TopActions, Footer } from 'components'
+import { Navbar, TopActions, Footer, CheckConnectedWallet } from 'components'
 import type { AppProps } from 'next/app'
 import { useMemo } from 'react'
 import { RecoilRoot } from 'recoil'
 import '../styles/globals.scss'
-import { theme, ThemeProvider } from '@primer/react'
+import { theme, ThemeProvider, Box } from '@primer/react'
 import deepmerge from 'deepmerge'
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -44,8 +44,12 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <RecoilRoot>
                         <WalletModalProvider>
                             <Navbar />
-                            <TopActions />
-                            <Component {...pageProps} />
+                            <CheckConnectedWallet>
+                                <Box className='container-xl p-responsive'>
+                                    <TopActions />
+                                    <Component {...pageProps} />
+                                </Box>
+                            </CheckConnectedWallet>
                         </WalletModalProvider>
                         <Footer />
                     </RecoilRoot>
