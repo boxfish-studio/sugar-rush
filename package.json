@@ -32,10 +32,11 @@
     "postcss": "^8.4.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "recoil": "^0.7.4",
     "sass": "^1.53.0",
     "styled-components": "^5.3.5",
-    "swiper": "^8.2.4",
     "tailwindcss": "^3.0.24",
+    "swiper": "^8.2.4",
     "yarn": "^1.22.18"
   },
   "devDependencies": {
