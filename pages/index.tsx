@@ -1,12 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useWallet } from '@solana/wallet-adapter-react'
-import { CandyMachineList, Spinner, Title } from 'components'
+import { CandyMachineList } from 'components'
 import { useRPC } from 'hooks'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import { Spinner } from '@primer/react'
 
 const ManageCandyMachines: NextPage = () => {
     const { publicKey, connected } = useWallet()
@@ -60,9 +61,16 @@ const ManageCandyMachines: NextPage = () => {
                 <link rel='icon' href='/favicon.ico' />
             </Head>
             <div className='flex-col'>
-                <h2 className='my-5'>Candy Machines · {accounts?.length}</h2>
-
-                {!error && accounts.length === 0 && <Spinner />}
+                <div className='d-flex my-5 flex-items-center'>
+                    <h2>Candy Machines ·</h2>
+                    <h2 className='ml-2'>
+                        {!error && accounts.length === 0 ? (
+                            <Spinner size='small' sx={{ display: 'flex' }} />
+                        ) : (
+                            accounts?.length
+                        )}
+                    </h2>
+                </div>
                 {error && !isLoading && (
                     <div className='flex flex-col items-center justify-center mt-11'>
                         Error fetching accounts
