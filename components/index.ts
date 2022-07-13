@@ -8,6 +8,7 @@ export { default as Title } from './Title'
 export { default as Wallet } from './Wallet'
 export { default as ExplorerLinks } from './ExplorerLinks'
 export { default as NftDetails } from './NftDetails'
+export { default as Footer } from './Footer'
 
 export * from './cards'
 export * from './forms'
