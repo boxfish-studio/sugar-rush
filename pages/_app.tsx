@@ -11,7 +11,7 @@ import {
     TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
 import { clusterApiUrl } from '@solana/web3.js'
-import { Navbar } from 'components'
+import { Navbar, Footer } from 'components'
 import type { AppProps } from 'next/app'
 import React, { useMemo } from 'react'
 import '../styles/globals.scss'
@@ -45,6 +45,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <Navbar />
                         <Component {...pageProps} />
                     </WalletModalProvider>
+                    <Footer />
                 </WalletProvider>
             </ConnectionProvider>
         </ThemeProvider>
