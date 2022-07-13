@@ -11,13 +11,12 @@ import {
     TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
 import { clusterApiUrl } from '@solana/web3.js'
-import { Navbar, Footer } from 'components'
+import { Navbar, Footer, CheckConnectedWallet } from 'components'
 import type { AppProps } from 'next/app'
 import { useMemo } from 'react'
 import '../styles/globals.scss'
 import { theme, ThemeProvider, Box } from '@primer/react'
 import deepmerge from 'deepmerge'
-import AppWrapper from 'components/AppWrapper'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const network = WalletAdapterNetwork.Devnet
@@ -43,11 +42,11 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <WalletProvider wallets={wallets}>
                     <WalletModalProvider>
                         <Navbar />
-                        <AppWrapper>
+                        <CheckConnectedWallet>
                             <Box className='container-xl p-responsive'>
                                 <Component {...pageProps} />
                             </Box>
-                        </AppWrapper>
+                        </CheckConnectedWallet>
                     </WalletModalProvider>
                     <Footer />
                 </WalletProvider>
