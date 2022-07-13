@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
-@import './wallet-adapter.scss';
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
+@import "./wallet-adapter.scss";
 @import "@primer/css/index.scss";
 
 @tailwind base;
@@ -8,7 +8,7 @@
 @tailwind utilities;
 
 :root {
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
     @apply text-base;
 }
 
@@ -30,15 +30,27 @@ h1 {
 }
 h2 {
     @apply text-2xl;
-} 
+}
 h3 {
     @apply text-xl;
 }
-h4, h5, h6 {
+h4,
+h5,
+h6 {
     @apply text-lg;
 }
 
 a {
     text-decoration: none;
     @apply text-blue-regular;
+}
+
+.wallet-adapter-button {
+    background-color: #4e44ce !important;
+    padding: 6px 12px !important;
+    height: 32px !important;
+    border-radius: 2px !important;
+    flex-shrink: 0;
+    font-size: 12px;
+    letter-spacing: -0.15px;
 }
