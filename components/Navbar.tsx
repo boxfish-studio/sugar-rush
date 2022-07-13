@@ -11,12 +11,8 @@ const Navbar: FC = () => {
     const [open, setOpen] = useState(false)
     const NAVBAR_ELEMENTS: INavbarElement[] = [
         {
-            title: 'Dashboard',
+            title: 'Dashboard / Candy Machines',
             url: '/',
-        },
-        {
-            title: 'Candy Machines',
-            url: '/create-candy-machine',
         },
     ]
 
