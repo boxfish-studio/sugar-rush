@@ -31,18 +31,17 @@ const Carousel: FC<{
                             stretch: 0,
                             depth: 100,
                             modifier: 1,
-                            slideShadows: false,
+                            slideShadows: true,
                         }}
                         navigation={true}
                         modules={[EffectCoverflow, Pagination, Navigation]}
                         onSlideChange={() => {
                             slideChange && slideChange()
                         }}
-                        className='w-2/3 h-full'
                     >
                         {carouselData &&
                             carouselData.map((data, i) => (
-                                <SwiperSlide key={i} onClick={onClick} className='bg-center bg-cover w-80'>
+                                <SwiperSlide key={i} onClick={onClick}>
                                     <h1 className='text-grey-daylight'>{data.title}</h1>
                                     <Image src={data.image} alt={data.title} width={250} height={250} />
                                 </SwiperSlide>
