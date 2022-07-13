@@ -1,30 +1,28 @@
 import { Modal } from 'components'
-import { useRemoveCandyMachineAccount, useSearchBar } from 'hooks'
+import { useRemoveCandyMachineAccount } from 'hooks'
+import { candyMachineSearchState } from 'lib/recoil/atoms'
 import Link from 'next/link'
 import { FC, useState } from 'react'
-
+import { useRecoilValue } from 'recoil'
 const CandyMachineCard: FC<{
     candyMachineAccounts: string[]
     setCandyMachineAccounts: React.Dispatch<React.SetStateAction<string[]>>
 }> = ({ candyMachineAccounts, setCandyMachineAccounts }) => {
-    const { searchResults, searchRef, setSearch } = useSearchBar(candyMachineAccounts)
+    const searchInput = useRecoilValue(candyMachineSearchState)
     const [isOpen, setIsOpen] = useState(false)
     const [selectedAccount, setSelectedAccount] = useState('')
+
+    const searchResults = candyMachineAccounts.filter((account) => {
+        return account.toLowerCase().includes(searchInput.trim().toLowerCase())
+    })
 
     const { removeAccount } = useRemoveCandyMachineAccount(candyMachineAccounts, setCandyMachineAccounts)
 
     return (
         <>
-            <input
-                className='border border-slate-300 py-2 px-5 rounded-lg mt-16 w-full md:max-w-[27rem]'
-                ref={searchRef}
-                type='search'
-                placeholder='Search candy machine...'
-                onChange={(event) => setSearch(event.target.value)}
-            />
             <Modal isOpen={isOpen} setIsOpen={setIsOpen} account={selectedAccount} callback={removeAccount} />
             <div className='grid grid-cols-1 gap-7 mt-6 md:mt-8'>
-                {searchResults.map((account) => (
+                {searchResults?.map((account) => (
                     <div
                         key={account}
                         className='border border-slate-300 items-center justify-center p-4 flex flex-col relative rounded-xl shadow-xl w-full'

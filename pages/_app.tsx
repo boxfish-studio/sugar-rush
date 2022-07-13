@@ -11,9 +11,10 @@ import {
     TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
 import { clusterApiUrl } from '@solana/web3.js'
-import { Navbar, Footer } from 'components'
+import { Navbar, Wallet, TopActions, Footer } from 'components'
 import type { AppProps } from 'next/app'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
+import { RecoilRoot } from 'recoil'
 import '../styles/globals.scss'
 import { theme, ThemeProvider } from '@primer/react'
 import deepmerge from 'deepmerge'
@@ -21,7 +22,6 @@ import deepmerge from 'deepmerge'
 function MyApp({ Component, pageProps }: AppProps) {
     const network = WalletAdapterNetwork.Devnet
     const endpoint = useMemo(() => clusterApiUrl(network), [network])
-
     const wallets = useMemo(
         () => [
             new PhantomWalletAdapter(),
@@ -41,11 +41,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ThemeProvider theme={customTheme}>
             <ConnectionProvider endpoint={endpoint}>
                 <WalletProvider wallets={wallets}>
-                    <WalletModalProvider>
-                        <Navbar />
-                        <Component {...pageProps} />
-                    </WalletModalProvider>
-                    <Footer />
+                    <RecoilRoot>
+                        <WalletModalProvider>
+                            <Navbar />
+                            <TopActions />
+                            <Component {...pageProps} />
+                        </WalletModalProvider>
+                        <Footer />
+                    </RecoilRoot>
                 </WalletProvider>
             </ConnectionProvider>
         </ThemeProvider>

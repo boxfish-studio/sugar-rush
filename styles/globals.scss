@@ -45,6 +45,14 @@ a {
     @apply text-blue-regular;
 }
 
+.searchbox-candymachine {
+    max-width: 186px;
+}
+
+.top-actions-bar{
+    gap: 1rem;
+}
+
 .wallet-adapter-button {
     background-color: #4e44ce !important;
     padding: 6px 12px !important;
