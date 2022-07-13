@@ -13,7 +13,11 @@ const TopActions: FC = () => {
     return (
         <div className='d-flex flex-justify-end top-actions-bar d-flex flex-row mt-16 pt-6 container-xl'>
             {pathname === '/' ? (
-                <SearchBar searchValue={searchValue} setSearchValue={setSearchValue} />
+                <SearchBar
+                    searchValue={searchValue}
+                    setSearchValue={setSearchValue}
+                    placeholderText='Search candy machine'
+                />
             ) : (
                 <>
                     <Button variant='danger'>Delete</Button>

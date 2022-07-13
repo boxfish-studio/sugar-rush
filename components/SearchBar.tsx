@@ -6,13 +6,14 @@ import { SearchIcon } from '@primer/octicons-react'
 const SearchBar: FC<{
     searchValue: string
     setSearchValue: SetterOrUpdater<string> | Dispatch<SetStateAction<string>>
-}> = ({ searchValue, setSearchValue }) => {
+    placeholderText: string
+}> = ({ searchValue, setSearchValue, placeholderText }) => {
     return (
         <TextInput
             icon={SearchIcon}
             className='border py-1 rounded-lg searchbox-candymachine f5 pl-2'
             type='search'
-            placeholder='Search candy machine'
+            placeholder={placeholderText}
             onChange={({ target }) => setSearchValue(target.value)}
             value={searchValue}
             sx={{ '> input': { padding: '0' }, '> svg': { width: '15px', height: '15px' } }}
