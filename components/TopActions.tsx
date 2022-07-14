@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { useRouter } from 'next/router'
 import SearchBar from './SearchBar'
 import { useRecoilState } from 'recoil'
-import { candyMachineSearchState } from 'lib/recoil/atoms'
+import { candyMachineSearchState } from 'lib/recoil-store/atoms'
 import { Button } from '@primer/react'
 import { LinkExternalIcon } from '@primer/octicons-react'
 

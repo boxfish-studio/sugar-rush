@@ -1,4 +1,4 @@
-import { candyMachineSearchState } from 'lib/recoil/atoms'
+import { candyMachineSearchState } from 'lib/recoil-store/atoms'
 import { CandyMachineTile } from 'components'
 import { FC } from 'react'
 import { useRecoilValue } from 'recoil'
