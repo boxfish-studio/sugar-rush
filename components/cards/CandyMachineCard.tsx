@@ -1,6 +1,6 @@
 import { Modal } from 'components'
 import { useRemoveCandyMachineAccount } from 'hooks'
-import { candyMachineSearchState } from 'lib/recoil/atoms'
+import { candyMachineSearchState } from 'lib/recoil-store/atoms'
 import Link from 'next/link'
 import { FC, useState } from 'react'
 import { useRecoilValue } from 'recoil'
