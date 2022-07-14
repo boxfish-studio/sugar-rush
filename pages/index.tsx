@@ -81,7 +81,7 @@ const ManageCandyMachines: NextPage = () => {
                 )}
 
                 {!isLoading && !error && accounts.length > 0 && accounts[0] !== '' && (
-                    <CandyMachineList candyMachineAccounts={accounts} setCandyMachineAccounts={setAccounts} />
+                    <CandyMachineList candyMachineAccounts={accounts} />
                 )}
                 {!isLoading && !error && accounts[0] === '' && (
                     <span className='mt-5'>
