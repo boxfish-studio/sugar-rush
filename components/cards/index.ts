@@ -1,1 +1,1 @@
-export { default as CandyMachineCard } from './CandyMachineCard'
+export { default as CandyMachineTile } from './CandyMachineTile'

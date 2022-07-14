@@ -13,8 +13,8 @@
 }
 
 body {
-    @apply min-h-screen;
-    @apply m-0;
+    margin: 0;
+    color: #24292e;
 }
 
 h1,
@@ -49,7 +49,7 @@ a {
     max-width: 186px;
 }
 
-.top-actions-bar{
+.top-actions-bar {
     gap: 1rem;
 }
 
