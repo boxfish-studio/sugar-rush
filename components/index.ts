@@ -12,6 +12,7 @@ export { default as ExplorerLinks } from './ExplorerLinks'
 export { default as NftDetails } from './NftDetails'
 export { default as NftCard } from './NftCard'
 export { default as Footer } from './Footer'
+export { default as CandyMachineList } from './CandyMachineList'
 
 export * from './cards'
 export * from './forms'

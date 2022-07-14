@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { useRouter } from 'next/router'
 import SearchBar from './SearchBar'
 import { useRecoilState } from 'recoil'
-import { candyMachineSearchState } from 'lib/recoil/atoms'
+import { candyMachineSearchState } from 'lib/recoil-store/atoms'
 import { Button } from '@primer/react'
 import { LinkExternalIcon } from '@primer/octicons-react'
 
@@ -11,7 +11,7 @@ const TopActions: FC = () => {
     const { pathname } = useRouter()
 
     return (
-        <div className='d-flex flex-justify-end top-actions-bar d-flex flex-row mt-16 pt-6 container-xl'>
+        <div className='d-flex flex-justify-end top-actions-bar d-flex flex-row'>
             {pathname === '/' ? (
                 <SearchBar
                     searchValue={searchValue}
