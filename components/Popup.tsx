@@ -1,6 +1,5 @@
 import { Dispatch, FC, SetStateAction, useState } from 'react'
-import styles from 'styles/modules/Modal.module.scss'
-import { Box, Button } from '@primer/react'
+import { Box } from '@primer/react'
 import { Dialog } from '@primer/react/drafts'
 
 const Modal: FC<{

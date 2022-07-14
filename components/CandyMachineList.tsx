@@ -1,4 +1,4 @@
-import { Modal } from 'components'
+import { Popup } from 'components'
 import { candyMachineSearchState } from 'lib/recoil/atoms'
 import { CandyMachineTile } from 'components'
 import { FC, useState } from 'react'
@@ -19,14 +19,14 @@ const CandyMachineList: FC<{
 
     return (
         <>
-            <Modal
+            <Popup
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 title='Title'
                 onClick={() => console.log('create a candy machine')}
             >
                 <CreateCandyMachine />
-            </Modal>
+            </Popup>
             <div style={{ display: 'grid', gridRowGap: '16px' }}>
                 {searchResults?.map((account) => (
                     <CandyMachineTile key={account} account={account} />
