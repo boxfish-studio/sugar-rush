@@ -16,7 +16,7 @@ import type { AppProps } from 'next/app'
 import { useMemo } from 'react'
 import { RecoilRoot } from 'recoil'
 import '../styles/globals.scss'
-import { theme, ThemeProvider, Box } from '@primer/react'
+import { theme, ThemeProvider } from '@primer/react'
 import deepmerge from 'deepmerge'
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -45,10 +45,10 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <WalletModalProvider>
                             <Navbar />
                             <CheckConnectedWallet>
-                                <Box className='container-xl p-responsive'>
+                                <div className='container-xl p-responsive height-full my-11'>
                                     <TopActions />
                                     <Component {...pageProps} />
-                                </Box>
+                                </div>
                             </CheckConnectedWallet>
                         </WalletModalProvider>
                         <Footer />
