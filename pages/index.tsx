@@ -31,7 +31,7 @@ const ManageCandyMachines: NextPage = () => {
                     ],
                 })
 
-                if (accounts.length === 0) return setAccounts([''])
+                if (accounts.length === 0) return setAccounts([])
 
                 const accountsPubkeys = accounts.map((account) => account.pubkey.toBase58()).sort()
                 setAccounts(accountsPubkeys)
