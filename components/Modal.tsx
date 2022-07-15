@@ -44,12 +44,12 @@ const Modal: FC<{
                     className={`flex fixed pt-8 left-20 top-0 w-full h-full overflow-auto z-10 bg-slate-400/50 scale-0 ${styles.modal}`}
                     onClick={handleModal}
                 >
-                    <span className='p-8 pt-16 bg-[hsl(0,0%,100%)] m-auto overflow-hidden flex relative flex-col w-[40rem] rounded-2xl h-[22rem] shadow-xl'>
+                    <span className='p-8 pt-16 bg-[hsl(0,0%,100%)] m-auto overflow-hidden flex relative flex-column w-[40rem] rounded-2xl h-[22rem] shadow-xl'>
                         <button className={styles.hamb} onClick={closeModal}>
                             <span className={styles.line} />
                             <span className={styles.line} />
                         </button>
-                        <span className={`flex flex-col ${styles.text}`}>
+                        <span className={`flex flex-column ${styles.text}`}>
                             <ExplorerLinks type='account' value={account} connection={connection} text={'View'} />
                             <h1 className='text-red-500 text-xl'>
                                 <span className='font-bold'>WARNING!</span> You are attempting to remove an account from
@@ -57,10 +57,10 @@ const Modal: FC<{
                                 refund the SOL locked from the account to your wallet.
                             </h1>
 
-                            <span className='flex flex-col  justify-center items-center'>
+                            <span className='flex flex-column  justify-center items-center'>
                                 {!isLoading && tx && !error && (
                                     <>
-                                        <span className='flex flex-col justify-center items-center mt-6'>
+                                        <span className='flex flex-column justify-center items-center mt-6'>
                                             Successfully closed account - Reedemed {tx.balanceChange.toFixed(4)} SOL
                                             <ExplorerLinks
                                                 type='transaction'
@@ -73,7 +73,9 @@ const Modal: FC<{
                                 )}{' '}
                                 {!isLoading && error && (
                                     <>
-                                        <span className='flex flex-col justify-center items-center mt-6'>{error}</span>
+                                        <span className='flex flex-column justify-center items-center mt-6'>
+                                            {error}
+                                        </span>
                                     </>
                                 )}{' '}
                                 {!isLoading && !tx && !error && (
