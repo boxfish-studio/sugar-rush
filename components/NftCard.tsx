@@ -13,7 +13,7 @@ const NftCard: FC<{ title: string; imageLink: string; hash?: string }> = ({ titl
             <Text as='p' fontWeight='bold'>
                 {title}
             </Text>
-            <img className='border rounded-3' style={{ height: '168px', width: '168px' }} src={imageLink} />
+            <img className='border rounded-3 mb-2' style={{ height: '168px', width: '168px' }} src={imageLink} />
             {hash && (
                 <Link
                     target='_blank'
