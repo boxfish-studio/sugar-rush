@@ -2,8 +2,8 @@
 import { useWallet } from '@solana/wallet-adapter-react'
 import { CandyMachineList } from 'components'
 import { useRPC } from 'hooks'
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import { candyMachinesState } from 'lib/recoil-store/atoms'
+import { fetchCandyMachineAccounts } from 'lib/utils'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
@@ -12,30 +12,16 @@ import { useRecoilState } from 'recoil'
 import { Spinner } from '@primer/react'
 
 const ManageCandyMachines: NextPage = () => {
-    const { publicKey } = useWallet()
     const [accounts, setAccounts] = useRecoilState(candyMachinesState)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(false)
     const { rpcEndpoint } = useRPC()
+    const { publicKey } = useWallet()
 
     const fetchAccounts = async () => {
         try {
-            const accounts = await rpcEndpoint.getProgramAccounts(CANDY_MACHINE_PROGRAM_V2_ID, {
-                commitment: 'confirmed',
-                filters: [
-                    {
-                        memcmp: {
-                            offset: 8,
-                            bytes: publicKey!.toBase58(),
-                        },
-                    },
-                ],
-            })
-
-            if (accounts.length === 0) return setAccounts([])
-
-            const accountsPubkeys = accounts.map((account) => account.pubkey.toBase58()).sort()
-            setAccounts(accountsPubkeys)
+            const accounts = await fetchCandyMachineAccounts(rpcEndpoint, publicKey!)
+            setAccounts(accounts)
             setError(false)
         } catch (err) {
             console.error(err)
@@ -52,11 +38,16 @@ const ManageCandyMachines: NextPage = () => {
                 setIsLoading(false)
             })
     }, [])
-    return isLoading ? (
-        <div className='d-flex width-full height-full flex-justify-center flex-items-center'>
-            <Spinner />
-        </div>
-    ) : (
+
+    if (isLoading) {
+        return (
+            <div className='d-flex width-full height-full flex-justify-center flex-items-center'>
+                <Spinner />
+            </div>
+        )
+    }
+
+    return (
         <>
             <Head>
                 <title>Candy Machines</title>
@@ -66,33 +57,24 @@ const ManageCandyMachines: NextPage = () => {
             <div className='flex-col'>
                 <div className='d-flex my-5 flex-items-center'>
                     <h2>Candy Machines ·</h2>
-                    <h2 className='ml-2'>
-                        {!error && accounts.length === 0 ? (
-                            <Spinner size='small' sx={{ display: 'flex' }} />
-                        ) : (
-                            accounts?.length
-                        )}
-                    </h2>
+                    <h2 className='ml-2'>{accounts?.length}</h2>
                 </div>
-                {error && !isLoading && (
+                {error ? (
                     <div className='flex flex-col items-center justify-center mt-11'>
                         Error fetching accounts
                         <button className='rounded-lg bg-slate-400 p-2 mt-4' onClick={fetchAccounts}>
                             Fetch again
                         </button>
                     </div>
-                )}
-
-                {!isLoading && !error && accounts.length > 0 && accounts[0] !== '' && (
-                    <CandyMachineList candyMachineAccounts={accounts} />
-                )}
-                {!isLoading && !error && accounts[0] === '' && (
+                ) : !accounts?.length ? (
                     <span className='mt-5'>
-                        You have no candy machine accounts.{' '}
+                        You have no candy machine accounts.
                         <Link href='/create-candy-machine'>
-                            <a className='text-[hsl(258,52%,62%)] hover:underline'>Create one?</a>
+                            <a className='text-[hsl(258,52%,62%)] hover:underline ml-1'>Create one?</a>
                         </Link>
                     </span>
+                ) : (
+                    <CandyMachineList candyMachineAccounts={accounts} />
                 )}
             </div>
         </>

@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { useRouter } from 'next/router'
-import SearchBar from './SearchBar'
+import { SearchBar, RefreshButton } from './'
 import { useRecoilState } from 'recoil'
 import { candyMachineSearchState } from 'lib/recoil-store/atoms'
 import { Button } from '@primer/react'
@@ -13,11 +13,14 @@ const TopActions: FC = () => {
     return (
         <div className='d-flex flex-justify-end top-actions-bar d-flex flex-row'>
             {pathname === '/' ? (
-                <SearchBar
-                    searchValue={searchValue}
-                    setSearchValue={setSearchValue}
-                    placeholderText='Search candy machine'
-                />
+                <>
+                    <SearchBar
+                        searchValue={searchValue}
+                        setSearchValue={setSearchValue}
+                        placeholderText='Search candy machine'
+                    />
+                    <RefreshButton />
+                </>
             ) : (
                 <>
                     <Button variant='danger'>Delete</Button>
