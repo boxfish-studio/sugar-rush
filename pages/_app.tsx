@@ -21,7 +21,7 @@ import deepmerge from 'deepmerge'
 
 function MyApp({ Component, pageProps }: AppProps) {
     const network = WalletAdapterNetwork.Devnet
-    const endpoint = useMemo(() => clusterApiUrl(network), [network])
+    const endpoint = useMemo(() => 'https://explorer-api.devnet.solana.com/', [network])
     const wallets = useMemo(
         () => [
             new PhantomWalletAdapter(),

@@ -17,7 +17,7 @@ const useRPC = () => {
     const { connection } = useConnection()
     const [network] = useRecoilState(networkState)
 
-    const defaultConnection = { ...connection, rpcEndpoint: RPC_API_MAINNET } as Connection
+    const defaultConnection = { ...connection, rpcEndpoint: RPC_API_DEVNET } as Connection
     const [rpc, setRpc] = useState<Connection>(defaultConnection)
 
     useEffect(() => {

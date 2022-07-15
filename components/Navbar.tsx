@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { INavbarElement } from 'lib/interfaces'
 import NetworkSelector from './NetworkSelector'
+import NetworkTps from './NetworkTps'
 
 const Navbar: FC = () => {
     const router = useRouter()
@@ -91,6 +92,7 @@ const Navbar: FC = () => {
                         </NavList>
                     )}
                 </div>
+                <NetworkTps />
                 <NetworkSelector />
                 <WalletMultiButton />
             </div>
