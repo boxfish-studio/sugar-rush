@@ -301,8 +301,8 @@ const UpdateCreateCandyMachineForm: FC<{
     }
 
     return (
-        <form className='flex flex-col items-center h-auto justify-center mt-4' onSubmit={onSubmit}>
-            <div className='flex flex-col p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>
+        <form className='flex flex-column items-center h-auto justify-center mt-4' onSubmit={onSubmit}>
+            <div className='flex flex-column p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>
                 <FormInput
                     id='price'
                     text='Price of each NFT (SOL)'
