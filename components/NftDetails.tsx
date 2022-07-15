@@ -3,7 +3,7 @@ import { FC } from 'react'
 
 const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
     return (
-        <div className='flex flex-col gap-3 p-5 mt-3 border-grey-500 border-2 rounded-lg'>
+        <div className='flex flex-column gap-3 p-5 mt-3 border-grey-500 border-2 rounded-lg'>
             {nft.symbol && (
                 <span>
                     <strong>Symbol</strong>: {nft.symbol}
