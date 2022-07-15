@@ -4,11 +4,7 @@ import { networkState } from 'lib/recoil-store/atoms'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 
 type Network = keyof typeof WalletAdapterNetwork
-declare module 'react' {
-    interface HTMLDetails<T> {
-        network?: Network
-    }
-}
+
 const NetworkSelector: FC = () => {
     const [network, setNetwork] = useRecoilState(networkState)
     const currentNetwork = Object.keys(WalletAdapterNetwork).find((e) => WalletAdapterNetwork[e as Network] === network)
