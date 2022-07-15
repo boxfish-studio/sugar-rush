@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction, useState } from 'react'
 import { Box } from '@primer/react'
 import { Dialog } from '@primer/react/drafts'
 
-const Modal: FC<{
+const Popup: FC<{
     isOpen: boolean
     setIsOpen: Dispatch<SetStateAction<boolean>>
     children: any
@@ -27,4 +27,4 @@ const Modal: FC<{
     )
 }
 
-export default Modal
+export default Popup
