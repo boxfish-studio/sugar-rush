@@ -19,14 +19,11 @@ const CandyMachineList: FC<{
 
     return (
         <>
-            <Popup
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-                title='Title'
-                onClick={() => console.log('create a candy machine')}
-            >
-                <CreateCandyMachine />
-            </Popup>
+            {isOpen && (
+                <Popup setIsOpen={setIsOpen} title='Title' onClick={() => console.log('create a candy machine')}>
+                    <CreateCandyMachine />
+                </Popup>
+            )}
             <div style={{ display: 'grid', gridRowGap: '16px' }}>
                 {searchResults?.map((account) => (
                     <CandyMachineTile key={account} account={account} />
