@@ -14,7 +14,7 @@ const NftCard: FC<{ title: string; imageLink: string; hash?: string }> = ({ titl
                 {title}
             </Text>
             <div
-                className='border rounded-3 mb-2 d-flex flex-items-center flex-justify-center'
+                className='border rounded-3 mb-2 overflow-hidden d-flex flex-items-center flex-justify-center'
                 style={{ height: '168px', width: '168px' }}
             >
                 <img alt={title} src={imageLink} />
