@@ -26,6 +26,8 @@ interface IPropertiesNft {
 interface ICollectionNft {
     name: string
     family: string
+    verified?: number
+    key?: string
 }
 
 interface IPropertyFileNft {

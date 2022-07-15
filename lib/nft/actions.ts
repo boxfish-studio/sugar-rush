@@ -29,3 +29,19 @@ export async function getAllNftsByCM(candyMachineAccount: string | string[], con
     }
     return nfts
 }
+
+export async function getNftByMint(mintAccount: string | string[], connection: Connection): Promise<Nft> {
+    let nft: Nft = { name: '', image: '' }
+    if (!connection && !mintAccount) return nft
+    const metaplex = new Metaplex(connection)
+    const nftAddress = await metaplex.nfts().findByMint(new PublicKey(mintAccount as string))
+    let fetchData = await fetch(nftAddress?.uri)
+    let nftData = await fetchData.json()
+    if (nftData) {
+        nft = {
+            name: nftData.name,
+            image: nftData.image,
+        }
+    }
+    return nft
+}
