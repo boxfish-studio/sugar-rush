@@ -113,7 +113,6 @@ const VerifyCandyMachine: NextPage = () => {
                     </div>
                 )}
             </div>
-            )
         </>
     )
 }
