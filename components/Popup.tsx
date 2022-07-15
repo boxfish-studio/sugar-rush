@@ -7,14 +7,16 @@ const Popup: FC<{
     children: any
     title: string
     onClick: () => void
-}> = ({ setIsOpen, children, title, onClick }) => {
+    buttonLabel?: string
+    buttonType?: 'primary' | 'danger'
+}> = ({ setIsOpen, children, title, onClick, buttonLabel, buttonType }) => {
     return (
         <>
             <Dialog
                 title={title}
                 onClose={() => setIsOpen(false)}
                 aria-labelledby='label'
-                footerButtons={[{ content: 'Ok', onClick: onClick }]}
+                footerButtons={[{ content: buttonLabel, onClick: onClick, buttonType: buttonType }]}
                 height='large'
                 width='xlarge'
             >
