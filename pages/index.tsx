@@ -51,7 +51,7 @@ const ManageCandyMachines: NextPage = () => {
             .finally(() => {
                 setIsLoading(false)
             })
-    }, [])
+    }, [rpcEndpoint])
     return isLoading ? (
         <div className='d-flex width-full height-full flex-justify-center flex-items-center'>
             <Spinner />

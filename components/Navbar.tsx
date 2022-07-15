@@ -5,6 +5,7 @@ import { NavList, Breadcrumbs } from '@primer/react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { INavbarElement } from 'lib/interfaces'
+import NetworkSelector from './NetworkSelector'
 
 const Navbar: FC = () => {
     const router = useRouter()
@@ -21,7 +22,7 @@ const Navbar: FC = () => {
             className='color-bg-emphasis color-fg-subtle position-fixed top-0 left-0 z-10 width-full d-flex flex-row color-fg-on-emphasis'
             style={{ height: '70px' }}
         >
-            <div className='d-flex width-full container-xl p-responsive py-4 flex-justify-between flex-items-center'>
+            <div className='d-flex width-full container-xl p-responsive py-4 flex-justify-between flex-items-center gap-5'>
                 <div
                     className='d-flex flex-items-center flex-justify-start
                          width-full'
@@ -90,7 +91,7 @@ const Navbar: FC = () => {
                         </NavList>
                     )}
                 </div>
-
+                <NetworkSelector />
                 <WalletMultiButton />
             </div>
         </nav>
