@@ -8,7 +8,7 @@ import CreateCandyMachine from 'pages/create-candy-machine'
 
 const CandyMachineList: FC<{
     candyMachineAccounts: string[]
-    setCandyMachineAccounts: React.Dispatch<React.SetStateAction<string[]>>
+    setCandyMachineAccounts?: React.Dispatch<React.SetStateAction<string[]>>
 }> = ({ candyMachineAccounts, setCandyMachineAccounts }) => {
     const searchInput = useRecoilValue(candyMachineSearchState)
     const [isOpen, setIsOpen] = useState(false)
