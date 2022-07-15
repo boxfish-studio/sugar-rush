@@ -69,7 +69,7 @@ const VerifyCandyMachine: NextPage = () => {
 
                 {!isLoading && error && <div className='text-red-500 text-center mt-6'>{error}</div>}
 
-                {isCaptcha ? (
+                {!isCaptcha ? (
                     <>
                         {!shouldMint && itemsRemaining !== 0 && (
                             <div className='text-red-500 text-center mt-6'>Important! Verify before Mint!</div>
@@ -98,8 +98,9 @@ const VerifyCandyMachine: NextPage = () => {
                         </div>
                     </>
                 ) : (
+                    // TODO: Add metaplex CIVIC Gateway when captcha is enabled
                     <div className='text-[hsl(258,52%,56%)] text-center mt-6'>
-                        Captcha is disabled. You can modify it in Inspect candy machine
+                        Captcha is enabled. You can modify it in Inspect candy machine
                     </div>
                 )}
 
