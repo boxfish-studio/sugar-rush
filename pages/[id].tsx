@@ -90,7 +90,7 @@ const CandyMachine: NextPage = () => {
             </Head>
             <div className='container flex justify-center items-center flex-col'>
                 <Title text='Update Candy Machine' />
-                <div className='mt-8 flex flex-col text-center'>
+                <div className='mt-8 flex flex-column text-center'>
                     <span className='break-all border border-slate-300 shadow-xl py-2 px-4 rounded-lg text-center'>
                         {candyMachineAccount}{' '}
                     </span>
@@ -103,7 +103,7 @@ const CandyMachine: NextPage = () => {
                 </div>
                 {isLoading && <Spinner />}
                 {error && (
-                    <div className='flex flex-col items-center justify-center mt-11'>
+                    <div className='flex flex-column items-center justify-center mt-11'>
                         Error fetching candy machine config
                         <button
                             className='rounded-lg bg-slate-400 p-2 mt-4'
@@ -115,7 +115,7 @@ const CandyMachine: NextPage = () => {
                 )}
 
                 {!error && candyMachineConfig?.uuid && (
-                    <div className='mt-5 flex flex-col text-center'>
+                    <div className='mt-5 flex flex-column text-center'>
                         <span className='mt-5'>
                             There are{' '}
                             {new BN(candyMachineConfig.itemsAvailable).toNumber() -

@@ -22,15 +22,11 @@ const Navbar: FC = () => {
             style={{ height: '70px' }}
         >
             <div className='d-flex width-full container-xl p-responsive py-4 flex-justify-between flex-items-center'>
-                <div
-                    className='d-flex flex-items-center flex-justify-start
-                         width-full'
-                >
+                <div className='d-flex flex-items-center flex-justify-start width-full'>
                     <div className='d-flex flex-shrink-0'>
                         <Image src='/logo.png' alt='logo' width={29} height={21} />
                         <h4 className='ml-2'>Sugar rush</h4>
                     </div>
-
                     <Breadcrumbs className='d-none d-md-flex flex-row ml-3'>
                         {NAVBAR_ELEMENTS.map((element) => {
                             return (

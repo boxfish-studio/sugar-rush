@@ -3,46 +3,13 @@
 @import "./wallet-adapter.scss";
 @import "@primer/css/index.scss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
     font-family: "Inter", sans-serif;
-    @apply text-base;
 }
 
 body {
     margin: 0;
     color: #24292e;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    @apply font-bold;
-}
-h1 {
-    @apply text-3xl;
-}
-h2 {
-    @apply text-2xl;
-}
-h3 {
-    @apply text-xl;
-}
-h4,
-h5,
-h6 {
-    @apply text-lg;
-}
-
-a {
-    text-decoration: none;
-    @apply text-blue-regular;
 }
 
 .searchbox-candymachine {
