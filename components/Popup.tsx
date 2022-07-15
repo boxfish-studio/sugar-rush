@@ -16,7 +16,7 @@ const Popup: FC<{
                 aria-labelledby='label'
                 footerButtons={[{ content: 'Ok', onClick: onClick }]}
                 height='large'
-                width='auto'
+                width='xlarge'
             >
                 <Box p={3}>{children}</Box>
             </Dialog>
