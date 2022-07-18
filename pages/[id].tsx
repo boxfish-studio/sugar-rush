@@ -34,7 +34,7 @@ const CandyMachine: NextPage = () => {
     const [error, setError] = useState('')
     const [nfts, setNfts] = useState<Nft[]>([])
     const [isLoading, setIsLoading] = useState(false)
-    const [isRefreshing, setIsRefreshing] = useState(false)
+    const [isReloading, setIsReloading] = useState(false)
     const setNftsState = useSetRecoilState(nftsState)
 
     async function viewNfts(e: React.ChangeEvent<HTMLInputElement>) {
@@ -92,7 +92,7 @@ const CandyMachine: NextPage = () => {
     }
 
     const refreshNfts = async () => {
-        setIsRefreshing(true)
+        setIsReloading(true)
         try {
             if (candyMachineAccount) {
                 const nfts = await getAllNftsByCM(candyMachineAccount, connection)
@@ -103,7 +103,7 @@ const CandyMachine: NextPage = () => {
         } catch (e) {
             console.error(e)
         }
-        setIsRefreshing(false)
+        setIsReloading(false)
     }
 
     useEffect(() => {
@@ -194,7 +194,7 @@ const CandyMachine: NextPage = () => {
                         <h3 className='r-0'>NFTs</h3>
                         <div className='l-0 d-flex flex-justify-end flex-items-center'>
                             <span className='pr-2'>5/10 Minted</span>
-                            <RefreshButton onClick={refreshNfts} isLoading={isRefreshing} />
+                            <RefreshButton onClick={refreshNfts} isLoading={isReloading} />
                         </div>
                     </div>
                     <div className='border-y width-full' />
