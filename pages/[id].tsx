@@ -64,14 +64,16 @@ const CandyMachine: NextPage = () => {
         setIsLoading(true)
         setMintedNfts([])
         let nfts = await getAllNftsByCM(candyMachineAccount, connection)
+        setMintedNfts(nfts)
+        // @ts-ignore
         if (nfts[0]?.collection?.key) {
             setHasCollection(true)
+            // @ts-ignore
             let nftCollectionData = await getNftByMint(nfts[0].collection.key, connection)
             if (nftCollectionData.name !== '') {
                 setCollectionNft(nftCollectionData)
             }
         }
-        setMintedNfts(nfts)
         setIsLoading(false)
     }
 

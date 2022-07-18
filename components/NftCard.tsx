@@ -2,6 +2,7 @@ import { useConnection } from '@solana/wallet-adapter-react'
 import { Link, Button, Text, IconButton } from '@primer/react'
 import { FC } from 'react'
 import { LinkExternalIcon } from '@primer/octicons-react'
+import Image from 'next/image'
 
 const NftCard: FC<{ title: string; imageLink: string; hash?: string }> = ({ title, imageLink, hash }) => {
     const { connection } = useConnection()
@@ -18,6 +19,14 @@ const NftCard: FC<{ title: string; imageLink: string; hash?: string }> = ({ titl
                 style={{ height: '168px', width: '168px' }}
             >
                 <img alt={title} src={imageLink} />
+                {/* <div style={{width: '100%', height: '100%', position: 'relative'}}>
+                    <Image
+                        alt={title} 
+                        src={imageLink}
+                        layout='fill'
+                        objectFit='contain'
+                    />
+                </div> */}
             </div>
             {hash && (
                 <Link
