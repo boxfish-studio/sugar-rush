@@ -6,7 +6,6 @@ export async function getAllNftsByCM(candyMachineAccount: string | string[], con
     if (!connection && !candyMachineAccount) return []
     const metaplex = new Metaplex(connection)
     const nftsAddresses = await metaplex.nfts().findAllByCandyMachine(new PublicKey(candyMachineAccount as string))
-
     const nfts: Nft[] = []
     for (let i = 0; i < nftsAddresses.length; i++) {
         let fetchData = await fetch(nftsAddresses[i].uri)
@@ -15,6 +14,7 @@ export async function getAllNftsByCM(candyMachineAccount: string | string[], con
             name: nftData.name,
             image: nftData.image,
             description: nftData.description,
+            mint: nftsAddresses[i].mint,
             animation_url: nftData.animation_url,
             external_url: nftData.external_url,
             symbol: nftData.symbol,
@@ -43,6 +43,7 @@ export async function getNftByMint(mintAccount: PublicKey, connection: Connectio
             name: nftData.name,
             image: nftData.image,
             description: nftData.description,
+            mint: nftAddress.mint,
             animation_url: nftData.animation_url,
             external_url: nftData.external_url,
             symbol: nftData.symbol,

@@ -14,6 +14,11 @@ const NftDetails: FC<{ nft: Nft }> = ({ nft }) => {
                     <strong>Description</strong>: {nft.description}
                 </span>
             )}
+            {nft.mint && (
+                <span>
+                    <strong>Mint</strong>: {nft.mint.toBase58()}
+                </span>
+            )}
             {nft.animation_url && (
                 <span>
                     <strong>Animation Ulrl</strong>: {nft.animation_url}

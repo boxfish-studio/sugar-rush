@@ -5,6 +5,7 @@ export interface Nft {
     image: string
     symbol?: string
     description?: string
+    mint?: PublicKey
     animation_url?: string
     external_url?: string
     attributes?: IAtributesNft[]
