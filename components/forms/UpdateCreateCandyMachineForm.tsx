@@ -381,7 +381,7 @@ const UpdateCreateCandyMachineForm: FC<{
                         <label htmlFor='storage' className='my-3 font-medium'>
                             Storage
                         </label>
-                        <input list='storage' name='storage' className='w-full p-2' required />
+                        <input list='storage' name='storage' onChange={onChange} className='w-full p-2' required />
                         <datalist id='storage' defaultValue='Arweave'>
                             {Object.keys(StorageType)
                                 .filter((key) => key === 'Arweave')

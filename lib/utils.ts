@@ -1,4 +1,6 @@
 import { BN } from '@project-serum/anchor'
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/mint/constants'
+import { Connection, PublicKey } from '@solana/web3.js'
 
 /**
  *
@@ -114,4 +116,28 @@ export function getTextFromUTF8Array(data: number[]) {
     }
 
     return str
+}
+
+export const fetchCandyMachineAccounts = async (rpcEndpoint: Connection, publicKey: PublicKey): Promise<string[]> => {
+    try {
+        const accounts =
+            (await rpcEndpoint.getProgramAccounts(CANDY_MACHINE_PROGRAM_V2_ID, {
+                commitment: 'confirmed',
+                filters: [
+                    {
+                        memcmp: {
+                            offset: 8,
+                            bytes: publicKey!.toBase58(),
+                        },
+                    },
+                ],
+            })) ?? []
+
+        const accountsPubkeys = accounts.map((account) => account.pubkey.toBase58()).sort()
+
+        return accountsPubkeys
+    } catch (err) {
+        console.error(err)
+        return []
+    }
 }
