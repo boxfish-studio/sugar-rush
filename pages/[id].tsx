@@ -223,7 +223,11 @@ const CandyMachine: NextPage = () => {
                             <h4>Collection</h4>
                             {collectionNft && (
                                 <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
-                                    <NftCard title={collectionNft.name} imageLink={collectionNft.image} />
+                                    <NftCard
+                                        title={collectionNft.name}
+                                        imageLink={collectionNft.image}
+                                        hash={collectionNft.mint?.toBase58()}
+                                    />
                                 </div>
                             )}
                         </div>

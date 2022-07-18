@@ -32,7 +32,7 @@ const NftCard: FC<{ title: string; imageLink: string; hash?: string }> = ({ titl
                 <Link
                     target='_blank'
                     rel='noopener noreferrer'
-                    href={`https://solscan.io/account/${hash}?${
+                    href={`https://solscan.io/token/${hash}${
                         connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
                     }`}
                 >
