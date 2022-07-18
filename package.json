@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "yarn run version && next build",
     "start": "next start",
     "lint": "next lint",
+    "version": "curl https://api.github.com/repos/boxfish-studio/sugar-rush/tags > public/tag_version.txt",
     "format": "prettier --write  \"./**/*.{tsx,ts,css}\"",
     "prepare": "husky install"
   },
