@@ -3,7 +3,7 @@ import { Connection, PublicKey } from '@solana/web3.js'
 import { Nft } from './interfaces'
 
 export async function getAllNftsByCM(candyMachineAccount: string | string[], connection: Connection): Promise<Nft[]> {
-    if (!connection && !candyMachineAccount) return []
+    if (!connection && !candyMachineAccount) throw new Error('Connection error')
     try {
         const metaplex = new Metaplex(connection)
         const nftsAddresses = await metaplex.nfts().findAllByCandyMachine(new PublicKey(candyMachineAccount as string))
