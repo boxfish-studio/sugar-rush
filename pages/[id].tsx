@@ -1,7 +1,15 @@
 import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey } from '@solana/web3.js'
-import { Spinner, Title, UpdateCreateCandyMachineForm, Carousel, ExplorerLinks, NftCard } from 'components'
+import {
+    Spinner,
+    Title,
+    UpdateCreateCandyMachineForm,
+    Carousel,
+    ExplorerLinks,
+    NftCard,
+    RefreshButton,
+} from 'components'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Account } from 'lib/candy-machine/types'
@@ -12,6 +20,9 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Button } from '@primer/react'
 import { SyncIcon } from '@primer/octicons-react'
+import { useSetRecoilState } from 'recoil'
+import { nftsState } from 'lib/recoil-store/atoms'
+import { getAllNftsByCM } from 'lib/nft/actions'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -23,6 +34,8 @@ const CandyMachine: NextPage = () => {
     const [error, setError] = useState('')
     const [nfts, setNfts] = useState<Nft[]>([])
     const [isLoading, setIsLoading] = useState(false)
+    const [isReloading, setIsReloading] = useState(false)
+    const setNftsState = useSetRecoilState(nftsState)
 
     async function viewNfts(e: React.ChangeEvent<HTMLInputElement>) {
         if (!e.target.files || e.target.files.length == 0) {
@@ -76,6 +89,21 @@ const CandyMachine: NextPage = () => {
                 setError((err as Error).message)
             }
         }
+    }
+
+    const refreshNfts = async () => {
+        setIsReloading(true)
+        try {
+            if (candyMachineAccount) {
+                const nfts = await getAllNftsByCM(candyMachineAccount, connection)
+                setNftsState(nfts)
+            } else {
+                setNftsState([])
+            }
+        } catch (e) {
+            console.error(e)
+        }
+        setIsReloading(false)
     }
 
     useEffect(() => {
@@ -166,7 +194,7 @@ const CandyMachine: NextPage = () => {
                         <h3 className='r-0'>NFTs</h3>
                         <div className='l-0 d-flex flex-justify-end flex-items-center'>
                             <span className='pr-2'>5/10 Minted</span>
-                            <Button leadingIcon={SyncIcon}>Refresh</Button>
+                            <RefreshButton onClick={refreshNfts} isLoading={isReloading} />
                         </div>
                     </div>
                     <div className='border-y width-full' />
