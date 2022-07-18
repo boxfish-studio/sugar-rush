@@ -96,7 +96,6 @@ const CandyMachine: NextPage = () => {
         try {
             if (candyMachineAccount) {
                 const nfts = await getAllNftsByCM(candyMachineAccount, connection)
-                console.log(nfts)
                 setNftsState(nfts)
             } else {
                 setNftsState([])
