@@ -8,7 +8,7 @@ import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machi
 import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/candy-machine/upload/config'
 import { uploadV2 } from 'lib/candy-machine/upload/upload'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Box, Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
 
@@ -188,14 +188,32 @@ const CreateCandyMachine: FC<{
             setStatus(`Candy Machine created successfully! ${candyMachine}`)
         }
     }
+    useEffect(() => {
+        const button = document.getElementById('create-candy-machine-button')
+        const scrollAfterSubmit = () => {
+            const form = document.getElementById('form-container')
+            form?.scroll({ top: 0, behavior: 'smooth' })
+        }
+        button?.addEventListener('click', scrollAfterSubmit)
+        return () => {
+            button?.removeEventListener('click', scrollAfterSubmit)
+        }
+    }, [])
 
     return (
         <form onSubmit={onSubmit}>
             <div className='d-flex flex-column flex-justify-between'>
                 <Box
+                    id='form-container'
                     className='overflow-y-scroll d-flex flex-column pb-4 height-full'
-                    sx={{ maxHeight: ['380px', '550px'], marginBottom: ['16px', '32px'] }}
+                    sx={{ maxHeight: ['380px', '550px'] }}
                 >
+                    {errorMessage.length > 0 && (
+                        <span className='color-fg-closed color-bg-closed border color-border-closed-emphasis mt-3 p-3 rounded-2'>
+                            <StyledOcticon icon={AlertIcon} size={16} color='danger.fg' sx={{ marginRight: '6px' }} />{' '}
+                            {errorMessage}
+                        </span>
+                    )}
                     {isInteractingWithCM && (
                         <span className='color-fg-accent color-bg-accent border color-border-accent rounded-2 mt-4 p-3'>
                             IMPORTANT! Make sure to save the Cache file that will be downloaded at the end! Without it,
@@ -205,6 +223,11 @@ const CreateCandyMachine: FC<{
                     {!isInteractingWithCM && status && (
                         <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
                             {status}
+                        </span>
+                    )}
+                    {isInteractingWithCM && (
+                        <span className='color-fg-attention color-bg-severe border color-border-attention-emphasis rounded-2 mt-4 p-3'>
+                            After creating the candy machine, it is recommended to click the refresh button
                         </span>
                     )}
                     <FormInput
@@ -308,26 +331,27 @@ const CreateCandyMachine: FC<{
                             required
                         />
                     </div>
-                    {errorMessage.length > 0 && (
-                        <span className='color-fg-closed color-bg-closed border color-border-closed-emphasis mt-3 p-3 rounded-2'>
-                            <StyledOcticon icon={AlertIcon} size={16} color='danger.fg' sx={{ marginRight: '6px' }} />{' '}
-                            {errorMessage}
-                        </span>
-                    )}
                 </Box>
-
-                {!isInteractingWithCM && (
-                    <Button variant='primary' size='large' type='submit'>
-                        Create candy machine
-                    </Button>
-                )}
-                {isInteractingWithCM && (
-                    <>
-                        <Button isLoading disabled size='large'>
-                            Creating Candy Machine... <Spinner size='small' />
+                <div className='mt-3 mt-md-5'>
+                    {!isInteractingWithCM && (
+                        <Button
+                            variant='primary'
+                            size='large'
+                            type='submit'
+                            id='create-candy-machine-button'
+                            sx={{ width: '100%' }}
+                        >
+                            Create candy machine
                         </Button>
-                    </>
-                )}
+                    )}
+                    {isInteractingWithCM && (
+                        <>
+                            <Button isLoading disabled size='large' sx={{ width: '100%' }}>
+                                Creating Candy Machine... <Spinner size='small' />
+                            </Button>
+                        </>
+                    )}
+                </div>
             </div>
         </form>
     )
