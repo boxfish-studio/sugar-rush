@@ -6,6 +6,7 @@ import Image from 'next/image'
 
 const NftCard: FC<{ title: string; imageLink: string; hash?: string }> = ({ title, imageLink, hash }) => {
     const { connection } = useConnection()
+    const image = imageLink !== '' ? imageLink : '/default-image.png'
     return (
         <div
             className='d-flex flex-column flex-justify-center flex-items-center border rounded-3 gap-2 py-2'
