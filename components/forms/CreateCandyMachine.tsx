@@ -176,6 +176,9 @@ const CreateCandyMachine: FC<{
                 })
 
                 if (typeof _candyMachine === 'string') candyMachine = _candyMachine
+                setStatus(`Candy Machine created successfully! ${candyMachine}`)
+                const form = document.getElementById('form-container')
+                form?.scroll({ top: 0, behavior: 'smooth' })
             } catch (err) {
                 console.error('upload was not successful, please re-run.', err)
                 setIsInteractingWithCM(false)
@@ -183,18 +186,9 @@ const CreateCandyMachine: FC<{
             }
             const endMilliseconds = Date.now()
             console.log(endMilliseconds.toString())
-
             setIsInteractingWithCM(false)
-            setStatus(`Candy Machine created successfully! ${candyMachine}`)
         }
     }
-    useEffect(() => {
-        const button = document.getElementById('create-candy-machine-button')
-        button?.addEventListener('click', () => {
-            const form = document.getElementById('form-container')
-            form?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-        })
-    }, [])
     return (
         <form onSubmit={onSubmit}>
             <div className='d-flex flex-column flex-justify-between'>
@@ -203,6 +197,11 @@ const CreateCandyMachine: FC<{
                     className='overflow-y-scroll d-flex flex-column pb-4 height-full'
                     sx={{ maxHeight: ['380px', '550px'] }}
                 >
+                    {!isInteractingWithCM && status && (
+                        <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
+                            {status}
+                        </span>
+                    )}
                     <FormInput
                         id='price'
                         text='Price of each NFT (SOL)'
@@ -314,11 +313,6 @@ const CreateCandyMachine: FC<{
                         <span className='color-fg-accent color-bg-accent border color-border-accent rounded-2 mt-4 p-3'>
                             IMPORTANT! Make sure to save the Cache file that will be downloaded at the end! Without it,
                             you will not be able to update your Candy Machine.
-                        </span>
-                    )}
-                    {!isInteractingWithCM && status && (
-                        <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
-                            {status}
                         </span>
                     )}
                     {isInteractingWithCM && (
