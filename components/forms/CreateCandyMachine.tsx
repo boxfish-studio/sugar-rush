@@ -8,7 +8,7 @@ import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machi
 import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/candy-machine/upload/config'
 import { uploadV2 } from 'lib/candy-machine/upload/upload'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Box, Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
 
@@ -188,13 +188,20 @@ const CreateCandyMachine: FC<{
             setStatus(`Candy Machine created successfully! ${candyMachine}`)
         }
     }
-
+    useEffect(() => {
+        const button = document.getElementById('create-candy-machine-button')
+        button?.addEventListener('click', () => {
+            const form = document.getElementById('form-container')
+            form?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        })
+    }, [])
     return (
         <form onSubmit={onSubmit}>
             <div className='d-flex flex-column flex-justify-between'>
                 <Box
+                    id='form-container'
                     className='overflow-y-scroll d-flex flex-column pb-4 height-full'
-                    sx={{ maxHeight: ['380px', '550px'], marginBottom: ['16px', '32px'] }}
+                    sx={{ maxHeight: ['380px', '550px'] }}
                 >
                     <FormInput
                         id='price'
@@ -320,19 +327,26 @@ const CreateCandyMachine: FC<{
                         </span>
                     )}
                 </Box>
-
-                {!isInteractingWithCM && (
-                    <Button variant='primary' size='large' type='submit'>
-                        Create candy machine
-                    </Button>
-                )}
-                {isInteractingWithCM && (
-                    <>
-                        <Button isLoading disabled size='large'>
-                            Creating Candy Machine... <Spinner size='small' />
+                <div className='mt-3 mt-md-5'>
+                    {!isInteractingWithCM && (
+                        <Button
+                            variant='primary'
+                            size='large'
+                            type='submit'
+                            id='create-candy-machine-button'
+                            sx={{ width: '100%' }}
+                        >
+                            Create candy machine
                         </Button>
-                    </>
-                )}
+                    )}
+                    {isInteractingWithCM && (
+                        <>
+                            <Button isLoading disabled size='large' sx={{ width: '100%' }}>
+                                Creating Candy Machine... <Spinner size='small' />
+                            </Button>
+                        </>
+                    )}
+                </div>
             </div>
         </form>
     )
