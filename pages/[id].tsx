@@ -18,11 +18,9 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Button } from '@primer/react'
-import { SyncIcon } from '@primer/octicons-react'
 import { useSetRecoilState } from 'recoil'
 import { nftsState } from 'lib/recoil-store/atoms'
-import { getAllNftsByCM } from 'lib/nft/actions'
+import { getAllNftsByCM, getNftByMint } from 'lib/nft/actions'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -33,9 +31,12 @@ const CandyMachine: NextPage = () => {
     const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
     const [nfts, setNfts] = useState<Nft[]>([])
+    const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
+    const [collectionNft, setCollectionNft] = useState<Nft>()
     const [isLoading, setIsLoading] = useState(false)
     const [isReloading, setIsReloading] = useState(false)
     const setNftsState = useSetRecoilState(nftsState)
+    const [hasCollection, setHasCollection] = useState(false)
 
     async function viewNfts(e: React.ChangeEvent<HTMLInputElement>) {
         if (!e.target.files || e.target.files.length == 0) {
@@ -56,6 +57,24 @@ const CandyMachine: NextPage = () => {
         } else {
             alert('This cache file is not from this candy machine')
         }
+    }
+
+    async function getNfts() {
+        if (!candyMachineAccount) return
+        setIsLoading(true)
+        setMintedNfts([])
+        let nfts = await getAllNftsByCM(candyMachineAccount, connection)
+        setMintedNfts(nfts)
+        // @ts-ignore
+        if (nfts[0]?.collection?.key) {
+            setHasCollection(true)
+            // @ts-ignore
+            let nftCollectionData = await getNftByMint(nfts[0].collection.key, connection)
+            if (nftCollectionData.name !== '') {
+                setCollectionNft(nftCollectionData)
+            }
+        }
+        setIsLoading(false)
     }
 
     async function fetchCandyMachine({
@@ -107,6 +126,7 @@ const CandyMachine: NextPage = () => {
     }
 
     useEffect(() => {
+        getNfts()
         fetchCandyMachine({ candyMachineAccount, connection }).then(setCandyMachineConfig)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [candyMachineAccount, connection, anchorWallet])
@@ -198,16 +218,20 @@ const CandyMachine: NextPage = () => {
                         </div>
                     </div>
                     <div className='border-y width-full' />
-                    <div className='mt-5'>
-                        <h4>Collection</h4>
-                        <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
-                            <NftCard
-                                title={'Collection Name'}
-                                imageLink={'/favicon.ico'}
-                                hash={'14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns'}
-                            />
+                    {hasCollection && (
+                        <div className='mt-5'>
+                            <h4>Collection</h4>
+                            {collectionNft && (
+                                <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
+                                    <NftCard
+                                        title={collectionNft.name}
+                                        imageLink={collectionNft.image}
+                                        hash={collectionNft.mint?.toBase58()}
+                                    />
+                                </div>
+                            )}
                         </div>
-                    </div>
+                    )}
                     <div className='mt-5'>
                         <h4>Minted NFTs - 5</h4>
                         <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
