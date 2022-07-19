@@ -9,7 +9,7 @@ import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/c
 import { uploadV2 } from 'lib/candy-machine/upload/upload'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
 import React, { FC, useState } from 'react'
-import { Box, Button, Spinner, StyledOcticon, TextInput } from '@primer/react'
+import { Box, Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
 
 const CreateCandyMachineForm: FC<{
