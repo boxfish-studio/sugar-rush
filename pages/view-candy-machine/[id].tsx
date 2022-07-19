@@ -23,9 +23,13 @@ const ViewCandyMachine: NextPage = () => {
         setIsLoading(true)
         setMessage('')
         setNfts([])
-        let nfts = await getAllNftsByCM(candyMachineAccount, connection)
-        if (nfts.length === 0) setMessage('Assets not found')
-        setNfts(nfts)
+        try {
+            let nfts = await getAllNftsByCM(candyMachineAccount, connection)
+            if (nfts.length === 0) setMessage('Assets not found')
+            setNfts(nfts)
+        } catch (e: any) {
+            setMessage(e.message)
+        }
         setIsLoading(false)
     }
 
@@ -92,7 +96,6 @@ const ViewCandyMachine: NextPage = () => {
                 )}
                 {nftDetails && <NftDetails nft={nftDetails} />}
             </div>
-            )
         </>
     )
 }
