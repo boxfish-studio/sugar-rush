@@ -279,24 +279,24 @@ const CreateCandyMachine: FC<{
                                 ))}
                         </select>
                     </div>
-
-                    <label
-                        htmlFor='file'
-                        className='my-4 px-4 py-2 rounded-2 cursor-pointer'
-                        style={{ border: '1px solid #1b1f2426' }}
-                    >
-                        Upload file
-                    </label>
-                    <input
-                        id='file'
-                        type='file'
-                        name='files'
-                        multiple
-                        onChange={uploadAssets}
-                        className='d-none'
-                        required
-                    />
-
+                    <div className='mt-4 '>
+                        <label
+                            htmlFor='file'
+                            className='px-4 py-2 rounded-2 cursor-pointer'
+                            style={{ border: '1px solid #1b1f2426' }}
+                        >
+                            Upload NFT files
+                        </label>
+                        <input
+                            id='file'
+                            type='file'
+                            name='files'
+                            multiple
+                            onChange={uploadAssets}
+                            className='d-none'
+                            required
+                        />
+                    </div>
                     {errorMessage.length > 0 && (
                         <span className='color-fg-closed color-bg-closed border color-border-closed-emphasis mt-3 p-3 rounded-2'>
                             <StyledOcticon icon={AlertIcon} size={16} color='danger.fg' sx={{ marginRight: '6px' }} />{' '}
@@ -340,8 +340,8 @@ interface Input {
 
 const FormInput: FC<Input> = ({ id, text, type, defaultValue, defaultChecked, value, required, onChange }) => {
     return (
-        <div className={`d-flex ${type === 'checkbox' ? 'flex-row' : 'flex-column'}`}>
-            <label htmlFor={id} className={`my-3 font-medium `}>
+        <div className={`d-flex ${type === 'checkbox' ? 'flex-row mt-3' : 'flex-column mt-0'}`}>
+            <label htmlFor={id} className={`${type === 'checkbox' ? 'my-0' : 'my-3'}`}>
                 {text}
             </label>
             <input
