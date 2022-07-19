@@ -18,11 +18,10 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Button } from '@primer/react'
-import { SyncIcon } from '@primer/octicons-react'
 import { useSetRecoilState } from 'recoil'
 import { nftsState } from 'lib/recoil-store/atoms'
 import { getAllNftsByCM } from 'lib/nft/actions'
+import { useMintCandyMachine } from 'hooks'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -36,6 +35,9 @@ const CandyMachine: NextPage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [isReloading, setIsReloading] = useState(false)
     const setNftsState = useSetRecoilState(nftsState)
+    const { isUserMinting, itemsRemaining, mintAccount, refreshCandyMachineState } = useMintCandyMachine(
+        candyMachineAccount as string
+    )
 
     async function viewNfts(e: React.ChangeEvent<HTMLInputElement>) {
         if (!e.target.files || e.target.files.length == 0) {
@@ -107,6 +109,7 @@ const CandyMachine: NextPage = () => {
     }
 
     useEffect(() => {
+        refreshCandyMachineState()
         fetchCandyMachine({ candyMachineAccount, connection }).then(setCandyMachineConfig)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [candyMachineAccount, connection, anchorWallet])
@@ -211,6 +214,17 @@ const CandyMachine: NextPage = () => {
                     <div className='mt-5'>
                         <h4>Minted NFTs - 5</h4>
                         <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
+                            {itemsRemaining > 0 && (
+                                <NftCard
+                                    title={'New NFT'}
+                                    buttonProps={{
+                                        text: 'Mint 1 NFT',
+                                        isLoading: isUserMinting,
+                                        variant: 'primary',
+                                        onClick: () => mintAccount(),
+                                    }}
+                                />
+                            )}
                             <NftCard
                                 title={'CryptoDude #1'}
                                 imageLink={'/favicon.ico'}
