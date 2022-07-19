@@ -1,5 +1,4 @@
 import { FC } from 'react'
-import Image from 'next/image'
 import { Box, StyledOcticon } from '@primer/react'
 import { XCircleIcon } from '@primer/octicons-react'
 
