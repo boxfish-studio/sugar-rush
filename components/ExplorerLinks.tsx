@@ -11,7 +11,7 @@ const ExplorerLinks: FC<{
     const solscanType = type === 'account' ? 'account' : 'tx'
     const solanaFmType = type === 'account' ? 'address' : 'tx'
     return (
-        <div className='mt-5'>
+        <div className={`${type === 'account' && 'mt-5'}`}>
             <a
                 className='text-[hsl(258,52%,56%)] mt-4 mr-2'
                 href={`https://solscan.io/${solscanType}/${value}${

@@ -60,7 +60,10 @@ const TopActions: FC = () => {
                     </Button>
                     {isDeleteOpen && (
                         <Popup onClose={() => setIsDeleteOpen(false)} title='Delete Candy Machine' size='small'>
-                            <DeleteCandyMachine candyMachineAccount={candyMachineAccount as string} />
+                            <DeleteCandyMachine
+                                candyMachineAccount={candyMachineAccount as string}
+                                connection={rpcEndpoint}
+                            />
                         </Popup>
                     )}
                     <Button variant='outline'>Verify</Button>

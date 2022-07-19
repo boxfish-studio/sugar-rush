@@ -1,22 +1,27 @@
-import { CandyMachineTile } from 'components'
+import { ExplorerLinks } from 'components'
 import { FC, useState } from 'react'
 import { Button, Spinner, Text } from '@primer/react'
 import { useRemoveCandyMachineAccount } from 'hooks'
+import { Connection } from '@solana/web3.js'
+import { useRouter } from 'next/router'
 
 const DeleteCandyMachine: FC<{
     candyMachineAccount: string
-}> = ({ candyMachineAccount }) => {
+    connection: Connection
+}> = ({ candyMachineAccount, connection }) => {
     const [isDeleting, setIsDeleting] = useState(false)
     const [status, setStatus] = useState({ error: false, message: '' })
+    const [transaction, setTransaction] = useState('')
     const { removeAccount } = useRemoveCandyMachineAccount([candyMachineAccount])
+    const router = useRouter()
 
     const deleteCM = async () => {
         try {
             setIsDeleting(true)
             setStatus({ error: false, message: '' })
             const result = await removeAccount(candyMachineAccount)
-            console.log(result)
-            setStatus({ error: false, message: `Candy Machine deleted successfully! ${result}` })
+            result && setTransaction(result.txid)
+            setStatus({ error: false, message: `Candy Machine deleted successfully!` })
         } catch (error) {
             console.log(error)
             setStatus({ error: true, message: 'Delete was not successful.' })
@@ -26,21 +31,31 @@ const DeleteCandyMachine: FC<{
 
     return (
         <>
-            <div style={{ display: 'grid', gridRowGap: '16px' }}>
+            <div style={{ display: 'grid', gridRowGap: '5px' }}>
                 <Text as='p'>Are you sure you want to delete candy machine {candyMachineAccount}</Text>
                 {!isDeleting && status.message && (
-                    <span
-                        className={`border ${
-                            status.error
-                                ? 'color-fg-danger color-bg-danger color-border-danger'
-                                : 'color-fg-success color-bg-success color-border-success'
-                        } rounded-2 p-2`}
-                    >
-                        {status.message}
-                    </span>
+                    <>
+                        <span
+                            className={`border ${
+                                status.error
+                                    ? 'color-fg-danger color-bg-danger color-border-danger'
+                                    : 'color-fg-success color-bg-success color-border-success'
+                            } rounded-2 p-2`}
+                        >
+                            {status.message}
+                            {!status.error && (
+                                <ExplorerLinks
+                                    type='transaction'
+                                    value={transaction}
+                                    connection={connection}
+                                    text={'Check tx'}
+                                />
+                            )}
+                        </span>
+                    </>
                 )}
             </div>
-            {!isDeleting && (
+            {!isDeleting && !transaction && (
                 <Button
                     className={`width-full ${status.message ? 'mt-3' : 'mt-5'}`}
                     variant='danger'
@@ -49,6 +64,17 @@ const DeleteCandyMachine: FC<{
                     onClick={() => deleteCM()}
                 >
                     Delete candy machine
+                </Button>
+            )}
+            {!isDeleting && !!transaction && (
+                <Button
+                    className={`width-full mt-2`}
+                    variant='outline'
+                    state='rest'
+                    size='medium'
+                    onClick={() => router.push('/')}
+                >
+                    Go Home
                 </Button>
             )}
             {isDeleting && (
