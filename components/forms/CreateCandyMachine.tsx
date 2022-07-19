@@ -196,17 +196,6 @@ const CreateCandyMachine: FC<{
                     className='overflow-y-scroll d-flex flex-column pb-4 height-full'
                     sx={{ maxHeight: ['380px', '550px'], marginBottom: ['16px', '32px'] }}
                 >
-                    {isInteractingWithCM && (
-                        <span className='color-fg-accent color-bg-accent border color-border-accent rounded-2 mt-4 p-3'>
-                            IMPORTANT! Make sure to save the Cache file that will be downloaded at the end! Without it,
-                            you will not be able to update your Candy Machine.
-                        </span>
-                    )}
-                    {!isInteractingWithCM && status && (
-                        <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
-                            {status}
-                        </span>
-                    )}
                     <FormInput
                         id='price'
                         text='Price of each NFT (SOL)'
@@ -312,6 +301,22 @@ const CreateCandyMachine: FC<{
                         <span className='color-fg-closed color-bg-closed border color-border-closed-emphasis mt-3 p-3 rounded-2'>
                             <StyledOcticon icon={AlertIcon} size={16} color='danger.fg' sx={{ marginRight: '6px' }} />{' '}
                             {errorMessage}
+                        </span>
+                    )}
+                    {isInteractingWithCM && (
+                        <span className='color-fg-accent color-bg-accent border color-border-accent rounded-2 mt-4 p-3'>
+                            IMPORTANT! Make sure to save the Cache file that will be downloaded at the end! Without it,
+                            you will not be able to update your Candy Machine.
+                        </span>
+                    )}
+                    {!isInteractingWithCM && status && (
+                        <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
+                            {status}
+                        </span>
+                    )}
+                    {isInteractingWithCM && (
+                        <span className='color-fg-attention color-bg-severe border color-border-attention-emphasis rounded-2 mt-4 p-3'>
+                            After creating the candy machine, it is recommended to click the refresh button
                         </span>
                     )}
                 </Box>
