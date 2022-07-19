@@ -24,9 +24,9 @@ const Popup: FC<{
                 sx={{
                     zIndex: 10,
                     width: '100%',
-                    maxWidth: '60vh',
+                    maxWidth: size === 'large' ? '60vh' : '45vh',
                     height: '100%',
-                    maxHeight: size === 'large' ? ['550px', '750px'] : ['50%'],
+                    maxHeight: size === 'large' ? ['550px', '750px'] : ['27.5%'],
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
