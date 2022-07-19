@@ -279,17 +279,6 @@ const CreateCandyMachineForm: FC<{
                                 ))}
                         </select>
                     </div>
-                    {/* <label htmlFor='storage' className='my-3'>
-                        Storage
-                    </label>
-                    <TextInput list='storage' name='storage' onChange={onChange} className='w-full p-2' required />
-                    <datalist id='storage' defaultValue='Arweave' className='position-relative'>
-                        {Object.keys(StorageType)
-                            .filter((key) => key === 'Arweave')
-                            .map((key) => (
-                                <option className='position-absolute bottom-0 width-full' key={key} value={key} />
-                            ))}
-                    </datalist> */}
 
                     <label
                         htmlFor='file'
