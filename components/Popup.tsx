@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import Image from 'next/image'
-import { Box, Button } from '@primer/react'
+import { Box, StyledOcticon } from '@primer/react'
+import { XCircleIcon } from '@primer/octicons-react'
 
 const Popup: FC<{
     children: any
@@ -26,17 +27,12 @@ const Popup: FC<{
                     transform: 'translate(-50%, -50%)',
                 }}
             >
-                <div className='p-3 p-md-5 d-flex flex-column height-full flex-justify-between'>
+                <div className='p-3 p-md-5 d-flex flex-column height-full'>
                     <div className='d-flex flex-justify-between text-bold'>
                         <h3>{title}</h3>
-                        <Image
-                            src='/close.svg'
-                            alt='close'
-                            width={22}
-                            height={22}
-                            onClick={onClose}
-                            style={{ cursor: 'pointer' }}
-                        />
+                        <div onClick={onClose} style={{ cursor: 'pointer' }}>
+                            <StyledOcticon icon={XCircleIcon} size={25} />
+                        </div>
                     </div>
                     <div className='mt-5'>{children}</div>
                 </div>

@@ -9,7 +9,7 @@ import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/c
 import { uploadV2 } from 'lib/candy-machine/upload/upload'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
 import React, { FC, useState } from 'react'
-import { Box, Button, Spinner, StyledOcticon } from '@primer/react'
+import { Box, Button, Spinner, StyledOcticon, TextInput } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
 
 const CreateCandyMachineForm: FC<{
@@ -257,18 +257,39 @@ const CreateCandyMachineForm: FC<{
                         }
                         required
                     />
-
-                    <label htmlFor='storage' className='my-3'>
+                    <div className='select-wrapper d-flex flex-column'>
+                        <label htmlFor='storage' className='my-3'>
+                            Storage client
+                        </label>
+                        <select
+                            name='storage'
+                            id='storage'
+                            className='mb-4 px-2 py-2 rounded-2 cursor-pointer'
+                            style={{ border: '1px solid #1b1f2426' }}
+                        >
+                            <option value='' disabled selected>
+                                Choose an option
+                            </option>
+                            {Object.keys(StorageType)
+                                .filter((key) => key === 'Arweave')
+                                .map((key) => (
+                                    <option key={key} value={key}>
+                                        {key}
+                                    </option>
+                                ))}
+                        </select>
+                    </div>
+                    {/* <label htmlFor='storage' className='my-3'>
                         Storage
                     </label>
-                    <input list='storage' name='storage' onChange={onChange} className='w-full p-2' required />
-                    <datalist id='storage' defaultValue='Arweave'>
+                    <TextInput list='storage' name='storage' onChange={onChange} className='w-full p-2' required />
+                    <datalist id='storage' defaultValue='Arweave' className='position-relative'>
                         {Object.keys(StorageType)
                             .filter((key) => key === 'Arweave')
                             .map((key) => (
-                                <option key={key} value={key} />
+                                <option className='position-absolute bottom-0 width-full' key={key} value={key} />
                             ))}
-                    </datalist>
+                    </datalist> */}
 
                     <label
                         htmlFor='file'
@@ -330,12 +351,13 @@ interface Input {
 
 const FormInput: FC<Input> = ({ id, text, type, defaultValue, defaultChecked, value, required, onChange }) => {
     return (
-        <>
-            <label htmlFor={id} className='my-3 font-medium'>
+        <div className={`d-flex ${type === 'checkbox' ? 'flex-row' : 'flex-column'}`}>
+            <label htmlFor={id} className={`my-3 font-medium `}>
                 {text}
             </label>
             <input
-                className='w-full p-2'
+                style={{ border: '1px solid #1b1f2426' }}
+                className={`w-full p-2 rounded-2 ${type === 'checkbox' ? 'ml-2' : 'ml-0'}`}
                 id={id}
                 type={type}
                 step='any'
@@ -346,7 +368,7 @@ const FormInput: FC<Input> = ({ id, text, type, defaultValue, defaultChecked, va
                 required={required}
                 onChange={onChange}
             />
-        </>
+        </div>
     )
 }
 
