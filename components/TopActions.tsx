@@ -8,7 +8,7 @@ import { LinkExternalIcon } from '@primer/octicons-react'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useRPC } from 'hooks'
 import { fetchCandyMachineAccounts } from 'lib/utils'
-import { Popup, CreateCandyMachineForm } from 'components'
+import { Popup, CreateCandyMachine } from 'components'
 
 const TopActions: FC = () => {
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
@@ -45,7 +45,7 @@ const TopActions: FC = () => {
                     </Button>
                     {isOpen && (
                         <Popup onClose={() => setIsOpen(false)} title='Create Candy Machine' size='large'>
-                            <CreateCandyMachineForm />
+                            <CreateCandyMachine />
                         </Popup>
                     )}
                     <RefreshButton onClick={refreshCandyMachines} isLoading={isLoading} />

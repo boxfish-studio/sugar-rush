@@ -1,2 +1,2 @@
 export { default as UpdateCreateCandyMachineForm } from './UpdateCreateCandyMachineForm'
-export { default as CreateCandyMachineForm } from './CreateCandyMachineForm'
+export { default as CreateCandyMachine } from './CreateCandyMachine'

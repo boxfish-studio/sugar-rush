@@ -12,7 +12,7 @@ import React, { FC, useState } from 'react'
 import { Box, Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
 
-const CreateCandyMachineForm: FC<{
+const CreateCandyMachine: FC<{
     fetchedValues?: IFetchedCandyMachineConfig
     candyMachinePubkey?: string | string[]
 }> = ({ fetchedValues, candyMachinePubkey }) => {
@@ -361,4 +361,4 @@ const FormInput: FC<Input> = ({ id, text, type, defaultValue, defaultChecked, va
     )
 }
 
-export default CreateCandyMachineForm
+export default CreateCandyMachine
