@@ -196,6 +196,17 @@ const CreateCandyMachine: FC<{
                     className='overflow-y-scroll d-flex flex-column pb-4 height-full'
                     sx={{ maxHeight: ['380px', '550px'], marginBottom: ['16px', '32px'] }}
                 >
+                    {isInteractingWithCM && (
+                        <span className='color-fg-accent color-bg-accent border color-border-accent rounded-2 mt-4 p-3'>
+                            IMPORTANT! Make sure to save the Cache file that will be downloaded at the end! Without it,
+                            you will not be able to update your Candy Machine.
+                        </span>
+                    )}
+                    {!isInteractingWithCM && status && (
+                        <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
+                            {status}
+                        </span>
+                    )}
                     <FormInput
                         id='price'
                         text='Price of each NFT (SOL)'
@@ -315,13 +326,8 @@ const CreateCandyMachine: FC<{
                         <Button isLoading disabled size='large'>
                             Creating Candy Machine... <Spinner size='small' />
                         </Button>
-                        <span className='color-fg-accent text-center mt-6 w-full my-3'>
-                            IMPORTANT! Make sure to save the Cache file that will be downloaded at the end! Without it,
-                            you will not be able to update your Candy Machine.
-                        </span>
                     </>
                 )}
-                {!isInteractingWithCM && status && <span className='font-medium text-xl mt-6 mb-4'>{status}</span>}
             </div>
         </form>
     )
