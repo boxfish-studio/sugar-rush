@@ -12,8 +12,6 @@ const useVerifyCandyMachineV2 = (cache: File) => {
     const anchorWallet = useAnchorWallet()
     const [error, setError] = useState('')
     const [message, setMessage] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const [shouldMint, setShouldMint] = useState(false)
 
     async function verifyCandyMachine({ candyMachineAccount }: { candyMachineAccount: Account }) {
         if (!cache) {
@@ -27,10 +25,8 @@ const useVerifyCandyMachineV2 = (cache: File) => {
             const env = cacheContent.env
             setMessage('')
             setError('')
-            setIsLoading(false)
             let errorMessage = ''
             try {
-                setIsLoading(true)
                 const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'processed',
                 })
@@ -60,10 +56,8 @@ const useVerifyCandyMachineV2 = (cache: File) => {
                         const env = cacheContent.env
                         setMessage('')
                         setError('')
-                        setIsLoading(false)
                         let errorMessage = ''
                         try {
-                            setIsLoading(true)
                             const provider = new AnchorProvider(connection, anchorWallet, {
                                 preflightCommitment: 'processed',
                             })
@@ -145,11 +139,9 @@ const useVerifyCandyMachineV2 = (cache: File) => {
                                 setMessage('All assets are verified. Ready to deploy!')
                             }
                             saveCache(cacheName, env, cacheContent)
-                            setIsLoading(false)
                         } catch (err) {
                             console.error(err)
                             saveCache(cacheName, env, cacheContent)
-                            setIsLoading(false)
                             setError(errorMessage || (err as Error).message)
                         }
                     }
@@ -169,27 +161,21 @@ const useVerifyCandyMachineV2 = (cache: File) => {
                         }) is smaller than the uploaded one (${lineCount.toNumber()})`
                     )
                 } else {
-                    setShouldMint(true)
                     setMessage('All assets are verified. Ready to deploy!')
                     saveCache(cacheName, env, cacheContent)
                 }
-                setIsLoading(false)
             } catch (err) {
                 console.error(err)
                 saveCache(cacheName, env, cacheContent)
-                setIsLoading(false)
                 setError(errorMessage || (err as Error).message)
             }
         }
     }
 
     return {
-        isLoading,
         error,
         verifyCandyMachine,
         message,
-        connection,
-        shouldMint,
     }
 }
 
