@@ -1,15 +1,13 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Button, Spinner } from '@primer/react'
 import { useUploadCache, useVerifyCandyMachineV2 } from 'hooks'
-import { useRouter } from 'next/router'
 
 const VerifyCandyMachine: FC<{
     candyMachineAccount: string
 }> = ({ candyMachineAccount }) => {
     const [isVerifying, setIsVerifying] = useState(false)
     const { cache, uploadCache } = useUploadCache()
-    const { error, verifyCandyMachine, message } = useVerifyCandyMachineV2(cache)
-    const router = useRouter()
+    const { setError, error, verifyCandyMachine, message } = useVerifyCandyMachineV2(cache)
 
     const verifyCM = async () => {
         try {
@@ -20,6 +18,10 @@ const VerifyCandyMachine: FC<{
         }
         setIsVerifying(false)
     }
+
+    useEffect(() => {
+        setError('')
+    }, [cache])
 
     return (
         <>

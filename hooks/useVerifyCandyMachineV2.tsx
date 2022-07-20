@@ -113,6 +113,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
     }
 
     return {
+        setError,
         error,
         verifyCandyMachine,
         message,
