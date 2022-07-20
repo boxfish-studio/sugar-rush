@@ -65,15 +65,7 @@ const TopActions: FC = () => {
                             <VerifyCandyMachine candyMachineAccount={candyMachineAccount as string} />
                         </Popup>
                     )}
-                    <Link
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        href={`https://solscan.io/account/${candyMachineAccount}${
-                            rpcEndpoint.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                        }`}
-                    >
-                        <Button leadingIcon={LinkExternalIcon}>View in solscan</Button>
-                    </Link>
+                    <Button leadingIcon={LinkExternalIcon}>View in solscan</Button>
                 </>
             )}
         </div>
