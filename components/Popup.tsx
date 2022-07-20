@@ -28,7 +28,7 @@ const Popup: FC<{
                     width: '100%',
                     maxWidth: size === 'large' ? '60vh' : '45vh',
                     height: '100%',
-                    maxHeight: size === 'large' ? ['550px', '750px'] : ['30%'],
+                    maxHeight: size === 'large' ? ['550px', '750px'] : ['300px', '300px', '340px'],
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
@@ -36,14 +36,14 @@ const Popup: FC<{
             >
                 <div className='p-3 p-md-5 d-flex flex-column height-full'>
                     <div className='d-flex flex-justify-between text-bold'>
-                        <h3 className='wb-break-word' style={{ width: '75%' }}>
+                        <h3 className='wb-break-word' style={{ width: '75%', flex: 1 }}>
                             {title}
                         </h3>
                         <div onClick={onClose} style={{ cursor: 'pointer' }}>
                             <StyledOcticon icon={XCircleIcon} size={25} />
                         </div>
                     </div>
-                    <div className='mt-5'>{children}</div>
+                    <div className='mt-3 mt-md-5 height-full'>{children}</div>
                 </div>
             </Box>
         </>

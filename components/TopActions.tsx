@@ -61,11 +61,7 @@ const TopActions: FC = () => {
                         Verify
                     </Button>
                     {isVerifyOpen && (
-                        <Popup
-                            onClose={() => setIsVerifyOpen(false)}
-                            title={`Verify Candy Machine ${candyMachineAccount}`}
-                            size='small'
-                        >
+                        <Popup onClose={() => setIsVerifyOpen(false)} title={`Verify Candy Machine`} size='small'>
                             <VerifyCandyMachine candyMachineAccount={candyMachineAccount as string} />
                         </Popup>
                     )}
