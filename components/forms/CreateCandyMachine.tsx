@@ -201,7 +201,7 @@ const CreateCandyMachine: FC<{
     }, [])
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} noValidate>
             <div className='d-flex flex-column flex-justify-between'>
                 <Box
                     id='form-container'

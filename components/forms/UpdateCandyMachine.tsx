@@ -9,7 +9,8 @@ import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machi
 import { getCandyMachineV2Config, loadCandyProgramV2 } from 'lib/candy-machine/upload/config'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
 import React, { FC, useState } from 'react'
-import { Button, Spinner } from '@primer/react'
+import { Button, Spinner, StyledOcticon } from '@primer/react'
+import { AlertIcon } from '@primer/octicons-react'
 
 const UpdateCreateCandyMachineForm: FC<{
     fetchedValues?: IFetchedCandyMachineConfig
@@ -46,7 +47,15 @@ const UpdateCreateCandyMachineForm: FC<{
         // TODO add custom message to show error message
         if (!values['date-mint'] || !values['time-mint']) return false
         if (values.price === 0 || isNaN(values.price)) return false
-
+        if (!cache) {
+            setErrorMessage('There are no files to upload')
+            return false
+        }
+        if (values.price == 0 || isNaN(values.price)) {
+            setErrorMessage('The Price of each NFT cannot be 0')
+            return false
+        }
+        setErrorMessage('')
         return true
     }
 
@@ -149,7 +158,7 @@ const UpdateCreateCandyMachineForm: FC<{
     }
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} noValidate>
             <div className='d-flex flex-column flex-justify-between col-12 col-md-8 col-lg-6'>
                 <FormInput
                     id='price'
@@ -232,7 +241,12 @@ const UpdateCreateCandyMachineForm: FC<{
                 </div>
 
                 {errorMessage.length > 0 && (
-                    <span className='text-red-500 border border-red-500 mt-3 p-3 rounded-xl'>{errorMessage}</span>
+                    <div className='my-3 color-fg-closed color-bg-closed border color-border-closed-emphasis p-3 rounded-2'>
+                        <span>
+                            <StyledOcticon icon={AlertIcon} size={16} color='danger.fg' sx={{ marginRight: '6px' }} />{' '}
+                            {errorMessage}
+                        </span>
+                    </div>
                 )}
 
                 {!isInteractingWithCM && (
