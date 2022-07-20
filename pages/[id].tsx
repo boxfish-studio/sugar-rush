@@ -21,6 +21,7 @@ import { useEffect, useState } from 'react'
 import { useSetRecoilState } from 'recoil'
 import { nftsState } from 'lib/recoil-store/atoms'
 import { getAllNftsByCM, getNftByMint } from 'lib/nft/actions'
+import { useMintCandyMachine } from 'hooks'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -36,6 +37,9 @@ const CandyMachine: NextPage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [isReloading, setIsReloading] = useState(false)
     const setNftsState = useSetRecoilState(nftsState)
+    const { isUserMinting, itemsRemaining, mintAccount, refreshCandyMachineState } = useMintCandyMachine(
+        candyMachineAccount as string
+    )
     const [hasCollection, setHasCollection] = useState(false)
 
     async function viewNfts(e: React.ChangeEvent<HTMLInputElement>) {
@@ -126,6 +130,7 @@ const CandyMachine: NextPage = () => {
     }
 
     useEffect(() => {
+        refreshCandyMachineState()
         getNfts()
         fetchCandyMachine({ candyMachineAccount, connection }).then(setCandyMachineConfig)
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -226,7 +231,14 @@ const CandyMachine: NextPage = () => {
                                     <NftCard
                                         title={collectionNft.name}
                                         imageLink={collectionNft.image}
-                                        hash={collectionNft.mint?.toBase58()}
+                                        buttons={[
+                                            {
+                                                text: 'View in Solscan',
+                                                as: 'link',
+                                                variant: 'invisible',
+                                                hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                            },
+                                        ]}
                                     />
                                 </div>
                             )}
@@ -235,30 +247,79 @@ const CandyMachine: NextPage = () => {
                     <div className='mt-5'>
                         <h4>Minted NFTs - 5</h4>
                         <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
+                            {itemsRemaining > 0 && (
+                                <NftCard
+                                    title={'New NFT'}
+                                    buttons={[
+                                        {
+                                            text: 'Mint 1 NFT',
+                                            isLoading: isUserMinting,
+                                            as: 'button',
+                                            variant: 'primary',
+                                            onClick: () => mintAccount(),
+                                        },
+                                    ]}
+                                />
+                            )}
                             <NftCard
                                 title={'CryptoDude #1'}
                                 imageLink={'/favicon.ico'}
-                                hash={'14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns'}
+                                buttons={[
+                                    {
+                                        text: 'View in Solscan',
+                                        as: 'link',
+                                        variant: 'invisible',
+                                        hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                    },
+                                ]}
                             />
                             <NftCard
                                 title={'CryptoDude #2'}
                                 imageLink={'/favicon.ico'}
-                                hash={'14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns'}
+                                buttons={[
+                                    {
+                                        text: 'View in Solscan',
+                                        as: 'link',
+                                        variant: 'invisible',
+                                        hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                    },
+                                ]}
                             />
                             <NftCard
                                 title={'CryptoDude #3'}
                                 imageLink={'/favicon.ico'}
-                                hash={'14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns'}
+                                buttons={[
+                                    {
+                                        text: 'View in Solscan',
+                                        as: 'link',
+                                        variant: 'invisible',
+                                        hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                    },
+                                ]}
                             />
                             <NftCard
                                 title={'CryptoDude #4'}
                                 imageLink={'/favicon.ico'}
-                                hash={'14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns'}
+                                buttons={[
+                                    {
+                                        text: 'View in Solscan',
+                                        as: 'link',
+                                        variant: 'invisible',
+                                        hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                    },
+                                ]}
                             />
                             <NftCard
                                 title={'CryptoDude #5'}
                                 imageLink={'/favicon.ico'}
-                                hash={'14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns'}
+                                buttons={[
+                                    {
+                                        text: 'View in Solscan',
+                                        as: 'link',
+                                        variant: 'invisible',
+                                        hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                    },
+                                ]}
                             />
                         </div>
                     </div>
@@ -268,27 +329,62 @@ const CandyMachine: NextPage = () => {
                             <NftCard
                                 title={'CryptoDude #1'}
                                 imageLink={'/favicon.ico'}
-                                hash={'14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns'}
+                                buttons={[
+                                    {
+                                        text: 'View in Solscan',
+                                        as: 'link',
+                                        variant: 'invisible',
+                                        hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                    },
+                                ]}
                             />
                             <NftCard
                                 title={'CryptoDude #2'}
                                 imageLink={'/favicon.ico'}
-                                hash={'14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns'}
+                                buttons={[
+                                    {
+                                        text: 'View in Solscan',
+                                        as: 'link',
+                                        variant: 'invisible',
+                                        hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                    },
+                                ]}
                             />
                             <NftCard
                                 title={'CryptoDude #3'}
                                 imageLink={'/favicon.ico'}
-                                hash={'14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns'}
+                                buttons={[
+                                    {
+                                        text: 'View in Solscan',
+                                        as: 'link',
+                                        variant: 'invisible',
+                                        hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                    },
+                                ]}
                             />
                             <NftCard
                                 title={'CryptoDude #4'}
                                 imageLink={'/favicon.ico'}
-                                hash={'14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns'}
+                                buttons={[
+                                    {
+                                        text: 'View in Solscan',
+                                        as: 'link',
+                                        variant: 'invisible',
+                                        hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                    },
+                                ]}
                             />
                             <NftCard
                                 title={'CryptoDude #5'}
                                 imageLink={'/favicon.ico'}
-                                hash={'14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns'}
+                                buttons={[
+                                    {
+                                        text: 'View in Solscan',
+                                        as: 'link',
+                                        variant: 'invisible',
+                                        hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                    },
+                                ]}
                             />
                         </div>
                     </div>
