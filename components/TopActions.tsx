@@ -8,6 +8,7 @@ import { LinkExternalIcon } from '@primer/octicons-react'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useRPC } from 'hooks'
 import { fetchCandyMachineAccounts } from 'lib/utils'
+import { Popup, CreateCandyMachine } from 'components'
 
 const TopActions: FC = () => {
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
@@ -15,6 +16,8 @@ const TopActions: FC = () => {
     const [isLoading, setIsLoading] = useState(false)
     const { publicKey } = useWallet()
     const { rpcEndpoint } = useRPC()
+    const [isOpen, setIsOpen] = useState(false)
+
     const setCandyMachines = useSetRecoilState(candyMachinesState)
 
     const refreshCandyMachines = async () => {
@@ -29,7 +32,7 @@ const TopActions: FC = () => {
     }
 
     return (
-        <div className='d-flex flex-justify-end top-actions-bar d-flex flex-row'>
+        <div className='d-flex flex-justify-end top-actions-bar d-flex flex-column flex-md-row'>
             {pathname === '/' ? (
                 <>
                     <SearchBar
@@ -37,6 +40,14 @@ const TopActions: FC = () => {
                         setSearchValue={setSearchValue}
                         placeholderText='Search candy machine'
                     />
+                    <Button variant='primary' onClick={() => setIsOpen(true)} sx={{ textTransform: 'capitalize' }}>
+                        Create candy machine
+                    </Button>
+                    {isOpen && (
+                        <Popup onClose={() => setIsOpen(false)} title='Create Candy Machine' size='large'>
+                            <CreateCandyMachine />
+                        </Popup>
+                    )}
                     <RefreshButton onClick={refreshCandyMachines} isLoading={isLoading} />
                 </>
             ) : (
