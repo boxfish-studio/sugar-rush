@@ -46,20 +46,25 @@ const VerifyCandyMachine: FC<{
                 {!isVerifying && message && (
                     <>
                         <span
-                            className={`border ${
-                                error
-                                    ? 'color-fg-danger color-bg-danger color-border-danger'
-                                    : 'color-fg-success color-bg-success color-border-success'
-                            } rounded-2 p-2 mt-4`}
+                            className={`bordercolor-fg-success color-bg-success color-border-success rounded-2 p-2 mt-4`}
                         >
                             {message}
+                        </span>
+                    </>
+                )}
+                {!isVerifying && error && (
+                    <>
+                        <span
+                            className={`border color-fg-danger color-bg-danger color-border-danger rounded-2 p-2 mt-4`}
+                        >
+                            {error}
                         </span>
                     </>
                 )}
             </div>
             {!isVerifying && (
                 <Button
-                    className={`width-full ${message ? 'mt-3' : 'mt-5'}`}
+                    className={`width-full ${message || error ? 'mt-3' : 'mt-7'}`}
                     variant='primary'
                     state='rest'
                     size='medium'
