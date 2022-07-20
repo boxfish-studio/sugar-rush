@@ -44,7 +44,12 @@ const Carousel: FC<{
                             carouselData.map((data, i) => (
                                 <SwiperSlide key={i} onClick={onClick} className='bg-center bg-cover w-80'>
                                     <h1 className='text-grey-daylight'>{data.title}</h1>
-                                    <Image src={data.image} alt={data.title} width={250} height={250} />
+                                    <Image
+                                        src={data.image !== '' ? data.image : '/default-image.png'}
+                                        alt={data.title}
+                                        width={250}
+                                        height={250}
+                                    />
                                 </SwiperSlide>
                             ))}
                     </Swiper>

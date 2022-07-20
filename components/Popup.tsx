@@ -1,25 +1,49 @@
-import { Dispatch, FC, SetStateAction } from 'react'
-import { Box } from '@primer/react'
-import { Dialog } from '@primer/react/drafts'
+import { FC, useEffect } from 'react'
+import { Box, StyledOcticon } from '@primer/react'
+import { XCircleIcon } from '@primer/octicons-react'
 
 const Popup: FC<{
-    setIsOpen: Dispatch<SetStateAction<boolean>>
     children: any
     title: string
-    onClick: () => void
-}> = ({ setIsOpen, children, title, onClick }) => {
+    onClose: () => void
+    size: 'small' | 'large'
+}> = ({ children, title, onClose, size }) => {
+    useEffect(() => {
+        document.body.style.overflowY = 'hidden'
+        return () => {
+            document.body.style.overflowY = 'auto'
+        }
+    }, [])
     return (
         <>
-            <Dialog
-                title={title}
-                onClose={() => setIsOpen(false)}
-                aria-labelledby='label'
-                footerButtons={[{ content: 'Ok', onClick: onClick }]}
-                height='large'
-                width='xlarge'
+            <div
+                className='position-absolute width-full height-full top-0 left-0'
+                style={{ background: 'rgba(0, 0, 0, 0.5)', zIndex: 9 }}
+                onClick={onClose}
+            />
+            <Box
+                className='position-fixed color-bg-default rounded-2'
+                sx={{
+                    zIndex: 10,
+                    width: '100%',
+                    maxWidth: '60vh',
+                    height: '100%',
+                    maxHeight: size === 'large' ? ['550px', '750px'] : ['50%'],
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                }}
             >
-                <Box p={3}>{children}</Box>
-            </Dialog>
+                <div className='p-3 p-md-5 d-flex flex-column height-full'>
+                    <div className='d-flex flex-justify-between text-bold'>
+                        <h3>{title}</h3>
+                        <div onClick={onClose} style={{ cursor: 'pointer' }}>
+                            <StyledOcticon icon={XCircleIcon} size={25} />
+                        </div>
+                    </div>
+                    <div className='mt-5'>{children}</div>
+                </div>
+            </Box>
         </>
     )
 }

@@ -2,6 +2,7 @@ import { useConnection } from '@solana/wallet-adapter-react'
 import { Link, Text, Button, Spinner } from '@primer/react'
 import { FC } from 'react'
 import { LinkExternalIcon } from '@primer/octicons-react'
+import Image from 'next/image'
 import { VariantType } from '@primer/react/lib/Button/types'
 
 const NftCard: FC<{
@@ -29,7 +30,9 @@ const NftCard: FC<{
                 className='border color-bg-inset rounded-3 mb-2 overflow-hidden d-flex flex-items-center flex-justify-center'
                 style={{ height: '168px', width: '168px' }}
             >
-                {imageLink && <img alt={title} src={imageLink} />}
+                <div className='width-full height-full position-relative'>
+                    {imageLink?.length && <Image alt={title} src={imageLink} layout='fill' objectFit='cover' />}
+                </div>
             </div>
 
             {buttons
@@ -42,7 +45,6 @@ const NftCard: FC<{
                         </div>
                     </Button>
                 ))}
-
             {buttons
                 ?.filter((btn) => btn.as === 'link')
                 .map((btn, i) => (
