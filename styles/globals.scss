@@ -49,7 +49,7 @@ body {
 /* Firefox */
 * {
     scrollbar-width: auto;
-    scrollbar-color: #c8c9ca #f6f8fa;
+    scrollbar-color: #c8c9ca #ffffff;
 }
 
 /* Chrome, Edge, and Safari */
@@ -58,13 +58,13 @@ body {
 }
 
 *::-webkit-scrollbar-track {
-    background: #f6f8fa;
+    background: #ffffff;
 }
 
 *::-webkit-scrollbar-thumb {
     background-color: #c8c9ca;
     border-radius: 6px;
-    border: 4px solid #f6f8fa;
+    border: 4px solid #ffffff;
 }
 
 .select-wrapper > select {

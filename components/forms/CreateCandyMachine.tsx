@@ -232,7 +232,7 @@ const CreateCandyMachine: FC<{
                     )}
                     <FormInput
                         id='price'
-                        text='Price of each NFT (SOL)'
+                        text='Price of each NFT (SOL) *'
                         type='number'
                         onChange={onChange}
                         defaultValue={
@@ -243,7 +243,7 @@ const CreateCandyMachine: FC<{
 
                     <FormInput
                         id='number-of-nfts'
-                        text='Number of NFTs'
+                        text='Number of NFTs *'
                         type='number'
                         onChange={onChange}
                         defaultValue={
@@ -269,7 +269,7 @@ const CreateCandyMachine: FC<{
                     />
                     <FormInput
                         id='date-mint'
-                        text='Date for mint'
+                        text='Mint date *'
                         type='date'
                         onChange={onChange}
                         defaultValue={
@@ -281,7 +281,7 @@ const CreateCandyMachine: FC<{
                     />
                     <FormInput
                         id='time-mint'
-                        text='Time for mint (GMT)'
+                        text='Mint time *'
                         type='time'
                         onChange={onChange}
                         defaultValue={
@@ -293,12 +293,12 @@ const CreateCandyMachine: FC<{
                     />
                     <div className='select-wrapper d-flex flex-column'>
                         <label htmlFor='storage' className='my-3'>
-                            Storage client
+                            Storage client *
                         </label>
                         <select
                             name='storage'
                             id='storage'
-                            className='mb-4 px-2 py-2 rounded-2 cursor-pointer'
+                            className='mb-4 px-2 py-2 rounded-2 cursor-pointer color-bg-default'
                             style={{ border: '1px solid #1b1f2426' }}
                         >
                             <option value='' disabled selected>
@@ -316,7 +316,7 @@ const CreateCandyMachine: FC<{
                     <div className='mt-4 '>
                         <label
                             htmlFor='file'
-                            className='px-4 py-2 rounded-2 cursor-pointer'
+                            className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
                             style={{ border: '1px solid #1b1f2426' }}
                         >
                             Upload NFT files
@@ -371,7 +371,7 @@ interface Input {
 const FormInput: FC<Input> = ({ id, text, type, defaultValue, defaultChecked, value, required, onChange }) => {
     return (
         <div className={`d-flex ${type === 'checkbox' ? 'flex-row mt-3' : 'flex-column mt-0'}`}>
-            <label htmlFor={id} className={`${type === 'checkbox' ? 'my-0' : 'my-3'}`}>
+            <label htmlFor={id} className={`${type === 'checkbox' ? 'my-0' : 'mt-3 mb-2'}`}>
                 {text}
             </label>
             <input
