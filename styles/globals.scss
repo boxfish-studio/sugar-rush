@@ -16,8 +16,14 @@ body {
     max-width: 186px;
 }
 
-.top-actions-bar {
-    gap: 1rem;
+.column-gap-1 {
+    column-gap: 1rem;
+}
+
+.nfts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 185px);
+    grid-gap: 1rem;
 }
 
 .wallet-adapter-button {

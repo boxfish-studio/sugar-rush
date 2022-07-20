@@ -8,7 +8,8 @@ import { LinkExternalIcon } from '@primer/octicons-react'
 import { useWallet, useConnection } from '@solana/wallet-adapter-react'
 import { useRPC } from 'hooks'
 import { fetchCandyMachineAccounts } from 'lib/utils'
-import { Popup, CreateCandyMachine } from 'components'
+import { Popup } from 'components'
+import { CreateCandyMachine } from './forms'
 
 const TopActions: FC = () => {
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
@@ -34,7 +35,7 @@ const TopActions: FC = () => {
     }
 
     return (
-        <div className='d-flex flex-justify-end top-actions-bar d-flex flex-column flex-md-row'>
+        <div className='d-flex flex-justify-end column-gap-1 d-flex flex-column flex-md-row'>
             {pathname === '/' ? (
                 <>
                     <SearchBar
