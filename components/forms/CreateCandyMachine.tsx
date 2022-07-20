@@ -232,7 +232,7 @@ const CreateCandyMachine: FC<{
                     )}
                     <FormInput
                         id='price'
-                        text='Price of each NFT (SOL)'
+                        text='Price of each NFT (SOL) *'
                         type='number'
                         onChange={onChange}
                         defaultValue={
@@ -243,7 +243,7 @@ const CreateCandyMachine: FC<{
 
                     <FormInput
                         id='number-of-nfts'
-                        text='Number of NFTs'
+                        text='Number of NFTs *'
                         type='number'
                         onChange={onChange}
                         defaultValue={
@@ -269,7 +269,7 @@ const CreateCandyMachine: FC<{
                     />
                     <FormInput
                         id='date-mint'
-                        text='Date for mint'
+                        text='Mint date *'
                         type='date'
                         onChange={onChange}
                         defaultValue={
@@ -281,7 +281,7 @@ const CreateCandyMachine: FC<{
                     />
                     <FormInput
                         id='time-mint'
-                        text='Time for mint (GMT)'
+                        text='Mint time *'
                         type='time'
                         onChange={onChange}
                         defaultValue={
@@ -293,7 +293,7 @@ const CreateCandyMachine: FC<{
                     />
                     <div className='select-wrapper d-flex flex-column'>
                         <label htmlFor='storage' className='my-3'>
-                            Storage client
+                            Storage client *
                         </label>
                         <select
                             name='storage'
@@ -371,7 +371,7 @@ interface Input {
 const FormInput: FC<Input> = ({ id, text, type, defaultValue, defaultChecked, value, required, onChange }) => {
     return (
         <div className={`d-flex ${type === 'checkbox' ? 'flex-row mt-3' : 'flex-column mt-0'}`}>
-            <label htmlFor={id} className={`${type === 'checkbox' ? 'my-0' : 'my-3'}`}>
+            <label htmlFor={id} className={`${type === 'checkbox' ? 'my-0' : 'mt-3 mb-2'}`}>
                 {text}
             </label>
             <input
