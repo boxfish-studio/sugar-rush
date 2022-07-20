@@ -298,7 +298,7 @@ const CreateCandyMachine: FC<{
                         <select
                             name='storage'
                             id='storage'
-                            className='mb-4 px-2 py-2 rounded-2 cursor-pointer'
+                            className='mb-4 px-2 py-2 rounded-2 cursor-pointer color-bg-default'
                             style={{ border: '1px solid #1b1f2426' }}
                         >
                             <option value='' disabled selected>
@@ -316,7 +316,7 @@ const CreateCandyMachine: FC<{
                     <div className='mt-4 '>
                         <label
                             htmlFor='file'
-                            className='px-4 py-2 rounded-2 cursor-pointer'
+                            className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
                             style={{ border: '1px solid #1b1f2426' }}
                         >
                             Upload NFT files

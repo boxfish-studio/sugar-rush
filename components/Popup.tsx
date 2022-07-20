@@ -22,7 +22,7 @@ const Popup: FC<{
                 onClick={onClose}
             />
             <Box
-                className='position-fixed color-bg-inset rounded-2'
+                className='position-fixed color-bg-default rounded-2'
                 sx={{
                     zIndex: 10,
                     width: '100%',
