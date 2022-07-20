@@ -15,12 +15,14 @@ const Popup: FC<{
         }
     }, [])
     return (
-        <div
-            className='position-absolute width-full height-full top-0 left-0'
-            style={{ background: 'rgba(0, 0, 0, 0.5)' }}
-        >
+        <>
+            <div
+                className='position-absolute width-full height-full top-0 left-0'
+                style={{ background: 'rgba(0, 0, 0, 0.5)', zIndex: 9 }}
+                onClick={onClose}
+            />
             <Box
-                className='position-fixed color-bg-inset rounded-2'
+                className='position-fixed color-bg-default rounded-2'
                 sx={{
                     zIndex: 10,
                     width: '100%',
@@ -42,7 +44,7 @@ const Popup: FC<{
                     <div className='mt-5'>{children}</div>
                 </div>
             </Box>
-        </div>
+        </>
     )
 }
 
