@@ -31,29 +31,34 @@ const DeleteCandyMachine: FC<{
 
     return (
         <>
-            <div style={{ display: 'grid', gridRowGap: '5px' }}>
-                <Text as='p'>Are you sure you want to delete candy machine {candyMachineAccount}</Text>
-                {!isDeleting && status.message && (
-                    <>
-                        <span
-                            className={`border ${
-                                status.error
-                                    ? 'color-fg-danger color-bg-danger color-border-danger'
-                                    : 'color-fg-success color-bg-success color-border-success'
-                            } rounded-2 p-2`}
-                        >
-                            {status.message}
-                            {!status.error && (
-                                <ExplorerLinks
-                                    type='transaction'
-                                    value={transaction}
-                                    connection={connection}
-                                    text={'Check tx'}
-                                />
-                            )}
-                        </span>
-                    </>
-                )}
+            <div className='d-flex flex-column flex-justify-between'>
+                <div>
+                    <Text as='p'>Are you sure you want to delete candy machine</Text>
+                    <Text as='p' className='wb-break-all'>
+                        {candyMachineAccount}
+                    </Text>
+                    {!isDeleting && status.message && (
+                        <>
+                            <span
+                                className={`border ${
+                                    status.error
+                                        ? 'color-fg-danger color-bg-danger color-border-danger'
+                                        : 'color-fg-success color-bg-success color-border-success'
+                                } rounded-2 p-2`}
+                            >
+                                {status.message}
+                                {!status.error && (
+                                    <ExplorerLinks
+                                        type='transaction'
+                                        value={transaction}
+                                        connection={connection}
+                                        text={'Check tx'}
+                                    />
+                                )}
+                            </span>
+                        </>
+                    )}
+                </div>
             </div>
             {!isDeleting && !transaction && (
                 <Button
