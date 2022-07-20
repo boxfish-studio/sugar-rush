@@ -8,9 +8,11 @@ const NftCard: FC<{
     title: string
     imageLink?: string
     hash?: string
-    buttonProps?: { text: string; isLoading: boolean; variant: VariantType; onClick: () => void }
-}> = ({ title, imageLink, hash, buttonProps }) => {
+    buttons?: { text: string; isLoading: boolean; variant: VariantType; onClick: () => void }[]
+}> = ({ title, imageLink, hash, buttons }) => {
     const { connection } = useConnection()
+    console.log(buttons)
+
     return (
         <div
             className='d-flex flex-column flex-justify-center flex-items-center border rounded-3 py-2'
@@ -25,14 +27,17 @@ const NftCard: FC<{
             >
                 {imageLink && <img alt={title} src={imageLink} />}
             </div>
-            {buttonProps && (
-                <Button variant={buttonProps.variant} onClick={() => buttonProps.onClick()}>
-                    <div className={'d-flex flex-row flex-justify-center flex-items-center'}>
-                        {buttonProps.isLoading && <Spinner sx={{ mr: 2 }} size='small' />}
-                        {buttonProps.text}
-                    </div>
-                </Button>
-            )}
+            {buttons?.length &&
+                buttons.map((btn, i) => {
+                    return (
+                        <Button variant={btn.variant} onClick={() => btn.onClick()} key={i}>
+                            <div className={'d-flex flex-row flex-justify-center flex-items-center'}>
+                                {btn.isLoading && <Spinner sx={{ mr: 2 }} size='small' />}
+                                {btn.text}
+                            </div>
+                        </Button>
+                    )
+                })}
             {hash && (
                 <Link
                     target='_blank'

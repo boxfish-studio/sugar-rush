@@ -217,12 +217,14 @@ const CandyMachine: NextPage = () => {
                             {itemsRemaining > 0 && (
                                 <NftCard
                                     title={'New NFT'}
-                                    buttonProps={{
-                                        text: 'Mint 1 NFT',
-                                        isLoading: isUserMinting,
-                                        variant: 'primary',
-                                        onClick: () => mintAccount(),
-                                    }}
+                                    buttons={[
+                                        {
+                                            text: 'Mint 1 NFT',
+                                            isLoading: isUserMinting,
+                                            variant: 'primary',
+                                            onClick: () => mintAccount(),
+                                        },
+                                    ]}
                                 />
                             )}
                             <NftCard
