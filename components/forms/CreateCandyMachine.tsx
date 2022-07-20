@@ -336,7 +336,7 @@ const CreateCandyMachine: FC<{
                     {!isInteractingWithCM && (
                         <Button
                             variant='primary'
-                            size='large'
+                            size='medium'
                             type='submit'
                             id='create-candy-machine-button'
                             sx={{ width: '100%' }}
@@ -346,7 +346,7 @@ const CreateCandyMachine: FC<{
                     )}
                     {isInteractingWithCM && (
                         <>
-                            <Button isLoading disabled size='large' sx={{ width: '100%' }}>
+                            <Button isLoading disabled size='medium' sx={{ width: '100%' }}>
                                 Creating Candy Machine... <Spinner size='small' />
                             </Button>
                         </>
