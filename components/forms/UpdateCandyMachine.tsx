@@ -43,8 +43,6 @@ const UpdateCreateCandyMachineForm: FC<{
     const { onChange, onSubmit, values } = useForm(updateCandyMachineV2, initialState)
 
     function isFormUpdateValid(): boolean {
-        // TODO add more conditions
-        // TODO add custom message to show error message
         if (!values['date-mint'] || !values['time-mint']) return false
         if (values.price === 0 || isNaN(values.price)) return false
         if (!cache) {

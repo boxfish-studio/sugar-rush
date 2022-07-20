@@ -44,9 +44,6 @@ const CreateCandyMachine: FC<{
     const { onChange, onSubmit, values } = useForm(createCandyMachineV2, initialState)
 
     function isFormValid(): boolean {
-        // TODO add more conditions
-        // TODO add custom message to show error message
-
         if (files.length === 0) {
             setErrorMessage('There are no files to upload')
             return false
