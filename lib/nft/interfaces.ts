@@ -1,8 +1,11 @@
+import { PublicKey } from '@solana/web3.js'
+
 export interface Nft {
     name: string
     image: string
     symbol?: string
     description?: string
+    mint?: PublicKey
     animation_url?: string
     external_url?: string
     attributes?: IAtributesNft[]
@@ -26,6 +29,8 @@ interface IPropertiesNft {
 interface ICollectionNft {
     name: string
     family: string
+    verified?: number
+    key?: PublicKey
 }
 
 interface IPropertyFileNft {
