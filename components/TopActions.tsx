@@ -41,7 +41,7 @@ const TopActions: FC = () => {
     }, [query])
 
     return (
-        <div className='d-flex flex-justify-end top-actions-bar d-flex flex-column flex-md-row'>
+        <div className='d-flex flex-justify-end column-gap-1 d-flex flex-column flex-md-row'>
             {pathname === '/' ? (
                 <>
                     <SearchBar

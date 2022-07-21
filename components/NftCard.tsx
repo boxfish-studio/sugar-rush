@@ -1,7 +1,6 @@
 import { Link, Text, Button, Spinner } from '@primer/react'
 import { FC } from 'react'
 import { LinkExternalIcon } from '@primer/octicons-react'
-import Image from 'next/image'
 import { VariantType } from '@primer/react/lib/Button/types'
 import { useRPC } from 'hooks'
 
@@ -24,7 +23,7 @@ const NftCard: FC<{
             className='d-flex flex-column flex-justify-center flex-items-center border rounded-3 py-2'
             style={{ width: '185px' }}
         >
-            <Text as='p' fontWeight='bold'>
+            <Text as='p' fontWeight='bold' className='width-full text-center'>
                 {title}
             </Text>
             <div
@@ -32,7 +31,11 @@ const NftCard: FC<{
                 style={{ height: '168px', width: '168px' }}
             >
                 <div className='width-full height-full position-relative'>
-                    {imageLink?.length && <Image alt={title} src={imageLink} layout='fill' objectFit='cover' />}
+                    {imageLink?.length ? (
+                        <img alt={title} src={imageLink} className='object-fit-cover height-full width-full' />
+                    ) : (
+                        ''
+                    )}
                 </div>
             </div>
 
