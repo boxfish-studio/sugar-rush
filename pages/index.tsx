@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useWallet } from '@solana/wallet-adapter-react'
-import { CandyMachineList } from 'components'
+import { CandyMachineList, CreateCandyMachine, Popup } from 'components'
 import { useRPC } from 'hooks'
 import { candyMachinesState } from 'lib/recoil-store/atoms'
 import { fetchCandyMachineAccounts } from 'lib/utils'
@@ -17,6 +17,7 @@ const ManageCandyMachines: NextPage = () => {
     const [error, setError] = useState(false)
     const { connection } = useRPC()
     const { publicKey } = useWallet()
+    const [isOpen, setIsOpen] = useState(false)
 
     const fetchAccounts = async () => {
         try {
@@ -67,11 +68,21 @@ const ManageCandyMachines: NextPage = () => {
                         </Button>
                     </div>
                 ) : !accounts?.length ? (
-                    <span className='mt-5'>
+                    <span className='mt-5 d-flex flex-row flex-items-center '>
                         You have no candy machine accounts.
-                        <Link href='/create-candy-machine'>
-                            <a>Create one?</a>
-                        </Link>
+                        <Button
+                            className='color-bg-transparent'
+                            variant='invisible'
+                            onClick={() => setIsOpen(true)}
+                            sx={{ textTransform: 'capitalize' }}
+                        >
+                            Create one?
+                        </Button>
+                        {isOpen && (
+                            <Popup onClose={() => setIsOpen(false)} title='Create Candy Machine' size='large'>
+                                <CreateCandyMachine />
+                            </Popup>
+                        )}
                     </span>
                 ) : (
                     <CandyMachineList candyMachineAccounts={accounts} />
