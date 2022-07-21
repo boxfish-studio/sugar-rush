@@ -5,7 +5,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import { candyMachineSearchState, candyMachinesState } from 'lib/recoil-store/atoms'
 import { Button, Link } from '@primer/react'
 import { LinkExternalIcon } from '@primer/octicons-react'
-import { useWallet, useConnection } from '@solana/wallet-adapter-react'
+import { useWallet } from '@solana/wallet-adapter-react'
 import { useRPC } from 'hooks'
 import { fetchCandyMachineAccounts } from 'lib/utils'
 import { Popup, CreateCandyMachine } from 'components'
@@ -16,18 +16,17 @@ const TopActions: FC = () => {
     const { pathname, query, push } = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const { publicKey } = useWallet()
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
     const [isOpen, setIsOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
     const candyMachineAccount = query?.id
-    const { connection } = useConnection()
 
     const setCandyMachines = useSetRecoilState(candyMachinesState)
 
     const refreshCandyMachines = async () => {
         setIsLoading(true)
         try {
-            const candyMachines = await fetchCandyMachineAccounts(rpcEndpoint, publicKey!)
+            const candyMachines = await fetchCandyMachineAccounts(connection, publicKey!)
             setCandyMachines(candyMachines)
         } catch (e) {
             console.error(e)

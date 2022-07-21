@@ -23,7 +23,7 @@ const useRPC = () => {
     }, [network])
 
     return {
-        rpcEndpoint: rpc,
+        connection: rpc,
     }
 }
 

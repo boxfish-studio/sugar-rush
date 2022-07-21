@@ -29,7 +29,7 @@ const CandyMachine: NextPage = () => {
     const candyMachineAccount = router.query.id
 
     const anchorWallet = useAnchorWallet()
-    const { rpcEndpoint: connection } = useRPC()
+    const { connection } = useRPC()
     const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
     const [nfts, setNfts] = useState<Nft[]>([])

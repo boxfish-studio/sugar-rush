@@ -9,7 +9,7 @@ import { useState } from 'react'
 import useRPC from './useRPC'
 
 const useVerifyCandyMachineV2 = (cache: File) => {
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
     const anchorWallet = useAnchorWallet()
     const [error, setError] = useState('')
     const [message, setMessage] = useState('')
@@ -31,7 +31,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
             setError('')
             let errorMessage = ''
             try {
-                const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+                const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'processed',
                 })
 

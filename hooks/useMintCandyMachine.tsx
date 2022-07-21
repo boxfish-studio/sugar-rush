@@ -11,7 +11,7 @@ import { createAccountsForMint, mintOneNft } from 'lib/candy-machine/mint/mint'
 
 const useMintCandyMachine = (account: string) => {
     const anchorWallet = useAnchorWallet()
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
     const [isUserMinting, setIsUserMinting] = useState(false)
     const [itemsRemaining, setItemsRemaining] = useState(0)
     const [nftPrice, setNftPrice] = useState(0)
@@ -25,7 +25,7 @@ const useMintCandyMachine = (account: string) => {
 
     async function refreshCandyMachineState() {
         if (!anchorWallet || !wallet.publicKey) return
-        const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+        const provider = new AnchorProvider(connection, anchorWallet, {
             preflightCommitment: 'recent',
         })
 
@@ -84,7 +84,7 @@ const useMintCandyMachine = (account: string) => {
                 status = await awaitTransactionSignatureConfirmation(
                     setupMint.transaction,
                     DEFAULT_TIMEOUT,
-                    rpcEndpoint,
+                    connection,
                     undefined,
                     true
                 )
@@ -110,7 +110,7 @@ const useMintCandyMachine = (account: string) => {
                 status = await awaitTransactionSignatureConfirmation(
                     mintResult.mintTxId,
                     DEFAULT_TIMEOUT,
-                    rpcEndpoint,
+                    connection,
                     undefined,
                     true
                 )

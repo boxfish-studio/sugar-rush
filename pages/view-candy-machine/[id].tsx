@@ -16,7 +16,7 @@ const ViewCandyMachine: NextPage = () => {
     const [nftDetails, setNftDetails] = useState<Nft>()
     const [isLoading, setIsLoading] = useState(false)
     const [message, setMessage] = useState('')
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
 
     async function getNfts() {
         if (!candyMachineAccount) return
@@ -24,7 +24,7 @@ const ViewCandyMachine: NextPage = () => {
         setMessage('')
         setNfts([])
         try {
-            let nfts = await getAllNftsByCM(candyMachineAccount, rpcEndpoint)
+            let nfts = await getAllNftsByCM(candyMachineAccount, connection)
             if (nfts.length === 0) setMessage('Assets not found')
             setNfts(nfts)
         } catch (e: any) {
@@ -51,7 +51,7 @@ const ViewCandyMachine: NextPage = () => {
         if (connected) {
             getNfts()
         }
-    }, [candyMachineAccount, rpcEndpoint, connected])
+    }, [candyMachineAccount, connection, connected])
 
     return (
         <>
@@ -67,7 +67,7 @@ const ViewCandyMachine: NextPage = () => {
                     <ExplorerLinks
                         type='account'
                         value={candyMachineAccount as string}
-                        connection={rpcEndpoint}
+                        connection={connection}
                         text={'View'}
                     />
                 </span>

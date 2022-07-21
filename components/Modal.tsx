@@ -9,7 +9,7 @@ const Modal: FC<{
     account: string
     callback: (account: string) => Promise<{ txid: string; balanceChange: number } | undefined>
 }> = ({ isOpen, setIsOpen, callback, account }) => {
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
 
     const [isLoading, setIsLoading] = useState(false)
     const [tx, setTx] = useState<{ txid: string; balanceChange: number }>()
@@ -50,7 +50,7 @@ const Modal: FC<{
                             <span className={styles.line} />
                         </button>
                         <span className={`flex flex-col ${styles.text}`}>
-                            <ExplorerLinks type='account' value={account} connection={rpcEndpoint} text={'View'} />
+                            <ExplorerLinks type='account' value={account} connection={connection} text={'View'} />
                             <h1 className='text-red-500 text-xl'>
                                 <span className='font-bold'>WARNING!</span> You are attempting to remove an account from
                                 the Candy Machine. This means all the unminted NFTs will be gone forever. This will
@@ -65,7 +65,7 @@ const Modal: FC<{
                                             <ExplorerLinks
                                                 type='transaction'
                                                 value={tx.txid}
-                                                connection={rpcEndpoint}
+                                                connection={connection}
                                                 text={'Check the details'}
                                             />
                                         </span>
