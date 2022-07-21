@@ -3,46 +3,13 @@
 @import "./wallet-adapter.scss";
 @import "@primer/css/index.scss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
     font-family: "Inter", sans-serif;
-    @apply text-base;
 }
 
 body {
     margin: 0;
     color: #24292e;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    @apply font-bold;
-}
-h1 {
-    @apply text-3xl;
-}
-h2 {
-    @apply text-2xl;
-}
-h3 {
-    @apply text-xl;
-}
-h4,
-h5,
-h6 {
-    @apply text-lg;
-}
-
-a {
-    text-decoration: none;
-    @apply text-blue-regular;
 }
 
 .searchbox-candymachine {
@@ -61,4 +28,53 @@ a {
     flex-shrink: 0;
     font-size: 12px;
     letter-spacing: -0.15px;
+}
+
+.loading-animation {
+    svg {
+        animation: loading-animation 1s infinite;
+    }
+}
+
+@keyframes loading-animation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+/* Scrollbar CSS */
+/* Firefox */
+* {
+    scrollbar-width: auto;
+    scrollbar-color: #c8c9ca #ffffff;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 14px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #c8c9ca;
+    border-radius: 6px;
+    border: 4px solid #ffffff;
+}
+
+.select-wrapper > select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    cursor: pointer;
+    background-image: url("/select-arrow.svg");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 10px) center;
+    background-size: 20px;
 }

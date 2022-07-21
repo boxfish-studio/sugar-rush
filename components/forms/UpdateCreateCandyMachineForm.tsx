@@ -305,8 +305,8 @@ const UpdateCreateCandyMachineForm: FC<{
     }
 
     return (
-        <form className='flex flex-col items-center h-auto justify-center mt-4' onSubmit={onSubmit}>
-            <div className='flex flex-col p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>
+        <form className='flex flex-column items-center h-auto justify-center mt-4' onSubmit={onSubmit}>
+            <div className='flex flex-column p-6 xxl-shadow rounded-2xl scale-90 bg-slate-300 items-center justify-center'>
                 <FormInput
                     id='price'
                     text='Price of each NFT (SOL)'
@@ -385,7 +385,7 @@ const UpdateCreateCandyMachineForm: FC<{
                         <label htmlFor='storage' className='my-3 font-medium'>
                             Storage
                         </label>
-                        <input list='storage' name='storage' className='w-full p-2' required />
+                        <input list='storage' name='storage' onChange={onChange} className='w-full p-2' required />
                         <datalist id='storage' defaultValue='Arweave'>
                             {Object.keys(StorageType)
                                 .filter((key) => key === 'Arweave')

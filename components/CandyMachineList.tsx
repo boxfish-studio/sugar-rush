@@ -2,9 +2,11 @@ import { candyMachineSearchState } from 'lib/recoil-store/atoms'
 import { CandyMachineTile } from 'components'
 import { FC } from 'react'
 import { useRecoilValue } from 'recoil'
+
 const CandyMachineList: FC<{
     candyMachineAccounts: string[]
-}> = ({ candyMachineAccounts }) => {
+    setCandyMachineAccounts?: React.Dispatch<React.SetStateAction<string[]>>
+}> = ({ candyMachineAccounts, setCandyMachineAccounts }) => {
     const searchInput = useRecoilValue(candyMachineSearchState)
 
     const searchResults = candyMachineAccounts.filter((account) => {

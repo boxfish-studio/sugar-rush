@@ -1,9 +1,9 @@
 import { useWallet } from '@solana/wallet-adapter-react'
 import { candyMachinesState } from 'lib/recoil-store/atoms'
-import { useEffect } from 'react'
+import { FC, useEffect } from 'react'
 import { useResetRecoilState } from 'recoil'
 
-function CheckConnectedWallet({ children }: { children: JSX.Element }) {
+const CheckConnectedWallet: FC<{ children: JSX.Element }> = ({ children }) => {
     const { publicKey } = useWallet()
 
     const resetCandyMachines = useResetRecoilState(candyMachinesState)
@@ -15,7 +15,7 @@ function CheckConnectedWallet({ children }: { children: JSX.Element }) {
     if (!publicKey) {
         return (
             <div
-                className='d-flex flex-justify-center flex-items-center flex-col gap-4'
+                className='d-flex flex-justify-center flex-items-center flex-column'
                 style={{ height: '100vh', letterSpacing: '0.3px' }}
             >
                 <h3>Please connect your Solana wallet</h3>
