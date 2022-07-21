@@ -8,7 +8,6 @@ const RPC_API_DEVNET = process.env.NEXT_PUBLIC_RPC_API_DEVNET as string
 const RPC_API_MAINNET = process.env.NEXT_PUBLIC_RPC_API_MAINNET as string
 
 const useRPC = () => {
-    console.log(RPC_API_DEVNET, RPC_API_MAINNET)
     const [network] = useRecoilState(networkState)
     const connection = new Connection(RPC_API_MAINNET, 'finalized')
     const [rpc, setRpc] = useState<Connection>(connection)
