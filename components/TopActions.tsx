@@ -16,7 +16,7 @@ const TopActions: FC = () => {
     const { pathname, query } = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const { publicKey } = useWallet()
-    const { connection } = useRPC()
+    const { connection, isDevnet } = useRPC()
     const [isOpen, setIsOpen] = useState(false)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
@@ -80,9 +80,7 @@ const TopActions: FC = () => {
                     <Button leadingIcon={LinkExternalIcon}>
                         <Link
                             target='_blank'
-                            href={`https://solscan.io/account/${candyMachineAccount}?${
-                                connection?.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                            }`}
+                            href={`https://solscan.io/account/${candyMachineAccount}?${isDevnet}`}
                             sx={{ textDecoration: 'none', color: '#24292F' }}
                         >
                             View in Solscan
