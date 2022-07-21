@@ -15,12 +15,12 @@ const ManageCandyMachines: NextPage = () => {
     const [accounts, setAccounts] = useRecoilState(candyMachinesState)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(false)
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
     const { publicKey } = useWallet()
 
     const fetchAccounts = async () => {
         try {
-            const accounts = await fetchCandyMachineAccounts(rpcEndpoint, publicKey!)
+            const accounts = await fetchCandyMachineAccounts(connection, publicKey!)
             setAccounts(accounts)
             setError(false)
         } catch (err) {
@@ -37,7 +37,7 @@ const ManageCandyMachines: NextPage = () => {
             .finally(() => {
                 setIsLoading(false)
             })
-    }, [])
+    }, [connection])
 
     if (isLoading) {
         return (
