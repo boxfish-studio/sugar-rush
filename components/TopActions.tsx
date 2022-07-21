@@ -3,23 +3,26 @@ import { useRouter } from 'next/router'
 import { SearchBar, RefreshButton } from './'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { candyMachineSearchState, candyMachinesState } from 'lib/recoil-store/atoms'
-import { Button } from '@primer/react'
+import { Button, Link } from '@primer/react'
 import { LinkExternalIcon } from '@primer/octicons-react'
-import { useWallet } from '@solana/wallet-adapter-react'
+import { useWallet, useConnection } from '@solana/wallet-adapter-react'
 import { useRPC } from 'hooks'
 import { fetchCandyMachineAccounts } from 'lib/utils'
 import { Popup, CreateCandyMachine } from 'components'
+import VerifyCandyMachine from './VerifyCandyMachine'
 import DeleteCandyMachine from './DeleteCandyMachine'
 
 const TopActions: FC = () => {
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
-    const { pathname, query } = useRouter()
+    const { pathname, query, push } = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const { publicKey } = useWallet()
     const { rpcEndpoint } = useRPC()
     const [isOpen, setIsOpen] = useState(false)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+    const [isVerifyOpen, setIsVerifyOpen] = useState(false)
     const candyMachineAccount = query?.id
+    const { connection } = useConnection()
 
     const setCandyMachines = useSetRecoilState(candyMachinesState)
 
@@ -66,8 +69,25 @@ const TopActions: FC = () => {
                             />
                         </Popup>
                     )}
-                    <Button variant='outline'>Verify</Button>
-                    <Button leadingIcon={LinkExternalIcon}>View in Solscan</Button>
+                    <Button variant='outline' onClick={() => setIsVerifyOpen(true)}>
+                        Verify
+                    </Button>
+                    {isVerifyOpen && (
+                        <Popup onClose={() => setIsVerifyOpen(false)} title={`Verify Candy Machine`} size='small'>
+                            <VerifyCandyMachine candyMachineAccount={candyMachineAccount as string} />
+                        </Popup>
+                    )}
+                    <Button leadingIcon={LinkExternalIcon}>
+                        <Link
+                            target='_blank'
+                            href={`https://solscan.io/account/${candyMachineAccount}?${
+                                connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
+                            }`}
+                            sx={{ textDecoration: 'none', color: '#24292F' }}
+                        >
+                            View in Solscan
+                        </Link>
+                    </Button>
                 </>
             )}
         </div>
