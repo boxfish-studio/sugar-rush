@@ -23,7 +23,6 @@ const CandyMachine: NextPage = () => {
     const { connection } = useRPC()
     const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
-    const [initialLoad, setInitialLoad] = useState(false)
     const [nfts, setNfts] = useState<Nft[]>([])
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft>()
@@ -58,8 +57,7 @@ const CandyMachine: NextPage = () => {
 
     async function getNfts() {
         if (!candyMachineAccount) return
-        // setIsLoading(true)
-        console.log('getNfts', isLoading)
+        setIsLoading(true)
         setMintedNfts([])
         let nfts = await getAllNftsByCM(candyMachineAccount, connection)
         setMintedNfts(nfts)
@@ -72,8 +70,6 @@ const CandyMachine: NextPage = () => {
                 setCollectionNft(nftCollectionData)
             }
         }
-        console.log('getNfts end', isLoading)
-
         setIsLoading(false)
     }
 
@@ -81,8 +77,6 @@ const CandyMachine: NextPage = () => {
         setError('')
         if (candyMachineAccount && anchorWallet) {
             try {
-                console.log(4, error)
-
                 setIsLoading(true)
                 const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'processed',
@@ -97,7 +91,6 @@ const CandyMachine: NextPage = () => {
                 state.data.solTreasuryAccount = state.wallet
                 state.data.itemsRedeemed = state.itemsRedeemed
                 setError('')
-                console.log(6)
                 return state.data
             } catch (err) {
                 setError((err as Error).message)
