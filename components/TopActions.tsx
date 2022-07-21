@@ -9,14 +9,16 @@ import { useWallet, useConnection } from '@solana/wallet-adapter-react'
 import { useRPC } from 'hooks'
 import { fetchCandyMachineAccounts } from 'lib/utils'
 import { Popup, CreateCandyMachine } from 'components'
+import VerifyCandyMachine from './VerifyCandyMachine'
 
 const TopActions: FC = () => {
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
-    const { pathname, query } = useRouter()
+    const { pathname, query, push } = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const { publicKey } = useWallet()
     const { rpcEndpoint } = useRPC()
     const [isOpen, setIsOpen] = useState(false)
+    const [isVerifyOpen, setIsVerifyOpen] = useState(false)
     const candyMachineAccount = query?.id
     const { connection } = useConnection()
 
@@ -55,7 +57,14 @@ const TopActions: FC = () => {
             ) : (
                 <>
                     <Button variant='danger'>Delete</Button>
-                    <Button variant='outline'>Verify</Button>
+                    <Button variant='outline' onClick={() => setIsVerifyOpen(true)}>
+                        Verify
+                    </Button>
+                    {isVerifyOpen && (
+                        <Popup onClose={() => setIsVerifyOpen(false)} title={`Verify Candy Machine`} size='small'>
+                            <VerifyCandyMachine candyMachineAccount={candyMachineAccount as string} />
+                        </Popup>
+                    )}
                     <Button leadingIcon={LinkExternalIcon}>
                         <Link
                             target='_blank'

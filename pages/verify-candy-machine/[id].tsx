@@ -11,7 +11,7 @@ const VerifyCandyMachine: NextPage = () => {
     const candyMachineAccount = router.query.id
     const { cache, uploadCache } = useUploadCache()
     const { connected } = useWallet()
-    const { error, isLoading, verifyCandyMachine, message, connection, shouldMint } = useVerifyCandyMachineV2(cache)
+    const { error, verifyCandyMachine, message } = useVerifyCandyMachineV2(cache)
     const {
         isUserMinting,
         itemsRemaining,
@@ -40,12 +40,6 @@ const VerifyCandyMachine: NextPage = () => {
                     <span className='break-all border border-slate-300 shadow-xl py-2 px-4 rounded-lg text-center'>
                         {candyMachineAccount}{' '}
                     </span>
-                    <ExplorerLinks
-                        type='account'
-                        value={candyMachineAccount as string}
-                        connection={connection}
-                        text={'View'}
-                    />
                 </div>
                 <div className='flex flex-column justify-center items-center gap-3'>
                     <label
@@ -57,23 +51,8 @@ const VerifyCandyMachine: NextPage = () => {
                     <input id='cache' type='file' name='cache' onChange={uploadCache} className='w-full p-2 hidden' />
                 </div>
 
-                {isLoading && <Button text='Verifying Candy Machine...' isLoading />}
-
-                {!isLoading && (
-                    <Button text='Verify Candy Machine' onClick={() => verifyCandyMachine({ candyMachineAccount })} />
-                )}
-                {!error && message && <div className='text-[hsl(258,52%,56%)] text-center mt-6'>{message}</div>}
-                {itemsRemaining === 0 && (
-                    <div className='text-[hsl(258,52%,56%)] text-center mt-6'>All NFTs have already been minted</div>
-                )}
-
-                {!isLoading && error && <div className='text-red-500 text-center mt-6'>{error}</div>}
-
-                {!isCaptcha ? (
+                {isCaptcha ? (
                     <>
-                        {!shouldMint && itemsRemaining !== 0 && (
-                            <div className='text-red-500 text-center mt-6'>Important! Verify before Mint!</div>
-                        )}
                         <div
                             className={`border border-gray-500 mt-10 p-5 rounded-xl grid grid-cols-3 justify-items-center gap-5 
                                     ${itemsRemaining === 0 ? 'opacity-50' : ''}`}
