@@ -1,16 +1,13 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react'
 import { useRPC } from 'hooks'
-import { useWallet } from '@solana/wallet-adapter-react'
 
 const MIN_TPS = 2500
 
 const NetworkTps: FC = () => {
     const { connection } = useRPC()
     const [averageTps, setAverageTps] = useState(0)
-    const { connected } = useWallet()
 
     const getNetworkPerformance = useCallback(async () => {
-        if (!connected) return
         try {
             const samples = await connection.getRecentPerformanceSamples()
             const tpsList = samples.reduce((acc, sample) => {
@@ -21,11 +18,11 @@ const NetworkTps: FC = () => {
         } catch (err) {
             console.error(err)
         }
-    }, [connection, connected])
+    }, [connection])
 
     useEffect(() => {
         getNetworkPerformance()
-    }, [getNetworkPerformance, connected, connection])
+    }, [getNetworkPerformance, connection])
 
     const tps = useMemo(() => averageTps.toFixed() ?? 'N/A', [averageTps])
     const networkPerformanceText = useMemo(() => (averageTps > MIN_TPS ? '' : '⚠️'), [averageTps])
