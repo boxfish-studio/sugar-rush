@@ -1,7 +1,7 @@
 import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey } from '@solana/web3.js'
-import { Title, UpdateCandyMachine, Carousel, ExplorerLinks, NftCard, RefreshButton } from 'components'
+import { Title, UpdateCandyMachine, Carousel, NftCard, RefreshButton } from 'components'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Account } from 'lib/candy-machine/types'
