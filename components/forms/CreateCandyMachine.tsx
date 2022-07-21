@@ -44,9 +44,6 @@ const CreateCandyMachine: FC<{
     const { onChange, onSubmit, values } = useForm(createCandyMachineV2, initialState)
 
     function isFormValid(): boolean {
-        // TODO add more conditions
-        // TODO add custom message to show error message
-
         if (files.length === 0) {
             setErrorMessage('There are no files to upload')
             return false
@@ -201,7 +198,7 @@ const CreateCandyMachine: FC<{
     }, [])
 
     return (
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit} noValidate>
             <div className='d-flex flex-column flex-justify-between'>
                 <Box
                     id='form-container'
@@ -336,7 +333,7 @@ const CreateCandyMachine: FC<{
                     {!isInteractingWithCM && (
                         <Button
                             variant='primary'
-                            size='large'
+                            size='medium'
                             type='submit'
                             id='create-candy-machine-button'
                             sx={{ width: '100%' }}
@@ -346,7 +343,7 @@ const CreateCandyMachine: FC<{
                     )}
                     {isInteractingWithCM && (
                         <>
-                            <Button isLoading disabled size='large' sx={{ width: '100%' }}>
+                            <Button isLoading disabled size='medium' sx={{ width: '100%' }}>
                                 Creating Candy Machine... <Spinner size='small' />
                             </Button>
                         </>

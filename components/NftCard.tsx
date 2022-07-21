@@ -15,6 +15,7 @@ const NftCard: FC<{
         isLoading?: boolean
         variant: VariantType
         onClick?: () => void
+        disabled?: boolean
     }[]
 }> = ({ title, imageLink, buttons }) => {
     const { connection } = useRPC()
@@ -38,7 +39,12 @@ const NftCard: FC<{
             {buttons
                 ?.filter((btn) => btn.as === 'button')
                 .map((btn, i) => (
-                    <Button variant={btn.variant} onClick={() => btn.onClick && btn.onClick()} key={i}>
+                    <Button
+                        variant={btn.variant}
+                        onClick={() => btn.onClick && btn.onClick()}
+                        disabled={btn.disabled}
+                        key={i}
+                    >
                         <div className={'d-flex flex-row flex-justify-center flex-items-center'}>
                             {btn.isLoading && <Spinner sx={{ mr: 2 }} size='small' />}
                             {btn.text}
