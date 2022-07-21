@@ -1,4 +1,4 @@
-import { useAnchorWallet, useWallet, useConnection } from '@solana/wallet-adapter-react'
+import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { AnchorProvider, Program, BN } from '@project-serum/anchor'
 import { useRPC } from 'hooks'
 import { PublicKey, LAMPORTS_PER_SOL, Transaction } from '@solana/web3.js'
@@ -20,8 +20,6 @@ const useMintCandyMachine = (account: string) => {
     const [setupTxn, setSetupTxn] = useState<SetupState>()
     const [mintMessage, setMintMessage] = useState({ error: false, message: '' })
     const [candyMachine, setCandyMachine] = useState<CandyMachineAccount>()
-
-    const { connection } = useConnection()
 
     const wallet = useWallet()
 
@@ -86,7 +84,7 @@ const useMintCandyMachine = (account: string) => {
                 status = await awaitTransactionSignatureConfirmation(
                     setupMint.transaction,
                     DEFAULT_TIMEOUT,
-                    connection,
+                    rpcEndpoint,
                     undefined,
                     true
                 )
@@ -112,7 +110,7 @@ const useMintCandyMachine = (account: string) => {
                 status = await awaitTransactionSignatureConfirmation(
                     mintResult.mintTxId,
                     DEFAULT_TIMEOUT,
-                    connection,
+                    rpcEndpoint,
                     undefined,
                     true
                 )

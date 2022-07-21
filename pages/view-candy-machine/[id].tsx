@@ -4,9 +4,9 @@ import { Title, Carousel, Spinner, NftDetails, ExplorerLinks } from 'components'
 import Head from 'next/head'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
-import { useConnection } from '@solana/wallet-adapter-react'
 import { Nft } from 'lib/nft/interfaces'
 import { getAllNftsByCM } from 'lib/nft/actions'
+import { useRPC } from 'hooks'
 
 const ViewCandyMachine: NextPage = () => {
     const router = useRouter()
@@ -16,14 +16,14 @@ const ViewCandyMachine: NextPage = () => {
     const [nftDetails, setNftDetails] = useState<Nft>()
     const [isLoading, setIsLoading] = useState(false)
     const [message, setMessage] = useState('')
-    const { connection } = useConnection()
+    const { rpcEndpoint } = useRPC()
 
     async function getNfts() {
         if (!candyMachineAccount) return
         setIsLoading(true)
         setMessage('')
         setNfts([])
-        let nfts = await getAllNftsByCM(candyMachineAccount, connection)
+        let nfts = await getAllNftsByCM(candyMachineAccount, rpcEndpoint)
         if (nfts.length === 0) setMessage('Assets not found')
         setNfts(nfts)
         setIsLoading(false)
@@ -47,7 +47,7 @@ const ViewCandyMachine: NextPage = () => {
         if (connected) {
             getNfts()
         }
-    }, [candyMachineAccount, connection, connected])
+    }, [candyMachineAccount, rpcEndpoint, connected])
 
     return (
         <>
@@ -63,7 +63,7 @@ const ViewCandyMachine: NextPage = () => {
                     <ExplorerLinks
                         type='account'
                         value={candyMachineAccount as string}
-                        connection={connection}
+                        connection={rpcEndpoint}
                         text={'View'}
                     />
                 </span>

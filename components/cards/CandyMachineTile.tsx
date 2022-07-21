@@ -1,13 +1,13 @@
 import { FC } from 'react'
 import Link from 'next/link'
-import { useConnection } from '@solana/wallet-adapter-react'
 import { Button } from '@primer/react'
 import { LinkExternalIcon } from '@primer/octicons-react'
+import { useRPC } from 'hooks'
 
 const CandyMachineTile: FC<{
     account: string
 }> = ({ account }) => {
-    const { connection } = useConnection()
+    const { rpcEndpoint } = useRPC()
     return (
         <>
             <div
@@ -20,7 +20,7 @@ const CandyMachineTile: FC<{
                 <div className='d-flex mt-2 mt-md-0 '>
                     <Link
                         href={`https://solscan.io/account/${account}?${
-                            connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
+                            rpcEndpoint.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
                         }`}
                     >
                         <a target='_blank'>

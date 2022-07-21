@@ -1,7 +1,8 @@
 import { AnchorProvider, BN, Program } from '@project-serum/anchor'
-import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
+import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { Spinner, Title, UpdateCreateCandyMachineForm, Carousel, ExplorerLinks } from 'components'
+import { useRPC } from 'hooks'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Account } from 'lib/candy-machine/types'
@@ -16,7 +17,7 @@ const CandyMachine: NextPage = () => {
     const candyMachineAccount = router.query.id
 
     const anchorWallet = useAnchorWallet()
-    const { connection } = useConnection()
+    const { rpcEndpoint } = useRPC()
     const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
     const [nfts, setNfts] = useState<Nft[]>([])
@@ -77,9 +78,9 @@ const CandyMachine: NextPage = () => {
     }
 
     useEffect(() => {
-        fetchCandyMachine({ candyMachineAccount, connection }).then(setCandyMachineConfig)
+        fetchCandyMachine({ candyMachineAccount, connection: rpcEndpoint }).then(setCandyMachineConfig)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [candyMachineAccount, connection, anchorWallet])
+    }, [candyMachineAccount, rpcEndpoint, anchorWallet])
 
     return (
         <>
@@ -97,7 +98,7 @@ const CandyMachine: NextPage = () => {
                     <ExplorerLinks
                         type='account'
                         value={candyMachineAccount as string}
-                        connection={connection}
+                        connection={rpcEndpoint}
                         text={'View'}
                     />
                 </div>
@@ -107,7 +108,7 @@ const CandyMachine: NextPage = () => {
                         Error fetching candy machine config
                         <button
                             className='rounded-lg bg-slate-400 p-2 mt-4'
-                            onClick={() => fetchCandyMachine({ candyMachineAccount, connection })}
+                            onClick={() => fetchCandyMachine({ candyMachineAccount, connection: rpcEndpoint })}
                         >
                             Fetch again
                         </button>

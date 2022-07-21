@@ -13,5 +13,5 @@ export const candyMachinesState = atom({
 
 export const networkState = atom({
     key: 'networkState',
-    default: WalletAdapterNetwork.Devnet,
+    default: WalletAdapterNetwork.Mainnet,
 })
