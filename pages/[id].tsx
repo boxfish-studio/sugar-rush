@@ -124,8 +124,7 @@ const CandyMachine: NextPage = () => {
         ;(async function () {
             const data = await fetchCandyMachine()
             setCandyMachineConfig(data)
-            // I comment this for now, takes lots of time and cant see anything
-            // await getNfts()
+            await getNfts()
         })()
         setIsLoading(false)
     }, [connection])
