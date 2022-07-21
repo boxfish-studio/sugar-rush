@@ -31,7 +31,7 @@ const NftCard: FC<{
                 style={{ height: '168px', width: '168px' }}
             >
                 <div className='width-full height-full position-relative'>
-                    {imageLink?.length && <Image alt={title} src={imageLink} layout='fill' objectFit='cover' />}
+                    {imageLink?.length ? <Image alt={title} src={imageLink} layout='fill' objectFit='cover' /> : ''}
                 </div>
             </div>
 
