@@ -18,7 +18,7 @@ const UpdateCreateCandyMachineForm: FC<{
 }> = ({ fetchedValues, candyMachinePubkey }) => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
 
     const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
@@ -89,7 +89,7 @@ const UpdateCreateCandyMachineForm: FC<{
             }
 
             if (publicKey && anchorWallet && candyMachinePubkey) {
-                const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+                const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'recent',
                 })
 
