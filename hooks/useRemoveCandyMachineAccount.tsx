@@ -15,11 +15,11 @@ const useRemoveCandyMachineAccount = (
     setAccounts: React.Dispatch<React.SetStateAction<string[]>>
 ) => {
     const anchorWallet = useAnchorWallet()
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
 
     const removeAccount = async (candyMachineAccount: string) => {
         if (!anchorWallet) return
-        const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+        const provider = new AnchorProvider(connection, anchorWallet, {
             preflightCommitment: 'recent',
         })
 
