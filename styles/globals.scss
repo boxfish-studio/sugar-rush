@@ -22,8 +22,12 @@ body {
 
 .nfts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 185px);
+    place-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
     grid-gap: 1rem;
+    @media screen and (min-width: 1280px) {
+        grid-template-columns: repeat(6, 185px);
+    }
 }
 
 .wallet-adapter-button {

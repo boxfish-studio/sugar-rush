@@ -258,21 +258,24 @@ const CandyMachine: NextPage = () => {
                                             ]}
                                         />
                                     )}
-                                    {mintedNfts.map(({ name, image, mint }, index) => (
-                                        <NftCard
-                                            title={name}
-                                            imageLink={image}
-                                            key={index}
-                                            buttons={[
-                                                {
-                                                    text: 'View in Solscan',
-                                                    as: 'link',
-                                                    variant: 'invisible',
-                                                    hash: mint?.toBase58(),
-                                                },
-                                            ]}
-                                        />
-                                    ))}
+                                    {mintedNfts.map(
+                                        ({ name, image, mint }, index) =>
+                                            index < 10 && (
+                                                <NftCard
+                                                    title={name}
+                                                    imageLink={image}
+                                                    key={index}
+                                                    buttons={[
+                                                        {
+                                                            text: 'View in Solscan',
+                                                            as: 'link',
+                                                            variant: 'invisible',
+                                                            hash: mint?.toBase58(),
+                                                        },
+                                                    ]}
+                                                />
+                                            )
+                                    )}
                                 </div>
                             </div>
                             <div className='mt-5'>
