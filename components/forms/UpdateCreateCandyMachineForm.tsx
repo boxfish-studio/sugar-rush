@@ -22,7 +22,7 @@ const UpdateCreateCandyMachineForm: FC<{
 }> = ({ fetchedValues, updateCandyMachine, candyMachinePubkey }) => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
 
     const { files, uploadAssets } = useUploadFiles()
     const { cache, uploadCache } = useUploadCache()
@@ -117,7 +117,7 @@ const UpdateCreateCandyMachineForm: FC<{
         if (publicKey && anchorWallet) {
             const { supportedFiles, elemCount } = verifyAssets(files, config.storage, config.number)
 
-            const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+            const provider = new AnchorProvider(connection, anchorWallet, {
                 preflightCommitment: 'recent',
             })
 
@@ -238,7 +238,7 @@ const UpdateCreateCandyMachineForm: FC<{
             }
 
             if (publicKey && anchorWallet && candyMachinePubkey) {
-                const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+                const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'recent',
                 })
 
