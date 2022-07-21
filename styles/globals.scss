@@ -22,7 +22,6 @@ body {
 
 .nfts-grid {
     display: grid;
-    place-items: center;
     grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
     grid-gap: 1rem;
     @media screen and (min-width: 1280px) {
