@@ -12,11 +12,11 @@ type Withdraw = Pick<Transaction, 'txid'> & { balanceChange: number }
 
 const useRemoveCandyMachineAccount = (accounts: string[]) => {
     const anchorWallet = useAnchorWallet()
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
 
     const removeAccount = async (candyMachineAccount: string) => {
         if (!anchorWallet) return
-        const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+        const provider = new AnchorProvider(connection, anchorWallet, {
             preflightCommitment: 'recent',
         })
 

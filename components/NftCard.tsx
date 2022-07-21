@@ -1,9 +1,9 @@
-import { useConnection } from '@solana/wallet-adapter-react'
 import { Link, Text, Button, Spinner } from '@primer/react'
 import { FC } from 'react'
 import { LinkExternalIcon } from '@primer/octicons-react'
 import Image from 'next/image'
 import { VariantType } from '@primer/react/lib/Button/types'
+import { useRPC } from 'hooks'
 
 const NftCard: FC<{
     title: string
@@ -17,7 +17,7 @@ const NftCard: FC<{
         onClick?: () => void
     }[]
 }> = ({ title, imageLink, buttons }) => {
-    const { connection } = useConnection()
+    const { connection } = useRPC()
     return (
         <div
             className='d-flex flex-column flex-justify-center flex-items-center border rounded-3 py-2'

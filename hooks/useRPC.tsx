@@ -1,17 +1,29 @@
-import { useConnection } from '@solana/wallet-adapter-react'
 import { Connection } from '@solana/web3.js'
+import { useRecoilState } from 'recoil'
+import { networkState } from 'lib/recoil-store/atoms'
+import { useEffect, useState } from 'react'
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 
-const API_DEVNET = 'https://api.devnet.solana.com'
-const RPC_API_DEVNET = 'https://explorer-api.devnet.solana.com/'
+const RPC_API_DEVNET = process.env.NEXT_PUBLIC_RPC_API_DEVNET as string
+const RPC_API_MAINNET = process.env.NEXT_PUBLIC_RPC_API_MAINNET as string
 
 const useRPC = () => {
-    const { connection } = useConnection()
+    console.log(RPC_API_DEVNET, RPC_API_MAINNET)
+    const [network] = useRecoilState(networkState)
+    const connection = new Connection(RPC_API_MAINNET, 'finalized')
+    const [rpc, setRpc] = useState<Connection>(connection)
 
-    // the endpoint provided by useConnection is wrong, so we need to use the RPC_API_DEVNET if we are on devnet.
-    const rpcEndpoint = connection.rpcEndpoint === API_DEVNET ? new Connection(RPC_API_DEVNET) : connection
+    useEffect(() => {
+        network && window.localStorage.setItem('network-gg', network)
+        if (network === WalletAdapterNetwork.Devnet) {
+            setRpc(new Connection(RPC_API_DEVNET))
+        } else if (network === WalletAdapterNetwork.Mainnet) {
+            setRpc(new Connection(RPC_API_MAINNET))
+        }
+    }, [network])
 
     return {
-        rpcEndpoint,
+        connection: rpc,
     }
 }
 
