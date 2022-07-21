@@ -86,8 +86,6 @@ const CandyMachine: NextPage = () => {
         setError('')
         if (candyMachineAccount && anchorWallet) {
             try {
-                console.log(4, error)
-
                 setIsLoading(true)
                 const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'processed',
