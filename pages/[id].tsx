@@ -31,7 +31,6 @@ const CandyMachine: NextPage = () => {
     const { connection } = useRPC()
     const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
-    const [initialLoad, setInitialLoad] = useState(false)
     const [nfts, setNfts] = useState<Nft[]>([])
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft>()
@@ -66,7 +65,8 @@ const CandyMachine: NextPage = () => {
 
     async function getNfts() {
         if (!candyMachineAccount) return
-        setIsLoading(true)
+        // setIsLoading(true)
+        console.log('getNfts', isLoading)
         setMintedNfts([])
         let nfts = await getAllNftsByCM(candyMachineAccount, connection)
         setMintedNfts(nfts)
@@ -79,6 +79,8 @@ const CandyMachine: NextPage = () => {
                 setCollectionNft(nftCollectionData)
             }
         }
+        console.log('getNfts end', isLoading)
+
         setIsLoading(false)
     }
 
@@ -101,14 +103,13 @@ const CandyMachine: NextPage = () => {
 
                 state.data.solTreasuryAccount = state.wallet
                 state.data.itemsRedeemed = state.itemsRedeemed
-                setInitialLoad(true)
-                setIsLoading(false)
-
+                setError('')
+                console.log(6)
                 return state.data
             } catch (err) {
-                initialLoad && setError((err as Error).message)
-                setIsLoading(false)
+                setError((err as Error).message)
             }
+            setIsLoading(false)
         }
     }
 
@@ -129,16 +130,16 @@ const CandyMachine: NextPage = () => {
 
     useEffect(() => {
         setError('')
-        fetchCandyMachine().then(setCandyMachineConfig)
+        setIsLoading(false)
         ;(async function () {
+            const data = await fetchCandyMachine()
+            setCandyMachineConfig(data)
             await getNfts()
         })()
-        if (initialLoad) {
-            setInitialLoad(false)
-        }
+        setIsLoading(false)
     }, [connection])
 
-    if (!initialLoad && error.includes('Account does not exist')) {
+    if (error.includes('Account does not exist')) {
         return (
             <>
                 <Head>
