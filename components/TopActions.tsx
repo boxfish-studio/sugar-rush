@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { SearchBar, RefreshButton } from './'
 import { useRecoilState, useSetRecoilState } from 'recoil'
@@ -14,7 +14,7 @@ import DeleteCandyMachine from './DeleteCandyMachine'
 
 const TopActions: FC = () => {
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
-    const { pathname, query, push } = useRouter()
+    const { pathname, query } = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const { publicKey } = useWallet()
     const { rpcEndpoint } = useRPC()
@@ -36,6 +36,10 @@ const TopActions: FC = () => {
         }
         setIsLoading(false)
     }
+
+    useEffect(() => {
+        setIsDeleteOpen(false)
+    }, [query])
 
     return (
         <div className='d-flex flex-justify-end top-actions-bar d-flex flex-column flex-md-row'>

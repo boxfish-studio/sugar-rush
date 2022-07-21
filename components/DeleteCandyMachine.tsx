@@ -47,15 +47,17 @@ const DeleteCandyMachine: FC<{
                                 } rounded-2 p-2`}
                             >
                                 {status.message}
-                                {!status.error && (
+                            </span>
+                            {!status.error && (
+                                <div className='mt-3'>
                                     <ExplorerLinks
                                         type='transaction'
                                         value={transaction}
                                         connection={connection}
                                         text={'Check tx'}
                                     />
-                                )}
-                            </span>
+                                </div>
+                            )}
                         </>
                     )}
                 </div>
@@ -73,7 +75,7 @@ const DeleteCandyMachine: FC<{
             )}
             {!isDeleting && !!transaction && (
                 <Button
-                    className={`width-full mt-2`}
+                    className={`width-full mt-3`}
                     variant='outline'
                     state='rest'
                     size='medium'
