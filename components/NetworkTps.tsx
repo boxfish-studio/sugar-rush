@@ -5,36 +5,35 @@ import { useWallet } from '@solana/wallet-adapter-react'
 const MIN_TPS = 2500
 
 const NetworkTps: FC = () => {
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
     const [averageTps, setAverageTps] = useState(0)
-    const { publicKey } = useWallet()
+    const { connected } = useWallet()
 
     const getNetworkPerformance = useCallback(async () => {
-        if (!publicKey) return
+        if (!connected) return
         try {
-            const samples = await rpcEndpoint.getRecentPerformanceSamples()
+            const samples = await connection.getRecentPerformanceSamples()
             const tpsList = samples.reduce((acc, sample) => {
                 const tps = sample.numTransactions / sample.samplePeriodSecs
                 return acc + tps
             }, 0)
-            console.log('tpsList', tpsList)
             setAverageTps(tpsList / samples.length)
         } catch (err) {
             console.error(err)
         }
-    }, [rpcEndpoint, publicKey])
+    }, [connection, connected])
 
     useEffect(() => {
         getNetworkPerformance()
-    }, [getNetworkPerformance, publicKey, rpcEndpoint])
+    }, [getNetworkPerformance, connected, connection])
 
     const tps = useMemo(() => averageTps.toFixed() ?? 'N/A', [averageTps])
     const networkPerformanceText = useMemo(() => (averageTps > MIN_TPS ? '' : '⚠️'), [averageTps])
     if (averageTps === 0) return <></>
     return (
-        <div className='d-flex gap-2'>
-            <p>{networkPerformanceText}</p> <p>{tps}</p>
-            <p>TPS</p>
+        <div className='d-flex gap-2 flex-justify-center flex-items-center flex-content-center pr-4 f4 cursor-default'>
+            <p className='m-0'>{networkPerformanceText}</p> <p className='m-0 pl-2'>{tps}</p>
+            <p className='m-0 pl-2'>TPS</p>
         </div>
     )
 }
