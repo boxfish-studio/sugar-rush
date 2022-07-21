@@ -88,7 +88,7 @@ const UpdateCreateCandyMachineForm: FC<{
                 uuid: null,
             }
 
-            if (publicKey && anchorWallet && candyMachinePubkey) {
+            if (publicKey && anchorWallet && candyMachinePubkey && connection) {
                 const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'recent',
                 })

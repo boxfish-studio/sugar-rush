@@ -19,7 +19,7 @@ const ViewCandyMachine: NextPage = () => {
     const { connection } = useRPC()
 
     async function getNfts() {
-        if (!candyMachineAccount) return
+        if (!candyMachineAccount || !connection) return
         setIsLoading(true)
         setMessage('')
         setNfts([])
@@ -64,12 +64,7 @@ const ViewCandyMachine: NextPage = () => {
                 <Title text='View Candy Machine Nfts' />
                 <span className='mt-8'>
                     {candyMachineAccount}{' '}
-                    <ExplorerLinks
-                        type='account'
-                        value={candyMachineAccount as string}
-                        connection={connection}
-                        text={'View'}
-                    />
+                    <ExplorerLinks type='account' value={candyMachineAccount as string} text={'View'} />
                 </span>
                 {isLoading ? (
                     <Spinner />

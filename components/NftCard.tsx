@@ -17,7 +17,7 @@ const NftCard: FC<{
         disabled?: boolean
     }[]
 }> = ({ title, imageLink, buttons }) => {
-    const { connection } = useRPC()
+    const { isDevnet } = useRPC()
     return (
         <div
             className='d-flex flex-column flex-justify-center flex-items-center border rounded-3 py-2'
@@ -61,9 +61,7 @@ const NftCard: FC<{
                         key={i}
                         target='_blank'
                         rel='noopener noreferrer'
-                        href={`https://solscan.io/account/${btn.hash}?${
-                            connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                        }`}
+                        href={`https://solscan.io/account/${btn.hash}?${isDevnet}`}
                     >
                         <Button leadingIcon={LinkExternalIcon} variant={btn.variant}>
                             {btn.text}

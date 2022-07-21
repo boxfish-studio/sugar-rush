@@ -11,13 +11,12 @@ import { fetchCandyMachineAccounts } from 'lib/utils'
 import { Popup, CreateCandyMachine } from 'components'
 import VerifyCandyMachine from './VerifyCandyMachine'
 import DeleteCandyMachine from './DeleteCandyMachine'
-
 const TopActions: FC = () => {
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
     const { pathname, query } = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const { publicKey } = useWallet()
-    const { connection } = useRPC()
+    const { connection, isDevnet } = useRPC()
     const [isOpen, setIsOpen] = useState(false)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
@@ -27,6 +26,7 @@ const TopActions: FC = () => {
 
     const refreshCandyMachines = async () => {
         setIsLoading(true)
+        if (!connection) return
         try {
             const candyMachines = await fetchCandyMachineAccounts(connection, publicKey!)
             setCandyMachines(candyMachines)
@@ -66,10 +66,7 @@ const TopActions: FC = () => {
                     </Button>
                     {isDeleteOpen && (
                         <Popup onClose={() => setIsDeleteOpen(false)} title='Delete Candy Machine' size='small'>
-                            <DeleteCandyMachine
-                                candyMachineAccount={candyMachineAccount as string}
-                                connection={connection}
-                            />
+                            <DeleteCandyMachine candyMachineAccount={candyMachineAccount as string} />
                         </Popup>
                     )}
                     <Button variant='outline' onClick={() => setIsVerifyOpen(true)}>
@@ -83,9 +80,7 @@ const TopActions: FC = () => {
                     <Button leadingIcon={LinkExternalIcon}>
                         <Link
                             target='_blank'
-                            href={`https://solscan.io/account/${candyMachineAccount}?${
-                                connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                            }`}
+                            href={`https://solscan.io/account/${candyMachineAccount}?${isDevnet}`}
                             sx={{ textDecoration: 'none', color: '#24292F' }}
                         >
                             View in Solscan

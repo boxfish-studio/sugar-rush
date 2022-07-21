@@ -7,7 +7,7 @@ import { useRPC } from 'hooks'
 const CandyMachineTile: FC<{
     account: string
 }> = ({ account }) => {
-    const { connection } = useRPC()
+    const { isDevnet } = useRPC()
     return (
         <>
             <div
@@ -18,11 +18,7 @@ const CandyMachineTile: FC<{
                     {account}
                 </span>
                 <div className='d-flex mt-2 mt-md-0 '>
-                    <Link
-                        href={`https://solscan.io/account/${account}?${
-                            connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
-                        }`}
-                    >
+                    <Link href={`https://solscan.io/account/${account}?${isDevnet}`}>
                         <a target='_blank'>
                             <Button leadingIcon={LinkExternalIcon}>View in Solscan</Button>
                         </a>
