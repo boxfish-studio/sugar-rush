@@ -20,7 +20,7 @@ const NetworkSelector: FC = () => {
         }
     }, [])
     return (
-        <div>
+        <div className='pr-4'>
             <details
                 id='details'
                 className='dropdown details-reset details-overlay d-inline-block cursor-pointer'
