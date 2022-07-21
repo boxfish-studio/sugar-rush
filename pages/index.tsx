@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useWallet } from '@solana/wallet-adapter-react'
-import { CandyMachineList } from 'components'
+import { CandyMachineList, CreateCandyMachine, Popup } from 'components'
 import { useRPC } from 'hooks'
 import { candyMachinesState } from 'lib/recoil-store/atoms'
 import { fetchCandyMachineAccounts } from 'lib/utils'
@@ -17,6 +17,7 @@ const ManageCandyMachines: NextPage = () => {
     const [error, setError] = useState(false)
     const { connection } = useRPC()
     const { publicKey } = useWallet()
+    const [isOpen, setIsOpen] = useState(false)
 
     const fetchAccounts = async () => {
         try {
@@ -67,12 +68,22 @@ const ManageCandyMachines: NextPage = () => {
                         </Button>
                     </div>
                 ) : !accounts?.length ? (
-                    <span className='mt-5'>
-                        You have no candy machine accounts.
-                        <Link href='/create-candy-machine'>
-                            <a>Create one?</a>
-                        </Link>
-                    </span>
+                    <div className='mt-5 d-flex flex-column flex-md-row flex-items-start flex-md-items-center '>
+                        <div className='mr-2'>You have no candy machine accounts.</div>
+                        <Button
+                            className='color-bg-transparent text-semibold'
+                            variant='invisible'
+                            onClick={() => setIsOpen(true)}
+                            sx={{ textTransform: 'capitalize', padding: '0' }}
+                        >
+                            Create one?
+                        </Button>
+                        {isOpen && (
+                            <Popup onClose={() => setIsOpen(false)} title='Create Candy Machine' size='large'>
+                                <CreateCandyMachine />
+                            </Popup>
+                        )}
+                    </div>
                 ) : (
                     <CandyMachineList candyMachineAccounts={accounts} />
                 )}
