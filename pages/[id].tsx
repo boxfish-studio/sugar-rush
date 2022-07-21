@@ -129,6 +129,7 @@ const CandyMachine: NextPage = () => {
         ;(async function () {
             setError('')
             fetchCandyMachine().then(setCandyMachineConfig)
+            refreshCandyMachineState()
             await getNfts()
         })()
         if (initialLoad) {
