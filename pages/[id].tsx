@@ -281,6 +281,7 @@ const CandyMachine: NextPage = () => {
                                     {new Array(5).fill(0).map((_, index) => (
                                         <NftCard
                                             title={`CryptoDude #${index}`}
+                                            key={index}
                                             imageLink={'/favicon.ico'}
                                             buttons={[
                                                 {
