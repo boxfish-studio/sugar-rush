@@ -14,6 +14,8 @@ export { default as RefreshButton } from './RefreshButton'
 export { default as NftCard } from './NftCard'
 export { default as Footer } from './Footer'
 export { default as CandyMachineList } from './CandyMachineList'
+export { default as NetworkSelector } from './NetworkSelector'
+export { default as NetworkTps } from './NetworkTps'
 
 export * from './cards'
 export * from './forms'

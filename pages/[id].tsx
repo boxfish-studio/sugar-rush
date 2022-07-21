@@ -1,14 +1,14 @@
-import { Account } from 'lib/candy-machine/types'
-import { AnchorProvider, Program } from '@project-serum/anchor'
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
-import { Connection, PublicKey } from '@solana/web3.js'
 import { getNftByMint, getAllNftsByCM } from 'lib/nft/actions'
+import { AnchorProvider, Program } from '@project-serum/anchor'
+import { PublicKey } from '@solana/web3.js'
+import { Title, UpdateCreateCandyMachineForm, Carousel, ExplorerLinks, NftCard, RefreshButton } from 'components'
+import { useRPC } from 'hooks'
+import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Nft } from 'lib/nft/interfaces'
 import { nftsState } from 'lib/recoil-store/atoms'
 import { Spinner } from '@primer/react'
-import { Title, UpdateCreateCandyMachineForm, Carousel, ExplorerLinks, NftCard, RefreshButton } from 'components'
-import { useAnchorWallet, useConnection } from '@solana/wallet-adapter-react'
+import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
 import { useMintCandyMachine } from 'hooks'
 import { useRecoilState } from 'recoil'
@@ -21,10 +21,11 @@ const CandyMachine: NextPage = () => {
     const candyMachineAccount = router.query.id as string
 
     const anchorWallet = useAnchorWallet()
-    const { connection } = useConnection()
+    const { connection } = useRPC()
     const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
     const [isLoadingNfts, setIsLoadingNfts] = useState(false)
+    const [initialLoad, setInitialLoad] = useState(false)
     const [nfts, setNfts] = useState<Nft[]>([])
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft>()
@@ -58,15 +59,12 @@ const CandyMachine: NextPage = () => {
         setIsLoadingNfts(false)
     }
 
-    const fetchCandyMachine = async ({
-        candyMachineAccount,
-        connection,
-    }: {
-        candyMachineAccount: Account
-        connection: Connection
-    }): Promise<IFetchedCandyMachineConfig | undefined> => {
+    const fetchCandyMachine = async (): Promise<IFetchedCandyMachineConfig | undefined> => {
         if (candyMachineAccount && anchorWallet) {
+            setError('')
             try {
+                console.log(4, error)
+
                 setIsLoading(true)
                 const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'processed',
@@ -80,13 +78,13 @@ const CandyMachine: NextPage = () => {
 
                 state.data.solTreasuryAccount = state.wallet
                 state.data.itemsRedeemed = state.itemsRedeemed
+                setInitialLoad(true)
                 setIsLoading(false)
 
                 return state.data
             } catch (err) {
-                console.error(err)
+                initialLoad && setError((err as Error).message)
                 setIsLoading(false)
-                setError((err as Error).message)
             }
         }
     }
@@ -116,9 +114,12 @@ const CandyMachine: NextPage = () => {
     useEffect(() => {
         fetchNfts()
         refreshCandyMachineState()
-        fetchCandyMachine({ candyMachineAccount, connection }).then(setCandyMachineConfig)
+        fetchCandyMachine().then(setCandyMachineConfig)
+        if (initialLoad) {
+            setInitialLoad(false)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [candyMachineAccount, connection, anchorWallet])
+    }, [connection])
 
     if (isLoading) {
         return (
@@ -152,11 +153,8 @@ const CandyMachine: NextPage = () => {
 
                 {error ? (
                     <div className='d-flex flex-column items-center justify-center mt-11'>
-                        Error fetching candy machine config
-                        <button
-                            className='rounded-lg bg-slate-400 p-2 mt-4'
-                            onClick={() => fetchCandyMachine({ candyMachineAccount, connection })}
-                        >
+                        {error}
+                        <button className='rounded-lg bg-slate-400 p-2 mt-4' onClick={() => fetchCandyMachine()}>
                             Fetch again
                         </button>
                     </div>

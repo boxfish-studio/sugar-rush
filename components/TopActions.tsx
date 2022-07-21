@@ -1,39 +1,44 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { SearchBar, RefreshButton } from './'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { candyMachineSearchState, candyMachinesState } from 'lib/recoil-store/atoms'
 import { Button, Link } from '@primer/react'
 import { LinkExternalIcon } from '@primer/octicons-react'
-import { useWallet, useConnection } from '@solana/wallet-adapter-react'
+import { useWallet } from '@solana/wallet-adapter-react'
 import { useRPC } from 'hooks'
 import { fetchCandyMachineAccounts } from 'lib/utils'
 import { Popup, CreateCandyMachine } from 'components'
 import VerifyCandyMachine from './VerifyCandyMachine'
+import DeleteCandyMachine from './DeleteCandyMachine'
 
 const TopActions: FC = () => {
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
-    const { pathname, query, push } = useRouter()
+    const { pathname, query } = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const { publicKey } = useWallet()
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
     const [isOpen, setIsOpen] = useState(false)
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
     const candyMachineAccount = query?.id
-    const { connection } = useConnection()
 
     const setCandyMachines = useSetRecoilState(candyMachinesState)
 
     const refreshCandyMachines = async () => {
         setIsLoading(true)
         try {
-            const candyMachines = await fetchCandyMachineAccounts(rpcEndpoint, publicKey!)
+            const candyMachines = await fetchCandyMachineAccounts(connection, publicKey!)
             setCandyMachines(candyMachines)
         } catch (e) {
             console.error(e)
         }
         setIsLoading(false)
     }
+
+    useEffect(() => {
+        setIsDeleteOpen(false)
+    }, [query])
 
     return (
         <div className='d-flex flex-justify-end column-gap-1 d-flex flex-column flex-md-row'>
@@ -56,7 +61,17 @@ const TopActions: FC = () => {
                 </>
             ) : (
                 <>
-                    <Button variant='danger'>Delete</Button>
+                    <Button variant='danger' onClick={() => setIsDeleteOpen(true)}>
+                        Delete
+                    </Button>
+                    {isDeleteOpen && (
+                        <Popup onClose={() => setIsDeleteOpen(false)} title='Delete Candy Machine' size='small'>
+                            <DeleteCandyMachine
+                                candyMachineAccount={candyMachineAccount as string}
+                                connection={connection}
+                            />
+                        </Popup>
+                    )}
                     <Button variant='outline' onClick={() => setIsVerifyOpen(true)}>
                         Verify
                     </Button>
