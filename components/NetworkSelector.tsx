@@ -30,7 +30,7 @@ const NetworkSelector: FC = () => {
 
     useEffect(() => {
         const _network = window.localStorage.getItem('network-gg') as Network | null
-        if (_network) {
+        if (_network === 'Devnet' || _network === 'Mainnet' || _network === 'Testnet') {
             setNetwork({ network: _network, url: getUrl(_network), connection: new Connection(getUrl(_network)) })
             window.localStorage.setItem('network-gg', _network)
         }
