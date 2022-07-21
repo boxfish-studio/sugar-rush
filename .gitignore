@@ -37,3 +37,4 @@ tag_version.txt
 
 # linter
 .eslintcache
+.env

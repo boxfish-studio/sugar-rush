@@ -1,5 +1,6 @@
 import { Nft } from 'lib/nft/interfaces'
 import { atom, RecoilState } from 'recoil'
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 
 export const candyMachineSearchState: RecoilState<string> = atom<string>({
     key: 'candyMachineSearchState',
@@ -14,4 +15,9 @@ export const candyMachinesState: RecoilState<string[]> = atom<string[]>({
 export const nftsState: RecoilState<Nft[]> = atom<Nft[]>({
     key: 'nftsState',
     default: [],
+})
+
+export const networkState = atom({
+    key: 'networkState',
+    default: WalletAdapterNetwork.Mainnet,
 })

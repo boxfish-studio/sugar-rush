@@ -1,4 +1,4 @@
-import { useAnchorWallet, useWallet, useConnection } from '@solana/wallet-adapter-react'
+import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { AnchorProvider, Program, BN } from '@project-serum/anchor'
 import { useRPC } from 'hooks'
 import { PublicKey, LAMPORTS_PER_SOL, Transaction } from '@solana/web3.js'
@@ -11,7 +11,7 @@ import { createAccountsForMint, mintOneNft } from 'lib/candy-machine/mint/mint'
 
 const useMintCandyMachine = (account: string) => {
     const anchorWallet = useAnchorWallet()
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
     const [isUserMinting, setIsUserMinting] = useState(false)
     const [itemsRemaining, setItemsRemaining] = useState(0)
     const [nftPrice, setNftPrice] = useState(0)
@@ -21,13 +21,11 @@ const useMintCandyMachine = (account: string) => {
     const [mintMessage, setMintMessage] = useState({ error: false, message: '' })
     const [candyMachine, setCandyMachine] = useState<CandyMachineAccount>()
 
-    const { connection } = useConnection()
-
     const wallet = useWallet()
 
     async function refreshCandyMachineState() {
         if (!anchorWallet || !wallet.publicKey) return
-        const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+        const provider = new AnchorProvider(connection, anchorWallet, {
             preflightCommitment: 'recent',
         })
 

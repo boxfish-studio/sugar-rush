@@ -11,6 +11,9 @@ import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/c
 import { uploadV2 } from 'lib/candy-machine/upload/upload'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
 import React, { FC, useState } from 'react'
+import { useRecoilState } from 'recoil'
+import { networkState } from 'lib/recoil-store/atoms'
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 
 const UpdateCreateCandyMachineForm: FC<{
     fetchedValues?: IFetchedCandyMachineConfig
@@ -19,13 +22,14 @@ const UpdateCreateCandyMachineForm: FC<{
 }> = ({ fetchedValues, updateCandyMachine, candyMachinePubkey }) => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
-    const { rpcEndpoint } = useRPC()
+    const { connection } = useRPC()
 
     const { files, uploadAssets } = useUploadFiles()
     const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
     const [status, setStatus] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
+    const [network] = useRecoilState(networkState)
 
     const initialState = {
         price: fetchedValues?.price ? new BN(fetchedValues?.price).toNumber() / LAMPORTS_PER_SOL : 0,
@@ -113,7 +117,7 @@ const UpdateCreateCandyMachineForm: FC<{
         if (publicKey && anchorWallet) {
             const { supportedFiles, elemCount } = verifyAssets(files, config.storage, config.number)
 
-            const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+            const provider = new AnchorProvider(connection, anchorWallet, {
                 preflightCommitment: 'recent',
             })
 
@@ -150,7 +154,7 @@ const UpdateCreateCandyMachineForm: FC<{
                 const _candyMachine = await uploadV2({
                     files: supportedFiles,
                     cacheName: 'example',
-                    env: 'devnet',
+                    env: network as Exclude<typeof network, WalletAdapterNetwork.Testnet>,
                     totalNFTs: elemCount,
                     gatekeeper,
                     storage,
@@ -234,7 +238,7 @@ const UpdateCreateCandyMachineForm: FC<{
             }
 
             if (publicKey && anchorWallet && candyMachinePubkey) {
-                const provider = new AnchorProvider(rpcEndpoint, anchorWallet, {
+                const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'recent',
                 })
 

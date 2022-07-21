@@ -1,13 +1,13 @@
 import { FC } from 'react'
 import Link from 'next/link'
-import { useConnection } from '@solana/wallet-adapter-react'
 import { Button } from '@primer/react'
 import { LinkExternalIcon } from '@primer/octicons-react'
+import { useRPC } from 'hooks'
 
 const CandyMachineTile: FC<{
     account: string
 }> = ({ account }) => {
-    const { connection } = useConnection()
+    const { connection } = useRPC()
     return (
         <>
             <div
