@@ -5,8 +5,7 @@ import { NavList, Breadcrumbs } from '@primer/react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { INavbarElement } from 'lib/interfaces'
-import NetworkSelector from './NetworkSelector'
-import NetworkTps from './NetworkTps'
+import { NetworkSelector, NetworkTps } from 'components'
 
 const Navbar: FC = () => {
     const router = useRouter()
