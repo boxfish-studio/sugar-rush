@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { SearchBar, RefreshButton } from './'
 import { useRecoilState, useSetRecoilState } from 'recoil'
@@ -10,14 +10,16 @@ import { useRPC } from 'hooks'
 import { fetchCandyMachineAccounts } from 'lib/utils'
 import { Popup, CreateCandyMachine } from 'components'
 import VerifyCandyMachine from './VerifyCandyMachine'
+import DeleteCandyMachine from './DeleteCandyMachine'
 
 const TopActions: FC = () => {
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
-    const { pathname, query, push } = useRouter()
+    const { pathname, query } = useRouter()
     const [isLoading, setIsLoading] = useState(false)
     const { publicKey } = useWallet()
     const { connection } = useRPC()
     const [isOpen, setIsOpen] = useState(false)
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
     const candyMachineAccount = query?.id
 
@@ -33,6 +35,10 @@ const TopActions: FC = () => {
         }
         setIsLoading(false)
     }
+
+    useEffect(() => {
+        setIsDeleteOpen(false)
+    }, [query])
 
     return (
         <div className='d-flex flex-justify-end top-actions-bar d-flex flex-column flex-md-row'>
@@ -55,7 +61,17 @@ const TopActions: FC = () => {
                 </>
             ) : (
                 <>
-                    <Button variant='danger'>Delete</Button>
+                    <Button variant='danger' onClick={() => setIsDeleteOpen(true)}>
+                        Delete
+                    </Button>
+                    {isDeleteOpen && (
+                        <Popup onClose={() => setIsDeleteOpen(false)} title='Delete Candy Machine' size='small'>
+                            <DeleteCandyMachine
+                                candyMachineAccount={candyMachineAccount as string}
+                                connection={connection}
+                            />
+                        </Popup>
+                    )}
                     <Button variant='outline' onClick={() => setIsVerifyOpen(true)}>
                         Verify
                     </Button>

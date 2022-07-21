@@ -10,10 +10,7 @@ type Transaction = UnwrapPromise<ReturnType<typeof sendTransactionWithRetryWithK
 
 type Withdraw = Pick<Transaction, 'txid'> & { balanceChange: number }
 
-const useRemoveCandyMachineAccount = (
-    accounts: string[],
-    setAccounts: React.Dispatch<React.SetStateAction<string[]>>
-) => {
+const useRemoveCandyMachineAccount = (accounts: string[]) => {
     const anchorWallet = useAnchorWallet()
     const { connection } = useRPC()
 
@@ -52,7 +49,6 @@ const useRemoveCandyMachineAccount = (
 
             const balanceChange = (postBalance - preBalance) / LAMPORTS_PER_SOL
             const accountsFiltered = accounts.filter((account) => account !== candyAddress.toBase58())
-            setAccounts(accountsFiltered)
             return {
                 txid,
                 balanceChange,
