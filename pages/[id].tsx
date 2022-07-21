@@ -38,7 +38,7 @@ const CandyMachine: NextPage = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [isReloading, setIsReloading] = useState(false)
     const setNftsState = useSetRecoilState(nftsState)
-    const { isUserMinting, itemsRemaining, mintAccount, refreshCandyMachineState } = useMintCandyMachine(
+    const { isUserMinting, itemsRemaining, mintAccount, refreshCandyMachineState, isCaptcha } = useMintCandyMachine(
         candyMachineAccount as string
     )
     const [hasCollection, setHasCollection] = useState(false)
@@ -248,7 +248,7 @@ const CandyMachine: NextPage = () => {
                     <div className='mt-5'>
                         <h4>Minted NFTs - 5</h4>
                         <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
-                            {itemsRemaining > 0 && (
+                            {itemsRemaining > 0 && !isCaptcha && (
                                 <NftCard
                                     title={'New NFT'}
                                     buttons={[
@@ -258,6 +258,19 @@ const CandyMachine: NextPage = () => {
                                             as: 'button',
                                             variant: 'primary',
                                             onClick: () => mintAccount(),
+                                        },
+                                    ]}
+                                />
+                            )}
+                            {itemsRemaining > 0 && isCaptcha && (
+                                <NftCard
+                                    title={'New NFT'}
+                                    buttons={[
+                                        {
+                                            text: 'Captcha enabled',
+                                            as: 'button',
+                                            variant: 'outline',
+                                            disabled: true,
                                         },
                                     ]}
                                 />
