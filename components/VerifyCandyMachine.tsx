@@ -28,7 +28,7 @@ const VerifyCandyMachine: FC<{
             <div className='d-flex flex-column flex-justify-between height-full'>
                 <div>
                     <h3 className='wb-break-all f3'>{candyMachineAccount}</h3>
-                    <div className={`${message || error ? 'mt-3 mb-3' : 'my-5'}`}>
+                    <div className='my-3 my-md-5'>
                         <label
                             htmlFor='cache'
                             className='px-4 py-2 rounded-2 cursor-pointer'
@@ -49,22 +49,20 @@ const VerifyCandyMachine: FC<{
 
                     {!isVerifying && message && (
                         <>
-                            <span
-                                className={`bordercolor-fg-success color-bg-success color-border-success rounded-2 p-2`}
-                            >
+                            <span className='bordercolor-fg-success color-bg-success color-border-success rounded-2 p-2'>
                                 {message}
                             </span>
                         </>
                     )}
                     {!isVerifying && error && (
-                        <div className={`border color-fg-danger color-bg-danger color-border-danger rounded-2 p-2`}>
+                        <div className='border color-fg-danger color-bg-danger color-border-danger rounded-2 p-2'>
                             <span>{error}</span>
                         </div>
                     )}
                 </div>
                 {!isVerifying && (
                     <Button
-                        className={`width-full `}
+                        className={`width-full ${message || error ? 'mt-3' : 'mt-0'}`}
                         variant='primary'
                         state='rest'
                         size='medium'
@@ -75,7 +73,7 @@ const VerifyCandyMachine: FC<{
                 )}
                 {isVerifying && (
                     <>
-                        <Button className='width-full mt-4' isLoading disabled size='large'>
+                        <Button className='width-full mt-4' size='medium' isLoading disabled>
                             Verifying Candy Machine... <Spinner size='small' />
                         </Button>
                     </>

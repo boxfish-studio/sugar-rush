@@ -27,14 +27,13 @@ const Popup: FC<{
                     zIndex: 10,
                     width: '100%',
                     maxWidth: size === 'large' ? '60vh' : '45vh',
-                    height: '100%',
-                    maxHeight: size === 'large' ? ['550px', '750px'] : ['300px', '300px', '340px'],
+                    minHeight: size === 'large' ? ['550px', '750px'] : ['200px'],
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
                 }}
             >
-                <div className='p-3 p-md-5 d-flex flex-column height-full'>
+                <div className='p-3 p-md-5 d-flex flex-column'>
                     <div className='d-flex flex-justify-between text-bold'>
                         <h3 className='wb-break-word' style={{ width: '75%', flex: 1 }}>
                             {title}
