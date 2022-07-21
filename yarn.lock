@@ -4609,6 +4609,14 @@ get-symbol-description@^1.0.0:
     call-bind "^1.0.2"
     get-intrinsic "^1.1.1"
 
+git-tags@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/git-tags/-/git-tags-0.2.4.tgz#b24c71d5d7df8dd587a36998e9521e20dde259c5"
+  integrity sha512-5YqXZoX2sqFI0j/eDKB1QgplJSMywWMvmuv1kKOmoDEuXL+Q3YTf9lGmCgBG2BrMQ7pOQiMe16QCZmbU1mNqcA==
+  dependencies:
+    lodash "^2.4.1"
+    semver "^3.0.1"
+
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
@@ -5283,6 +5291,11 @@ lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
+
+lodash@^2.4.1:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-2.4.2.tgz#fadd834b9683073da179b3eae6d9c0d15053f73e"
+  integrity sha512-Kak1hi6/hYHGVPmdyiZijoQyz5x2iGVzs6w9GYB/HiXEtylY7tIoYEROMjvM1d9nXJqPOrG2MNPMn01bJ+S0Rw==
 
 lodash@^4.17.11, lodash@^4.17.20, lodash@^4.17.21:
   version "4.17.21"
@@ -6204,6 +6217,11 @@ secp256k1@^4.0.1, secp256k1@^4.0.2:
     elliptic "^6.5.4"
     node-addon-api "^2.0.0"
     node-gyp-build "^4.2.0"
+
+semver@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-3.0.1.tgz#720ac012515a252f91fb0dd2e99a56a70d6cf078"
+  integrity sha512-MrF9mHWFtD/0eV4t3IheoXnGWTdw17axm5xqzOWyPsOMVnTtRAZT6uwPwslQXH5SsiaBLiMuu8NX8DtXWZfDwg==
 
 semver@^6.3.0:
   version "6.3.0"
