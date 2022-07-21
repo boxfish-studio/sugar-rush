@@ -68,13 +68,13 @@ const ManageCandyMachines: NextPage = () => {
                         </Button>
                     </div>
                 ) : !accounts?.length ? (
-                    <span className='mt-5 d-flex flex-row flex-items-center '>
-                        You have no candy machine accounts.
+                    <div className='mt-5 d-flex flex-column flex-md-row flex-items-start flex-md-items-center '>
+                        <div className='mr-2'>You have no candy machine accounts.</div>
                         <Button
-                            className='color-bg-transparent'
+                            className='color-bg-transparent text-semibold'
                             variant='invisible'
                             onClick={() => setIsOpen(true)}
-                            sx={{ textTransform: 'capitalize' }}
+                            sx={{ textTransform: 'capitalize', padding: '0' }}
                         >
                             Create one?
                         </Button>
@@ -83,7 +83,7 @@ const ManageCandyMachines: NextPage = () => {
                                 <CreateCandyMachine />
                             </Popup>
                         )}
-                    </span>
+                    </div>
                 ) : (
                     <CandyMachineList candyMachineAccounts={accounts} />
                 )}
