@@ -13,6 +13,7 @@ const useRPC = () => {
     const [rpc, setRpc] = useState<Connection>(connection)
 
     useEffect(() => {
+        console.log('useRPC', network)
         network && window.localStorage.setItem('network-gg', network)
         if (network === WalletAdapterNetwork.Devnet) {
             setRpc(new Connection(RPC_API_DEVNET))

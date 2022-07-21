@@ -15,6 +15,7 @@ const NetworkSelector: FC = () => {
     }
     useEffect(() => {
         const _network = window.localStorage.getItem('network-gg') as WalletAdapterNetwork | null
+        console.log('_network', _network)
         if (_network) {
             setNetwork(_network)
         }

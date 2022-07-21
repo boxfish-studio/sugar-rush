@@ -128,9 +128,9 @@ const CandyMachine: NextPage = () => {
     }
 
     useEffect(() => {
+        setError('')
+        fetchCandyMachine().then(setCandyMachineConfig)
         ;(async function () {
-            setError('')
-            fetchCandyMachine().then(setCandyMachineConfig)
             await getNfts()
         })()
         if (initialLoad) {
