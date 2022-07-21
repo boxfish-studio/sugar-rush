@@ -56,19 +56,23 @@ const CandyMachine: NextPage = () => {
     }
 
     async function getNfts() {
-        if (!candyMachineAccount) return
-        setIsLoading(true)
-        setMintedNfts([])
-        let nfts = await getAllNftsByCM(candyMachineAccount, connection)
-        setMintedNfts(nfts)
-        // @ts-ignore
-        if (nfts[0]?.collection?.key) {
-            setHasCollection(true)
+        try {
+            if (!candyMachineAccount) return
+            setIsLoading(true)
+            setMintedNfts([])
+            let nfts = await getAllNftsByCM(candyMachineAccount, connection)
+            setMintedNfts(nfts)
             // @ts-ignore
-            let nftCollectionData = await getNftByMint(nfts[0].collection.key, connection)
-            if (nftCollectionData.name !== '') {
-                setCollectionNft(nftCollectionData)
+            if (nfts[0]?.collection?.key) {
+                setHasCollection(true)
+                // @ts-ignore
+                let nftCollectionData = await getNftByMint(nfts[0].collection.key, connection)
+                if (nftCollectionData.name !== '') {
+                    setCollectionNft(nftCollectionData)
+                }
             }
+        } catch (e) {
+            console.error(e)
         }
         setIsLoading(false)
     }
@@ -120,7 +124,8 @@ const CandyMachine: NextPage = () => {
         ;(async function () {
             const data = await fetchCandyMachine()
             setCandyMachineConfig(data)
-            await getNfts()
+            // I comment this for now, takes lots of time and cant see anything
+            // await getNfts()
         })()
         setIsLoading(false)
     }, [connection])
