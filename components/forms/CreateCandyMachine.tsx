@@ -103,7 +103,7 @@ const CreateCandyMachine: FC<{
             uuid: null,
         }
 
-        if (publicKey && anchorWallet) {
+        if (publicKey && anchorWallet && connection) {
             const { supportedFiles, elemCount } = verifyAssets(files, config.storage, config.number)
 
             const provider = new AnchorProvider(connection, anchorWallet, {

@@ -1,29 +1,42 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { useRecoilState } from 'recoil'
 import { networkState } from 'lib/recoil-store/atoms'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
+import { Connection } from '@solana/web3.js'
 
 type Network = keyof typeof WalletAdapterNetwork
 
+const RPC_API_DEVNET = process.env.NEXT_PUBLIC_RPC_API_DEVNET as string
+const RPC_API_MAINNET = process.env.NEXT_PUBLIC_RPC_API_MAINNET as string
+
+function getUrl(network: Network): string {
+    switch (network) {
+        case 'Devnet':
+            return RPC_API_DEVNET
+        case 'Mainnet':
+            return RPC_API_MAINNET
+        default:
+            throw new Error(`Unknown network: ${network}`)
+    }
+}
+
 const NetworkSelector: FC = () => {
-    const [, setNetwork] = useRecoilState(networkState)
-    const [currentNetwork, setCurrentNetwork] = useState('Mainnet' as Network)
+    const [network, setNetwork] = useRecoilState(networkState)
 
     const detailsRef = useRef<HTMLDetailsElement>(null)
     function hideUl() {
         detailsRef.current!.removeAttribute('open')
     }
+
     useEffect(() => {
         const _network = window.localStorage.getItem('network-gg') as Network | null
         if (_network) {
-            setNetwork(WalletAdapterNetwork[_network])
+            setNetwork({ network: _network, url: getUrl(_network), connection: new Connection(getUrl(_network)) })
             window.localStorage.setItem('network-gg', _network)
-            setCurrentNetwork(_network)
         }
     }, [])
     function changeNetwork(_network: Network) {
-        setNetwork(WalletAdapterNetwork[_network as Network])
-        setCurrentNetwork(_network as Network)
+        setNetwork({ network: _network, url: getUrl(_network), connection: new Connection(getUrl(_network)) })
         hideUl()
         window.localStorage.setItem('network-gg', _network)
     }
@@ -36,7 +49,7 @@ const NetworkSelector: FC = () => {
                 ref={detailsRef}
             >
                 <summary className='btn' aria-haspopup='true'>
-                    {currentNetwork}
+                    {network?.network || 'Select Network'}
                     <span className='dropdown-caret'></span>
                 </summary>
                 {

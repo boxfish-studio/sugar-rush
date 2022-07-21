@@ -20,7 +20,7 @@ const CandyMachineTile: FC<{
                 <div className='d-flex mt-2 mt-md-0 '>
                     <Link
                         href={`https://solscan.io/account/${account}?${
-                            connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
+                            connection?.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
                         }`}
                     >
                         <a target='_blank'>

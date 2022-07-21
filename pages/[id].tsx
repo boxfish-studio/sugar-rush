@@ -57,7 +57,7 @@ const CandyMachine: NextPage = () => {
 
     async function getNfts() {
         try {
-            if (!candyMachineAccount) return
+            if (!candyMachineAccount || !connection) return
             setIsLoading(true)
             setMintedNfts([])
             let nfts = await getAllNftsByCM(candyMachineAccount, connection)
@@ -79,7 +79,7 @@ const CandyMachine: NextPage = () => {
 
     async function fetchCandyMachine(): Promise<IFetchedCandyMachineConfig | undefined> {
         setError('')
-        if (candyMachineAccount && anchorWallet) {
+        if (candyMachineAccount && anchorWallet && connection) {
             try {
                 setIsLoading(true)
                 const provider = new AnchorProvider(connection, anchorWallet, {
@@ -106,7 +106,7 @@ const CandyMachine: NextPage = () => {
     const refreshNfts = async () => {
         setIsReloading(true)
         try {
-            if (candyMachineAccount) {
+            if (candyMachineAccount && connection) {
                 const nfts = await getAllNftsByCM(candyMachineAccount, connection)
                 setNftsState(nfts)
             } else {

@@ -59,7 +59,7 @@ const NftCard: FC<{
                         target='_blank'
                         rel='noopener noreferrer'
                         href={`https://solscan.io/account/${btn.hash}?${
-                            connection.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
+                            connection?.rpcEndpoint.includes('devnet') ? '?cluster=devnet' : ''
                         }`}
                     >
                         <Button leadingIcon={LinkExternalIcon} variant={btn.variant}>
