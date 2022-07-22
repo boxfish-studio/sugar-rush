@@ -68,6 +68,10 @@ const CreateCandyMachine: FC = () => {
         return true
     }
     async function createCandyMachineV2() {
+        if (!connection) {
+            setErrorMessage('Select network first')
+            return
+        }
         if (!isFormValid()) return
         setIsInteractingWithCM(true)
         setStatus('')
