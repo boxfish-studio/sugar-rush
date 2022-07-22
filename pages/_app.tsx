@@ -1,38 +1,56 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import React, { useMemo } from "react";
+import { WalletProvider } from '@solana/wallet-adapter-react'
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui'
 import {
-  ConnectionProvider,
-  WalletProvider,
-} from "@solana/wallet-adapter-react";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import {Wallet,Navbar} from "components/Layout";
-import { clusterApiUrl } from "@solana/web3.js";
+    GlowWalletAdapter,
+    PhantomWalletAdapter,
+    SlopeWalletAdapter,
+    SolflareWalletAdapter,
+    SolletExtensionWalletAdapter,
+    SolletWalletAdapter,
+    TorusWalletAdapter,
+} from '@solana/wallet-adapter-wallets'
+import { Navbar, TopActions, Footer, CheckConnectedWallet } from 'components'
+import type { AppProps } from 'next/app'
+import { useMemo } from 'react'
+import { RecoilRoot } from 'recoil'
+import '../styles/globals.scss'
+import { theme, ThemeProvider } from '@primer/react'
+import deepmerge from 'deepmerge'
 
-// Default styles that can be overridden by your app
-require("@solana/wallet-adapter-react-ui/styles.css");
 function MyApp({ Component, pageProps }: AppProps) {
-  const network = WalletAdapterNetwork.Devnet;
+    const wallets = useMemo(
+        () => [
+            new PhantomWalletAdapter(),
+            new GlowWalletAdapter(),
+            new SlopeWalletAdapter(),
+            new SolflareWalletAdapter(),
+            new TorusWalletAdapter(),
+            new SolletWalletAdapter(),
+            new SolletExtensionWalletAdapter(),
+        ],
+        []
+    )
+    const customTheme = deepmerge(theme, {})
 
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], [network]);
-
-  return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <Navbar />
-        <WalletModalProvider>
-          <Wallet />
-          <div style={{ marginLeft: "10rem" }}>
-            <Component {...pageProps} />
-          </div>
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
-  );
+    return (
+        // @ts-ignore
+        <ThemeProvider theme={customTheme}>
+            <WalletProvider wallets={wallets}>
+                <RecoilRoot>
+                    <WalletModalProvider>
+                        <Navbar />
+                        <CheckConnectedWallet>
+                            <div className='container-xl p-responsive height-full my-11'>
+                                <TopActions />
+                                <Component {...pageProps} />
+                            </div>
+                        </CheckConnectedWallet>
+                    </WalletModalProvider>
+                    <Footer />
+                </RecoilRoot>
+            </WalletProvider>
+        </ThemeProvider>
+    )
 }
 
-export default MyApp;
+export default MyApp
