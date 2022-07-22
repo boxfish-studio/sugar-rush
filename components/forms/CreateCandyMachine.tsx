@@ -12,33 +12,27 @@ import React, { FC, useState, useEffect } from 'react'
 import { Box, Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
 
-const CreateCandyMachine: FC<{
-    fetchedValues?: IFetchedCandyMachineConfig
-    candyMachinePubkey?: string | string[]
-}> = ({ fetchedValues, candyMachinePubkey }) => {
+const CreateCandyMachine: FC = () => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection } = useRPC()
 
     const { files, uploadAssets } = useUploadFiles()
-    const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
     const [status, setStatus] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
 
     const initialState = {
-        price: fetchedValues?.price ? new BN(fetchedValues?.price).toNumber() / LAMPORTS_PER_SOL : 0,
+        price: 0,
         'number-of-nfts': 0,
-        'treasury-account': fetchedValues?.solTreasuryAccount?.toBase58() ?? '',
-        captcha: fetchedValues?.gatekeeper ?? false,
-        mutable: fetchedValues?.isMutable ?? false,
-        'date-mint': fetchedValues?.goLiveDate ? parseDateFromDateBN(fetchedValues?.goLiveDate) : getCurrentDate(),
-        'time-mint': fetchedValues?.goLiveDate ? parseTimeFromDateBN(fetchedValues?.goLiveDate) : getCurrentTime(),
-
+        'treasury-account': '',
+        captcha: false,
+        mutable: false,
+        'date-mint': getCurrentDate(),
+        'time-mint': getCurrentTime(),
         storage: '',
         files: [],
         cache: null,
-        'new-authority': '',
     } as const
 
     const { onChange, onSubmit, values } = useForm(createCandyMachineV2, initialState)
@@ -74,6 +68,10 @@ const CreateCandyMachine: FC<{
         return true
     }
     async function createCandyMachineV2() {
+        if (!connection) {
+            setErrorMessage('Select network first')
+            return
+        }
         if (!isFormValid()) return
         setIsInteractingWithCM(true)
         setStatus('')
@@ -173,16 +171,14 @@ const CreateCandyMachine: FC<{
                 })
 
                 if (typeof _candyMachine === 'string') candyMachine = _candyMachine
+                setStatus(`Candy Machine created successfully! ${candyMachine}`)
             } catch (err) {
-                console.error('upload was not successful, please re-run.', err)
-                setIsInteractingWithCM(false)
-                setStatus('upload was not successful, please re-run.')
+                setErrorMessage('upload was not successful, please re-run.')
             }
             const endMilliseconds = Date.now()
             console.log(endMilliseconds.toString())
 
             setIsInteractingWithCM(false)
-            setStatus(`Candy Machine created successfully! ${candyMachine}`)
         }
     }
     useEffect(() => {
@@ -227,53 +223,19 @@ const CreateCandyMachine: FC<{
                             After creating the candy machine, it is recommended to click the refresh button
                         </span>
                     )}
-                    <FormInput
-                        id='price'
-                        text='Price of each NFT (SOL) *'
-                        type='number'
-                        onChange={onChange}
-                        defaultValue={
-                            fetchedValues?.price ? new BN(fetchedValues.price).toNumber() / LAMPORTS_PER_SOL : undefined
-                        }
-                        required
-                    />
+                    <FormInput id='price' text='Price of each NFT (SOL) *' type='number' onChange={onChange} required />
 
-                    <FormInput
-                        id='number-of-nfts'
-                        text='Number of NFTs *'
-                        type='number'
-                        onChange={onChange}
-                        defaultValue={
-                            fetchedValues?.itemsAvailable ? new BN(fetchedValues.itemsAvailable).toNumber() : undefined
-                        }
-                        required
-                    />
+                    <FormInput id='number-of-nfts' text='Number of NFTs *' type='number' onChange={onChange} required />
 
-                    <FormInput
-                        id='captcha'
-                        text='Captcha?'
-                        type='checkbox'
-                        onChange={onChange}
-                        defaultChecked={fetchedValues?.gatekeeper ?? false}
-                    />
+                    <FormInput id='captcha' text='Captcha?' type='checkbox' onChange={onChange} />
 
-                    <FormInput
-                        id='mutable'
-                        text='Mutable?'
-                        type='checkbox'
-                        onChange={onChange}
-                        defaultChecked={fetchedValues?.isMutable}
-                    />
+                    <FormInput id='mutable' text='Mutable?' type='checkbox' onChange={onChange} />
                     <FormInput
                         id='date-mint'
                         text='Mint date *'
                         type='date'
                         onChange={onChange}
-                        defaultValue={
-                            fetchedValues?.goLiveDate
-                                ? parseDateFromDateBN(fetchedValues?.goLiveDate)
-                                : getCurrentDate()
-                        }
+                        defaultValue={getCurrentDate()}
                         required
                     />
                     <FormInput
@@ -281,11 +243,7 @@ const CreateCandyMachine: FC<{
                         text='Mint time *'
                         type='time'
                         onChange={onChange}
-                        defaultValue={
-                            fetchedValues?.goLiveDate
-                                ? parseTimeFromDateBN(fetchedValues?.goLiveDate)
-                                : getCurrentTime()
-                        }
+                        defaultValue={getCurrentTime()}
                         required
                     />
                     <div className='select-wrapper d-flex flex-column'>
@@ -296,9 +254,10 @@ const CreateCandyMachine: FC<{
                             name='storage'
                             id='storage'
                             className='mb-4 px-2 py-2 rounded-2 cursor-pointer color-bg-default'
+                            defaultValue=''
                             style={{ border: '1px solid #1b1f2426' }}
                         >
-                            <option value='' disabled selected>
+                            <option value='' disabled>
                                 Choose an option
                             </option>
                             {Object.keys(StorageType)
