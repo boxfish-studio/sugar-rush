@@ -1,6 +1,6 @@
-import { useNotification } from 'hooks/useNotification'
+import { useNotification } from 'hooks'
 import { Notification } from 'components'
-import { NotificationProps } from 'lib/interfaces'
+import { INotification } from 'lib/interfaces'
 
 export default function NotificationManager() {
     const { notification, showNotification } = useNotification()
@@ -10,21 +10,21 @@ export default function NotificationManager() {
         })
     }
 
-    function InfoNotification(props: NotificationProps) {
+    const InfoNotification = (props: INotification) => {
         return <Notification {...props} type='default' />
     }
-    function ErrorNotification(props: NotificationProps) {
+    const ErrorNotification = (props: INotification) => {
         return <Notification {...props} type='danger' />
     }
-    function WarningNotification(props: NotificationProps) {
+    const WarningNotification = (props: INotification) => {
         return <Notification {...props} type='warning' />
     }
-    function SuccessNotification(props: NotificationProps) {
+    const SuccessNotification = (props: INotification) => {
         return <Notification {...props} type='success' />
     }
 
     return (
-        <div>
+        <>
             {notification.type === 'default' && notification.open && (
                 <InfoNotification message={notification.message} title={notification.title} onClose={() => onClose()} />
             )}
@@ -49,6 +49,6 @@ export default function NotificationManager() {
                     onClose={() => onClose()}
                 />
             )}
-        </div>
+        </>
     )
 }

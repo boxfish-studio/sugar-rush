@@ -1,5 +1,5 @@
 import { Nft } from 'lib/nft/interfaces'
-import { NotificationState } from 'lib/interfaces'
+import { INotification } from 'lib/interfaces'
 import { atom, RecoilState } from 'recoil'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import { Connection } from '@solana/web3.js'
@@ -28,7 +28,7 @@ export const networkState = atom<null | {
     default: null,
 })
 
-export const notificationState: RecoilState<NotificationState> = atom<NotificationState>({
+export const notificationState: RecoilState<INotification> = atom<INotification>({
     key: 'notificationState',
     default: {
         open: false,

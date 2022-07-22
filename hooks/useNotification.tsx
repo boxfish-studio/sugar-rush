@@ -1,11 +1,11 @@
 import { useRecoilState } from 'recoil'
-import { notificationState } from '../lib/recoil-store/atoms'
-import { NotificationProps, NotificationState } from 'lib/interfaces'
+import { notificationState } from 'lib/recoil-store/atoms'
+import { INotification } from 'lib/interfaces'
 import { useEffect } from 'react'
 
-export function useNotification() {
-    const [notification, setNotification] = useRecoilState<NotificationState>(notificationState)
-    const showNotification = (props: NotificationProps) => {
+const useNotification = () => {
+    const [notification, setNotification] = useRecoilState<INotification>(notificationState)
+    const showNotification = (props: INotification) => {
         setNotification({
             ...notification,
             ...props,
@@ -18,8 +18,9 @@ export function useNotification() {
                     open: false,
                 })
             }, 500000)
-            // notification?.timeout);
+            // notification?.timeout)
         }
     }, [notification?.open, notification?.timeout])
     return { notification, showNotification }
 }
+export default useNotification

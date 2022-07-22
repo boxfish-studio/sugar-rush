@@ -5,19 +5,11 @@ export interface INavbarElement {
     disabled?: boolean
 }
 
-export interface NotificationState {
-    open: boolean
-    message: string
-    type: string
-    timeout: number
-    title: string
-}
-
-export interface NotificationProps {
+export interface INotification {
+    open?: boolean
+    title?: string
     type?: string
     message?: string
     onClose?: () => void
-    open?: boolean
     timeout?: number
-    title?: string
 }
