@@ -20,7 +20,6 @@ const CreateCandyMachine: FC = () => {
     const { showNotification } = useNotification()
     const { files, uploadAssets } = useUploadFiles()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
-    const [status, setStatus] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
 
     const initialState = {
@@ -75,7 +74,6 @@ const CreateCandyMachine: FC = () => {
         }
         if (!isFormValid()) return
         setIsInteractingWithCM(true)
-        setStatus('')
         let candyMachine: string = ''
         const config: ICandyMachineConfig = {
             price: values.price,
@@ -172,9 +170,20 @@ const CreateCandyMachine: FC = () => {
                 })
 
                 if (typeof _candyMachine === 'string') candyMachine = _candyMachine
-                setStatus(`Candy Machine created successfully! ${candyMachine}`)
+                showNotification({
+                    open: true,
+                    message: `Candy Machine created successfully!`,
+                    type: 'success',
+                    timeout: 8000,
+                    title: `${candyMachine}`,
+                })
             } catch (err) {
-                setErrorMessage('upload was not successful, please re-run.')
+                showNotification({
+                    open: true,
+                    message: `An error occurred while creating the Candy Machine`,
+                    type: 'danger',
+                    timeout: 8000,
+                })
             }
             const endMilliseconds = Date.now()
             console.log(endMilliseconds.toString())
@@ -202,21 +211,10 @@ const CreateCandyMachine: FC = () => {
                     className='overflow-y-scroll d-flex flex-column pb-4 height-full'
                     sx={{ maxHeight: ['380px', '550px'] }}
                 >
-                    {errorMessage.length > 0 && (
-                        <span className='color-fg-closed color-bg-closed border color-border-closed-emphasis mt-3 p-3 rounded-2'>
-                            <StyledOcticon icon={AlertIcon} size={16} color='danger.fg' sx={{ marginRight: '6px' }} />{' '}
-                            {errorMessage}
-                        </span>
-                    )}
                     {isInteractingWithCM && (
                         <span className='color-fg-accent color-bg-accent border color-border-accent rounded-2 mt-4 p-3'>
                             IMPORTANT! Make sure to save the Cache file that will be downloaded at the end! Without it,
                             you will not be able to update your Candy Machine.
-                        </span>
-                    )}
-                    {!isInteractingWithCM && status && (
-                        <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
-                            {status}
                         </span>
                     )}
                     {isInteractingWithCM && (
