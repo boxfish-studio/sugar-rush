@@ -3,7 +3,7 @@ import { INotification } from 'lib/interfaces'
 import { StyledOcticon } from '@primer/react'
 import { XCircleIcon } from '@primer/octicons-react'
 
-export default function Notification(props: INotification) {
+const Notification = (props: INotification) => {
     const { type, message, onClose, title } = props
     return (
         <div className='notification'>
@@ -21,3 +21,4 @@ export default function Notification(props: INotification) {
         </div>
     )
 }
+export default Notification

@@ -1,16 +1,14 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
-import { LAMPORTS_PER_SOL } from '@solana/web3.js'
-import { useForm, useRPC, useUploadCache, useUploadFiles, useNotification } from 'hooks'
+import { useForm, useRPC, useUploadFiles, useNotification } from 'hooks'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
 import { StorageType } from 'lib/candy-machine/enums'
-import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
+import { ICandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/candy-machine/upload/config'
 import { uploadV2 } from 'lib/candy-machine/upload/upload'
-import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
+import { getCurrentDate, getCurrentTime, parseDateToUTC } from 'lib/utils'
 import React, { FC, useState, useEffect } from 'react'
-import { Box, Button, Spinner, StyledOcticon } from '@primer/react'
-import { AlertIcon } from '@primer/octicons-react'
+import { Box, Button, Spinner } from '@primer/react'
 
 const CreateCandyMachine: FC = () => {
     const { publicKey } = useWallet()

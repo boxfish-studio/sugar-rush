@@ -17,8 +17,7 @@ const useNotification = () => {
                 showNotification({
                     open: false,
                 })
-            }, 500000)
-            // notification?.timeout)
+            }, notification?.timeout)
         }
     }, [notification?.open, notification?.timeout])
     return { notification, showNotification }
