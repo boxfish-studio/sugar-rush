@@ -88,7 +88,7 @@ const UpdateCreateCandyMachineForm: FC<{
                 uuid: null,
             }
 
-            if (publicKey && anchorWallet && candyMachinePubkey) {
+            if (publicKey && anchorWallet && candyMachinePubkey && connection) {
                 const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'recent',
                 })
@@ -146,13 +146,12 @@ const UpdateCreateCandyMachineForm: FC<{
                     cache: await cache.text(),
                     newAuthority: values['new-authority'],
                 })
-                setIsInteractingWithCM(false)
                 setStatus('Candy Machine updated successfully!')
             }
         } catch (err) {
-            setIsInteractingWithCM(false)
-            setStatus('Candy Machine update was not successful, please re-run.')
+            setErrorMessage('Candy Machine update was not successful, please re-run.')
         }
+        setIsInteractingWithCM(false)
     }
 
     return (

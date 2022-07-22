@@ -20,6 +20,7 @@ const ManageCandyMachines: NextPage = () => {
     const [isOpen, setIsOpen] = useState(false)
 
     const fetchAccounts = async () => {
+        if (!connection) return
         try {
             const accounts = await fetchCandyMachineAccounts(connection, publicKey!)
             setAccounts(accounts)
@@ -30,6 +31,8 @@ const ManageCandyMachines: NextPage = () => {
     }
 
     useEffect(() => {
+        if (!connection) return
+
         setError(false)
         setIsLoading(true)
 

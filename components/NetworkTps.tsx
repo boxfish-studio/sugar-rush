@@ -6,6 +6,8 @@ const NetworkTps: FC = () => {
     const [averageTps, setAverageTps] = useState(0)
 
     const getNetworkPerformance = useCallback(async () => {
+        if (!connection) return
+
         try {
             const samples = await connection.getRecentPerformanceSamples()
             const tpsList = samples.reduce((acc, sample) => {

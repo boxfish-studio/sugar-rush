@@ -2,13 +2,11 @@ import { ExplorerLinks } from 'components'
 import { FC, useState } from 'react'
 import { Button, Spinner, Text } from '@primer/react'
 import { useRemoveCandyMachineAccount } from 'hooks'
-import { Connection } from '@solana/web3.js'
 import { useRouter } from 'next/router'
 
 const DeleteCandyMachine: FC<{
     candyMachineAccount: string
-    connection: Connection
-}> = ({ candyMachineAccount, connection }) => {
+}> = ({ candyMachineAccount }) => {
     const [isDeleting, setIsDeleting] = useState(false)
     const [status, setStatus] = useState({ error: false, message: '' })
     const [transaction, setTransaction] = useState('')
@@ -51,12 +49,7 @@ const DeleteCandyMachine: FC<{
                         </span>
                         {!status.error && (
                             <div className='mt-3'>
-                                <ExplorerLinks
-                                    type='transaction'
-                                    value={transaction}
-                                    connection={connection}
-                                    text={'Check tx'}
-                                />
+                                <ExplorerLinks type='transaction' value={transaction} text={'Check tx'} />
                             </div>
                         )}
                     </>

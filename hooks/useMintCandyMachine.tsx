@@ -25,7 +25,7 @@ const useMintCandyMachine = (account: string) => {
 
     async function refreshCandyMachineState() {
         try {
-            if (!anchorWallet || !wallet.publicKey) return
+            if (!anchorWallet || !wallet.publicKey || !connection) return
             const provider = new AnchorProvider(connection, anchorWallet, {
                 preflightCommitment: 'recent',
             })
@@ -75,7 +75,7 @@ const useMintCandyMachine = (account: string) => {
 
     const mintAccount = async (beforeTransactions: Transaction[] = [], afterTransactions: Transaction[] = []) => {
         try {
-            if (!anchorWallet || !wallet.publicKey) return
+            if (!anchorWallet || !wallet.publicKey || !connection) return
             setIsUserMinting(true)
             refreshCandyMachineState()
 
