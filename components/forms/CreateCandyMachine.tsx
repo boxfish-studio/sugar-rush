@@ -1,7 +1,7 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js'
-import { useForm, useRPC, useUploadCache, useUploadFiles } from 'hooks'
+import { useForm, useRPC, useUploadFiles } from 'hooks'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
 import { StorageType } from 'lib/candy-machine/enums'
 import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
@@ -21,7 +21,6 @@ const CreateCandyMachine: FC<{
     const { connection } = useRPC()
 
     const { files, uploadAssets } = useUploadFiles()
-    const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
     const [status, setStatus] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
@@ -297,8 +296,9 @@ const CreateCandyMachine: FC<{
                             id='storage'
                             className='mb-4 px-2 py-2 rounded-2 cursor-pointer color-bg-default'
                             style={{ border: '1px solid #1b1f2426' }}
+                            defaultValue={''}
                         >
-                            <option value='' disabled selected>
+                            <option value='' disabled>
                                 Choose an option
                             </option>
                             {Object.keys(StorageType)
