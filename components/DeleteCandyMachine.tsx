@@ -1,7 +1,7 @@
 import { ExplorerLinks } from 'components'
 import { FC, useState } from 'react'
 import { Button, Spinner, Text } from '@primer/react'
-import { useRemoveCandyMachineAccount } from 'hooks'
+import { useRemoveCandyMachineAccount, useNotification } from 'hooks'
 import { useRouter } from 'next/router'
 
 const DeleteCandyMachine: FC<{
@@ -12,6 +12,7 @@ const DeleteCandyMachine: FC<{
     const [transaction, setTransaction] = useState('')
     const { removeAccount } = useRemoveCandyMachineAccount([candyMachineAccount])
     const router = useRouter()
+    const { showNotification } = useNotification()
 
     const deleteCM = async () => {
         try {
@@ -19,10 +20,21 @@ const DeleteCandyMachine: FC<{
             setStatus({ error: false, message: '' })
             const result = await removeAccount(candyMachineAccount)
             result && setTransaction(result.txid)
-            setStatus({ error: false, message: `Candy Machine deleted successfully!` })
+            showNotification({
+                open: true,
+                message: `Candy Machine deleted successfully!`,
+                type: 'default',
+                timeout: 8000,
+                title: `${candyMachineAccount}`,
+            })
         } catch (error) {
             console.log(error)
-            setStatus({ error: true, message: 'Delete was not successful.' })
+            showNotification({
+                open: true,
+                message: `An error occurred while deleting the Candy Machine`,
+                type: 'danger',
+                timeout: 8000,
+            })
         }
         setIsDeleting(false)
     }

@@ -1,7 +1,7 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
-import { useForm, useRPC, useUploadCache } from 'hooks'
+import { useForm, useRPC, useUploadCache, useNotification } from 'hooks'
 import { updateV2 } from 'lib/candy-machine'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
 import { StorageType } from 'lib/candy-machine/enums'
@@ -19,7 +19,7 @@ const UpdateCreateCandyMachineForm: FC<{
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection } = useRPC()
-
+    const { showNotification } = useNotification()
     const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
     const [status, setStatus] = useState('')
@@ -146,10 +146,20 @@ const UpdateCreateCandyMachineForm: FC<{
                     cache: await cache.text(),
                     newAuthority: values['new-authority'],
                 })
-                setStatus('Candy Machine updated successfully!')
+                showNotification({
+                    open: true,
+                    message: `Candy Machine updated successfully!`,
+                    type: 'success',
+                    timeout: 8000,
+                })
             }
         } catch (err) {
-            setErrorMessage('Candy Machine update was not successful, please re-run.')
+            showNotification({
+                open: true,
+                message: `An error occurred while updating the Candy Machine`,
+                type: 'danger',
+                timeout: 8000,
+            })
         }
         setIsInteractingWithCM(false)
     }
@@ -256,12 +266,6 @@ const UpdateCreateCandyMachineForm: FC<{
                     <Button isLoading disabled size='medium' sx={{ width: 'fit-content' }}>
                         Updating Candy Machine... <Spinner size='small' />
                     </Button>
-                )}
-
-                {!isInteractingWithCM && status && (
-                    <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
-                        {status}
-                    </span>
                 )}
             </div>
         </form>
