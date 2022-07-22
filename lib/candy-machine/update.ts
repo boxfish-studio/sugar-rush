@@ -56,5 +56,6 @@ export async function updateV2({
         saveCache(cacheName, env, cacheContent)
     } catch (err) {
         console.error(err)
+        throw new Error()
     }
 }

@@ -1,24 +1,8 @@
 import Link from 'next/link'
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
+import { version } from '../version.json'
 
 const Footer: FC = () => {
-    const [version, setVersion] = useState('')
-    const getVersion = async (file: string) => {
-        try {
-            const response = await fetch(file)
-            await response
-                .json()
-                .then((version) => setVersion(version[0].name))
-                .catch(() => setVersion('v0.0.0'))
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-    useEffect(() => {
-        getVersion('tag_version.txt')
-    }, [])
-
     return (
         <footer
             className='color-bg-emphasis color-fg-on-emphasis position-fixed bottom-0 left-0

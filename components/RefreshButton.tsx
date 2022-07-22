@@ -7,7 +7,12 @@ const RefreshButton: FC<{
     onClick: () => void
 }> = ({ isLoading, onClick }) => {
     return (
-        <Button className={isLoading ? 'loading-animation' : ''} leadingIcon={SyncIcon} onClick={onClick}>
+        <Button
+            className={isLoading ? 'loading-animation' : ''}
+            leadingIcon={SyncIcon}
+            onClick={onClick}
+            disabled={isLoading}
+        >
             Refresh
         </Button>
     )

@@ -1,5 +1,3 @@
-export { default as Button } from './Button'
-export { default as Carousel } from './Carousel'
 export { default as CheckConnectedWallet } from './CheckConnectedWallet'
 export { default as Popup } from './Popup'
 export { default as Navbar } from './Navbar'

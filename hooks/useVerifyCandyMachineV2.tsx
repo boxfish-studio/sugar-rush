@@ -19,7 +19,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
             setError('Upload a cache file.')
             return
         }
-        if (candyMachineAccount && anchorWallet && cache) {
+        if (candyMachineAccount && anchorWallet && cache && connection) {
             const cacheContent: ICache = JSON.parse(await cache.text())
             if (cacheContent.program?.candyMachine !== candyMachineAccount) {
                 setError('Cache file does not match this candy machine.')
