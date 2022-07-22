@@ -16,6 +16,7 @@ export { default as Footer } from './Footer'
 export { default as CandyMachineList } from './CandyMachineList'
 export { default as NetworkSelector } from './NetworkSelector'
 export { default as NetworkTps } from './NetworkTps'
-
+export { default as Notification } from './Notification'
+export { default as NotificationManager } from './NotificationManager'
 export * from './cards'
 export * from './forms'

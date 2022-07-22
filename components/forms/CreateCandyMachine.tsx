@@ -11,6 +11,7 @@ import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, pa
 import React, { FC, useState, useEffect } from 'react'
 import { Box, Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
+import { useNotification } from 'hooks/useNotification'
 
 const CreateCandyMachine: FC<{
     fetchedValues?: IFetchedCandyMachineConfig
@@ -19,7 +20,7 @@ const CreateCandyMachine: FC<{
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection } = useRPC()
-
+    const { showNotification } = useNotification()
     const { files, uploadAssets } = useUploadFiles()
     const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
@@ -182,7 +183,13 @@ const CreateCandyMachine: FC<{
             console.log(endMilliseconds.toString())
 
             setIsInteractingWithCM(false)
-            setStatus(`Candy Machine created successfully! ${candyMachine}`)
+            showNotification({
+                open: true,
+                message: `Candy Machine created successfully!`,
+                type: 'success',
+                timeout: 8000,
+                title: `${candyMachine}`,
+            })
         }
     }
     useEffect(() => {

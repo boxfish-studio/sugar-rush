@@ -82,3 +82,16 @@ body {
 .cursor-default {
     cursor: default;
 }
+
+.notification {
+    z-index: 100;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+    @media (min-width: 780px) {
+        bottom: 100px;
+        right: 50px;
+        width: auto;
+    }
+}
