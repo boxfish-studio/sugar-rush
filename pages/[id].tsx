@@ -1,11 +1,11 @@
-import { AnchorProvider, BN, Program } from '@project-serum/anchor'
-import { Button, Spinner } from '@primer/react'
+import { AnchorProvider, Program } from '@project-serum/anchor'
+import { Button, Spinner, Text } from '@primer/react'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import { getAllNftsByCM, getNftByMint } from 'lib/nft/actions'
 import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Nft } from 'lib/nft/interfaces'
 import { nftsState } from 'lib/recoil-store/atoms'
-import { Title, NftCard, RefreshButton, ExplorerLinks, UpdateCandyMachine } from 'components'
+import { NftCard, RefreshButton, UpdateCandyMachine } from 'components'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
@@ -34,6 +34,7 @@ const CandyMachine: NextPage = () => {
     )
     const [hasCollection, setHasCollection] = useState<boolean>(false)
     const [nftsRecoilState, setNftsRecoilState] = useRecoilState(nftsState)
+    const [cache, setCache] = useState<File>()
 
     const viewNfts = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsLoadingNfts(true)
@@ -41,6 +42,7 @@ const CandyMachine: NextPage = () => {
             window.alert('No files uploaded')
             return
         }
+        setCache(e.target.files[0])
         let cacheData = await e.target.files[0].text()
         let cacheDataJson = JSON.parse(cacheData)
         if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
@@ -124,7 +126,6 @@ const CandyMachine: NextPage = () => {
             <Spinner size='small' />
         </div>
     )
-
     return (
         <>
             <Head>
@@ -251,25 +252,46 @@ const CandyMachine: NextPage = () => {
                                             )}
                                         </div>
                                     </div>
-                                    <div className='mt-5'>
-                                        <h4>Unminted NFTs - {itemsRemaining}</h4>
-                                        <div className='mt-3 nfts-grid'>
-                                            {new Array(5).fill(0).map((_, index) => (
-                                                <NftCard
-                                                    title={`CryptoDude #${index}`}
-                                                    key={index}
-                                                    imageLink={'/favicon.ico'}
-                                                    buttons={[
-                                                        {
-                                                            text: 'View in Solscan',
-                                                            as: 'link',
-                                                            variant: 'invisible',
-                                                            hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
-                                                        },
-                                                    ]}
-                                                />
-                                            ))}
-                                        </div>
+                                    <div className='mt-7'>
+                                        {!nfts.length ? (
+                                            <>
+                                                <h4>NFTs Preview · {itemsRemaining}</h4>
+                                                <Text as='p' className='mt-3 mb-4'>
+                                                    Upload cache file to preview NFTs
+                                                </Text>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <h4>Unminted NFTs - {nfts.length}</h4>
+                                                <div className='mt-3 nfts-grid'>
+                                                    {nfts.map(({ name, image }, index) => {
+                                                        if (!mintedNfts?.some((minted) => minted.name === name)) {
+                                                            return (
+                                                                <NftCard title={name} imageLink={image} key={index} />
+                                                            )
+                                                        }
+                                                    })}
+                                                </div>
+                                                <Text as='p' className='my-3'>
+                                                    {cache?.name}
+                                                </Text>
+                                            </>
+                                        )}
+                                        <label
+                                            htmlFor='nftsCache'
+                                            className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
+                                            style={{ border: '1px solid #1b1f2426' }}
+                                        >
+                                            Upload Cache file
+                                        </label>
+                                        <input
+                                            id='nftsCache'
+                                            type='file'
+                                            name='cache'
+                                            onChange={viewNfts}
+                                            className='w-full p-2 d-none'
+                                            required
+                                        />
                                     </div>
                                 </>
                             )}
