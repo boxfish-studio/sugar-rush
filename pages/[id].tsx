@@ -29,9 +29,8 @@ const CandyMachine: NextPage = () => {
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft>()
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const { isUserMinting, itemsRemaining, mintAccount, refreshCandyMachineState, isCaptcha } = useMintCandyMachine(
-        candyMachineAccount as string
-    )
+    const { isUserMinting, itemsRemaining, mintAccount, refreshCandyMachineState, isCaptcha, itemsAvailable } =
+        useMintCandyMachine(candyMachineAccount as string)
     const [hasCollection, setHasCollection] = useState<boolean>(false)
     const [nftsRecoilState, setNftsRecoilState] = useRecoilState(nftsState)
     const [cache, setCache] = useState<File>()
@@ -111,12 +110,10 @@ const CandyMachine: NextPage = () => {
 
     useEffect(() => {
         setError('')
+        refreshCandyMachineState()
         setIsLoading(false)
-        ;(async function () {
-            const data = await fetchCandyMachine()
-            setCandyMachineConfig(data)
-            await fetchNfts()
-        })()
+        fetchCandyMachine().then(setCandyMachineConfig)
+        fetchNfts()
         setIsLoading(false)
     }, [connection])
 
@@ -182,9 +179,7 @@ const CandyMachine: NextPage = () => {
                                 <h3 className='r-0'>NFTs</h3>
                                 <div className='l-0 d-flex flex-justify-end flex-items-center'>
                                     <span className='pr-2'>
-                                        {isLoadingNfts
-                                            ? ''
-                                            : `${mintedNfts?.length}/${itemsRemaining + mintedNfts.length} Minted`}
+                                        {isLoadingNfts ? '' : `${mintedNfts?.length}/${itemsAvailable} Minted`}
                                     </span>
                                     <RefreshButton onClick={fetchNfts} isLoading={isLoadingNfts} />
                                 </div>
@@ -276,7 +271,7 @@ const CandyMachine: NextPage = () => {
                                             </>
                                         ) : (
                                             <>
-                                                <h4>Unminted NFTs - {nfts.length}</h4>
+                                                <h4>Unminted NFTs - {itemsAvailable - itemsRemaining}</h4>
                                                 <div className='mt-3 nfts-grid'>
                                                     {nfts.map(({ name, image }, index) => {
                                                         if (!mintedNfts?.some((minted) => minted.name === name)) {
