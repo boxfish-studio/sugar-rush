@@ -8,16 +8,14 @@ export default function Notification(props: NotificationProps) {
     return (
         <div className='notification'>
             <Flash variant={type}>
-                <div
-                    className='width-full d-flex flex-items-center flex-justify-between mb-3'
-                    title='Close'
-                    onClick={onClose}
-                >
-                    <h4 className='wb-break-all mr-3'>{title}</h4>
-                    <StyledOcticon icon={XCircleIcon} size={25} />
-                </div>
-                <div className='d-flex '>
-                    <div className='f4'>{message}</div>
+                <div className='d-flex width-full flex-items-center flex-justify-between'>
+                    <div className='mr-3'>
+                        <div className='wb-break-all f5 mb-2'>{title}</div>
+                        <div className='f4'>{message}</div>
+                    </div>
+                    <div className=' d-flex flex-items-center flex-justify-between' title='Close' onClick={onClose}>
+                        <StyledOcticon icon={XCircleIcon} size={16} />
+                    </div>
                 </div>
             </Flash>
         </div>
