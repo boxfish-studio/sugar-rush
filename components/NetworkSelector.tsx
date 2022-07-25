@@ -34,6 +34,10 @@ const NetworkSelector: FC = () => {
             setNetwork({ network: _network, url: getUrl(_network), connection: new Connection(getUrl(_network)) })
             window.localStorage.setItem('network-gg', _network)
         }
+        if (!_network) {
+            setNetwork({ network: 'Mainnet', url: getUrl('Mainnet'), connection: new Connection(getUrl('Mainnet')) })
+            window.localStorage.setItem('network-gg', 'Mainnet')
+        }
     }, [])
     function changeNetwork(_network: Network) {
         setNetwork({ network: _network, url: getUrl(_network), connection: new Connection(getUrl(_network)) })
