@@ -1,6 +1,6 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
-import { LAMPORTS_PER_SOL } from '@solana/web3.js'
+import { Connection, LAMPORTS_PER_SOL } from '@solana/web3.js'
 import { useForm, useRPC, useUploadCache, useUploadFiles } from 'hooks'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
 import { StorageType } from 'lib/candy-machine/enums'
@@ -11,6 +11,7 @@ import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, pa
 import React, { FC, useState, useEffect } from 'react'
 import { Box, Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 
 const CreateCandyMachine: FC<{
     fetchedValues?: IFetchedCandyMachineConfig
@@ -18,7 +19,7 @@ const CreateCandyMachine: FC<{
 }> = ({ fetchedValues, candyMachinePubkey }) => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
-    const { connection } = useRPC()
+    const { connection, network } = useRPC()
 
     const { files, uploadAssets } = useUploadFiles()
     const { cache, uploadCache } = useUploadCache()
@@ -103,10 +104,9 @@ const CreateCandyMachine: FC<{
             uuid: null,
         }
 
-        if (publicKey && anchorWallet && connection) {
+        if (publicKey && anchorWallet && connection && network) {
             const { supportedFiles, elemCount } = verifyAssets(files, config.storage, config.number)
-
-            const provider = new AnchorProvider(connection, anchorWallet, {
+            const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
                 preflightCommitment: 'recent',
             })
 
@@ -137,13 +137,12 @@ const CreateCandyMachine: FC<{
             } = await getCandyMachineV2Config(publicKey, config, anchorProgram)
 
             const startMilliseconds = Date.now()
-
             console.log('started at: ' + startMilliseconds.toString())
             try {
                 const _candyMachine = await uploadV2({
                     files: supportedFiles,
                     cacheName: 'example',
-                    env: 'devnet',
+                    env: WalletAdapterNetwork[network] as Exclude<WalletAdapterNetwork, WalletAdapterNetwork.Testnet>,
                     totalNFTs: elemCount,
                     gatekeeper,
                     storage,

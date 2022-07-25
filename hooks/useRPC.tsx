@@ -7,6 +7,7 @@ const useRPC = () => {
     return {
         connection: network?.connection,
         isDevnet: network?.url.includes('devnet') ? '?cluster=devnet' : '',
+        network: network?.network,
     }
 }
 
