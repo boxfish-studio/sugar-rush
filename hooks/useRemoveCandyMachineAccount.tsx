@@ -1,6 +1,6 @@
 import { AnchorProvider, Program } from '@project-serum/anchor'
 import { AnchorWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
-import { LAMPORTS_PER_SOL, PublicKey, TransactionInstruction } from '@solana/web3.js'
+import { LAMPORTS_PER_SOL, PublicKey, TransactionInstruction, Connection } from '@solana/web3.js'
 import { useRPC } from 'hooks'
 import { loadCandyProgramV2 } from 'lib/candy-machine/upload/config'
 import { sendTransactionWithRetryWithKeypair } from 'lib/candy-machine/upload/transactions'
@@ -16,7 +16,7 @@ const useRemoveCandyMachineAccount = (accounts: string[]) => {
 
     const removeAccount = async (candyMachineAccount: string) => {
         if (!anchorWallet || !connection) return
-        const provider = new AnchorProvider(connection, anchorWallet, {
+        const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
             preflightCommitment: 'recent',
         })
 
