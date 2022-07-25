@@ -70,7 +70,9 @@ const useMintCandyMachine = (account: string) => {
                     retainAuthority: state.data.retainAuthority,
                 },
             })
-        } catch (_) {}
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     const mintAccount = async (beforeTransactions: Transaction[] = [], afterTransactions: Transaction[] = []) => {
