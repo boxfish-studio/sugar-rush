@@ -34,6 +34,7 @@ const CandyMachine: NextPage = () => {
     )
     const [hasCollection, setHasCollection] = useState<boolean>(false)
     const [nftsRecoilState, setNftsRecoilState] = useRecoilState(nftsState)
+    const [cacheName, setCacheName] = useState<string>('')
 
     const viewNfts = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsLoadingNfts(true)
@@ -41,6 +42,7 @@ const CandyMachine: NextPage = () => {
             window.alert('No files uploaded')
             return
         }
+        setCacheName(e.target.files[0].name)
         let cacheData = await e.target.files[0].text()
         let cacheDataJson = JSON.parse(cacheData)
         if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
@@ -282,6 +284,26 @@ const CandyMachine: NextPage = () => {
                                                     ]}
                                                 />
                                             ))}
+                                        </div>
+                                        <div className='mt-2'>
+                                            <span>{cacheName}</span>
+                                        </div>
+                                        <div className='mt-7'>
+                                            <label
+                                                htmlFor='nftsCache'
+                                                className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
+                                                style={{ border: '1px solid #1b1f2426' }}
+                                            >
+                                                Upload Cache file
+                                            </label>
+                                            <input
+                                                id='nftsCache'
+                                                type='file'
+                                                name='cache'
+                                                onChange={viewNfts}
+                                                className='w-full p-2 d-none'
+                                                required
+                                            />
                                         </div>
                                     </div>
                                 </>
