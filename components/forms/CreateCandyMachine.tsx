@@ -1,6 +1,7 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
-import { useForm, useRPC, useUploadFiles, useNotification } from 'hooks'
+import { Connection, LAMPORTS_PER_SOL } from '@solana/web3.js'
+import { useForm, useRPC, useUploadCache, useUploadFiles, useNotification } from 'hooks'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
 import { StorageType } from 'lib/candy-machine/enums'
 import { ICandyMachineConfig } from 'lib/candy-machine/interfaces'
@@ -9,12 +10,14 @@ import { uploadV2 } from 'lib/candy-machine/upload/upload'
 import { getCurrentDate, getCurrentTime, parseDateToUTC } from 'lib/utils'
 import React, { FC, useState, useEffect } from 'react'
 import { Box, Button, Spinner } from '@primer/react'
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 
 const CreateCandyMachine: FC = () => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
-    const { connection } = useRPC()
+    const { connection, network } = useRPC()
     const { showNotification } = useNotification()
+
     const { files, uploadAssets } = useUploadFiles()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
@@ -97,10 +100,9 @@ const CreateCandyMachine: FC = () => {
             uuid: null,
         }
 
-        if (publicKey && anchorWallet && connection) {
+        if (publicKey && anchorWallet && connection && network) {
             const { supportedFiles, elemCount } = verifyAssets(files, config.storage, config.number)
-
-            const provider = new AnchorProvider(connection, anchorWallet, {
+            const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
                 preflightCommitment: 'recent',
             })
 
@@ -131,13 +133,12 @@ const CreateCandyMachine: FC = () => {
             } = await getCandyMachineV2Config(publicKey, config, anchorProgram)
 
             const startMilliseconds = Date.now()
-
             console.log('started at: ' + startMilliseconds.toString())
             try {
                 const _candyMachine = await uploadV2({
                     files: supportedFiles,
                     cacheName: 'example',
-                    env: 'devnet',
+                    env: WalletAdapterNetwork[network] as Exclude<WalletAdapterNetwork, WalletAdapterNetwork.Testnet>,
                     totalNFTs: elemCount,
                     gatekeeper,
                     storage,
