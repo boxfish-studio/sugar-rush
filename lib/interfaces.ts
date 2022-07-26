@@ -7,7 +7,7 @@ export interface INavbarElement {
 
 export interface INotification {
     open?: boolean
-    title?: string
+    icon?: any
     type?: 'default' | 'success' | 'danger' | 'warning'
     message?: string
     onClose?: () => void

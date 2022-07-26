@@ -25,7 +25,6 @@ const DeleteCandyMachine: FC<{
                 message: `Candy Machine deleted successfully!`,
                 type: 'default',
                 timeout: 8000,
-                title: `${candyMachineAccount}`,
             })
         } catch (error) {
             console.log(error)

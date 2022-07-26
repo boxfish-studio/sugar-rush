@@ -172,7 +172,6 @@ const CreateCandyMachine: FC = () => {
                     message: `Candy Machine created successfully!`,
                     type: 'success',
                     timeout: 8000,
-                    title: `${candyMachine}`,
                 })
             } catch (err) {
                 showNotification({

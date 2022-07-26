@@ -1,6 +1,7 @@
 import { useNotification } from 'hooks'
 import { Notification } from 'components'
 import { INotification } from 'lib/interfaces'
+import { CheckIcon, XIcon, AlertIcon, InfoIcon } from '@primer/octicons-react'
 
 export default function NotificationManager() {
     const { notification, showNotification } = useNotification()
@@ -26,28 +27,16 @@ export default function NotificationManager() {
     return (
         <>
             {notification.type === 'default' && notification.open && (
-                <InfoNotification message={notification.message} title={notification.title} onClose={() => onClose()} />
+                <InfoNotification message={notification.message} onClose={() => onClose()} icon={InfoIcon} />
             )}
             {notification.type === 'danger' && notification.open && (
-                <ErrorNotification
-                    message={notification.message}
-                    title={notification.title}
-                    onClose={() => onClose()}
-                />
+                <ErrorNotification message={notification.message} onClose={() => onClose()} icon={XIcon} />
             )}
             {notification.type === 'warning' && notification.open && (
-                <WarningNotification
-                    message={notification.message}
-                    title={notification.title}
-                    onClose={() => onClose()}
-                />
+                <WarningNotification message={notification.message} onClose={() => onClose()} icon={AlertIcon} />
             )}
             {notification.type === 'success' && notification.open && (
-                <SuccessNotification
-                    message={notification.message}
-                    title={notification.title}
-                    onClose={() => onClose()}
-                />
+                <SuccessNotification message={notification.message} onClose={() => onClose()} icon={CheckIcon} />
             )}
         </>
     )

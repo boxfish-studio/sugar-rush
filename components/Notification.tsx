@@ -4,16 +4,16 @@ import { StyledOcticon } from '@primer/react'
 import { XCircleIcon } from '@primer/octicons-react'
 
 const Notification = (props: INotification) => {
-    const { type, message, onClose, title } = props
+    const { type, message, onClose, icon } = props
     return (
         <div className='notification'>
             <Flash variant={type}>
-                <div className='d-flex width-full flex-items-center flex-justify-between'>
-                    <div className='mr-3'>
-                        <div className='wb-break-all f5 mb-2'>{title}</div>
+                <div className='d-flex flex-justify-between'>
+                    <div className='mr-3 d-flex width-full flex-items-center'>
+                        <StyledOcticon icon={icon} />
                         <div className='f4'>{message}</div>
                     </div>
-                    <div className=' d-flex flex-items-center flex-justify-between' title='Close' onClick={onClose}>
+                    <div className=' d-flex flex-items-center flex-justify-end' title='Close' onClick={onClose}>
                         <StyledOcticon icon={XCircleIcon} size={16} />
                     </div>
                 </div>
