@@ -24,7 +24,6 @@ const CandyMachine: NextPage = () => {
     const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
     const [isLoadingNfts, setIsLoadingNfts] = useState(false)
-    const [initialLoad, setInitialLoad] = useState(false)
     const [nfts, setNfts] = useState<Nft[]>([])
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft>()
@@ -149,34 +148,33 @@ const CandyMachine: NextPage = () => {
             </Head>
             <div className='d-flex flex-justify-center flex-column'>
                 <h2 className='my-5 wb-break-all'>[CM]: {candyMachineAccount}</h2>
-                {isLoading && loadingText}
-                {!isLoading && (
+                {error ? (
+                    <div className='d-flex flex-column items-center justify-center my-5 col-12 col-md-8 col-lg-6'>
+                        <h3 className='color-fg-accent'> Error fetching candy machine config</h3>
+                        <Button
+                            className='rounded-lg bg-slate-400 p-2 mt-4'
+                            onClick={() => fetchCandyMachine()}
+                            sx={{ width: 'fit-content' }}
+                        >
+                            Fetch again
+                        </Button>
+                    </div>
+                ) : (
                     <>
-                        {error ? (
-                            <div className='d-flex flex-column items-center justify-center my-5 col-12 col-md-8 col-lg-6'>
-                                <h3 className='color-fg-accent'> Error fetching candy machine config</h3>
-                                <Button
-                                    className='rounded-lg bg-slate-400 p-2 mt-4'
-                                    onClick={() => fetchCandyMachine()}
-                                    sx={{ width: 'fit-content' }}
-                                >
-                                    Fetch again
-                                </Button>
+                        <div className='d-flex flex-column'>
+                            <div className='d-flex flex-column mb-6'>
+                                <h3>Configuration</h3>
+                                <div className='border-y width-full my-4' />
+                                {isLoading && !candyMachineConfig?.uuid ? (
+                                    loadingText
+                                ) : (
+                                    <UpdateCandyMachine
+                                        fetchedValues={candyMachineConfig}
+                                        candyMachinePubkey={candyMachineAccount}
+                                    />
+                                )}
                             </div>
-                        ) : (
-                            candyMachineConfig?.uuid && (
-                                <div className='d-flex flex-column'>
-                                    <div className='d-flex flex-column mb-6'>
-                                        <h3>Configuration</h3>
-                                        <div className='border-y width-full my-4' />
-                                        <UpdateCandyMachine
-                                            fetchedValues={candyMachineConfig}
-                                            candyMachinePubkey={candyMachineAccount}
-                                        />
-                                    </div>
-                                </div>
-                            )
-                        )}
+                        </div>
                         <div className='d-flex flex-justify-center flex-items-start flex-column mb-10 width-full p-0'>
                             <div className='d-flex flex-justify-between flex-items-center width-full mb-4'>
                                 <h3 className='r-0'>NFTs</h3>
