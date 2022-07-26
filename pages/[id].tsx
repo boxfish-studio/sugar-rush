@@ -53,6 +53,9 @@ const CandyMachine: NextPage = () => {
             })
 
             setNfts(nfts)
+            if (!!cacheDataJson.items) {
+                alert('NFTs Preview not available in cache file')
+            }
         } else {
             alert('This cache file is not from this candy machine')
         }
