@@ -33,7 +33,6 @@ export const notificationState: RecoilState<INotification> = atom<INotification>
     default: {
         open: false,
         message: '',
-        title: '',
         type: 'default',
         timeout: 5000,
     },
