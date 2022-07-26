@@ -23,7 +23,7 @@ const DeleteCandyMachine: FC<{
             showNotification({
                 open: true,
                 message: `Candy Machine deleted successfully!`,
-                type: 'default',
+                type: 'success',
                 timeout: 8000,
             })
         } catch (error) {
