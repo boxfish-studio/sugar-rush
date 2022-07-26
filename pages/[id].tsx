@@ -185,12 +185,51 @@ const CandyMachine: NextPage = () => {
                                 </div>
                             </div>
                             <div className='border-y width-full' />
+                            <div className='mt-5 mb-7'>
+                                {!nfts.length ? (
+                                    <>
+                                        <h4>NFTs Preview · {itemsRemaining}</h4>
+                                        <Text as='p' className='mt-3 mb-4'>
+                                            Upload cache file to preview NFTs
+                                        </Text>
+                                    </>
+                                ) : (
+                                    <>
+                                        <h4>Unminted NFTs - {itemsAvailable - itemsRemaining}</h4>
+                                        <div className='mt-3 nfts-grid'>
+                                            {nfts.map(({ name, image }, index) => {
+                                                if (!mintedNfts?.some((minted) => minted.name === name)) {
+                                                    return <NftCard title={name} imageLink={image} key={index} />
+                                                }
+                                            })}
+                                        </div>
+                                        <Text as='p' className='my-3'>
+                                            {cache?.name}
+                                        </Text>
+                                    </>
+                                )}
+                                <label
+                                    htmlFor='nftsCache'
+                                    className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
+                                    style={{ border: '1px solid #1b1f2426' }}
+                                >
+                                    Upload Cache file
+                                </label>
+                                <input
+                                    id='nftsCache'
+                                    type='file'
+                                    name='cache'
+                                    onChange={viewNfts}
+                                    className='w-full p-2 d-none'
+                                    required
+                                />
+                            </div>
                             {isLoadingNfts ? (
                                 loadingText
                             ) : (
                                 <>
                                     {hasCollection && (
-                                        <div className='mt-5'>
+                                        <div className='mb-5'>
                                             <h4>Collection</h4>
 
                                             {collectionNft && (
@@ -211,7 +250,8 @@ const CandyMachine: NextPage = () => {
                                             )}
                                         </div>
                                     )}
-                                    <div className='mt-5'>
+
+                                    <div>
                                         <h4>Minted NFTs - {mintedNfts.length}</h4>
                                         <div className='nfts-grid mt-3'>
                                             {itemsRemaining > 0 && isCaptcha && (
@@ -260,47 +300,6 @@ const CandyMachine: NextPage = () => {
                                                     )
                                             )}
                                         </div>
-                                    </div>
-                                    <div className='mt-7'>
-                                        {!nfts.length ? (
-                                            <>
-                                                <h4>NFTs Preview · {itemsRemaining}</h4>
-                                                <Text as='p' className='mt-3 mb-4'>
-                                                    Upload cache file to preview NFTs
-                                                </Text>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <h4>Unminted NFTs - {itemsAvailable - itemsRemaining}</h4>
-                                                <div className='mt-3 nfts-grid'>
-                                                    {nfts.map(({ name, image }, index) => {
-                                                        if (!mintedNfts?.some((minted) => minted.name === name)) {
-                                                            return (
-                                                                <NftCard title={name} imageLink={image} key={index} />
-                                                            )
-                                                        }
-                                                    })}
-                                                </div>
-                                                <Text as='p' className='my-3'>
-                                                    {cache?.name}
-                                                </Text>
-                                            </>
-                                        )}
-                                        <label
-                                            htmlFor='nftsCache'
-                                            className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
-                                            style={{ border: '1px solid #1b1f2426' }}
-                                        >
-                                            Upload Cache file
-                                        </label>
-                                        <input
-                                            id='nftsCache'
-                                            type='file'
-                                            name='cache'
-                                            onChange={viewNfts}
-                                            className='w-full p-2 d-none'
-                                            required
-                                        />
                                     </div>
                                 </>
                             )}
