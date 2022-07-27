@@ -2,14 +2,14 @@
 import { useWallet } from '@solana/wallet-adapter-react'
 import { CandyMachineList, CreateCandyMachine, Popup } from 'components'
 import { useRPC } from 'hooks'
-import { candyMachinesState } from 'lib/recoil-store/atoms'
+import { candyMachinesState, candyMachineSearchState } from 'lib/recoil-store/atoms'
 import { fetchCandyMachineAccounts } from 'lib/utils'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { Button, Spinner } from '@primer/react'
+import { useRecoilValue } from 'recoil'
 
 const ManageCandyMachines: NextPage = () => {
     const [accounts, setAccounts] = useRecoilState(candyMachinesState)
@@ -18,7 +18,11 @@ const ManageCandyMachines: NextPage = () => {
     const { connection } = useRPC()
     const { publicKey } = useWallet()
     const [isOpen, setIsOpen] = useState(false)
+    const searchInput = useRecoilValue(candyMachineSearchState)
 
+    const searchResults = accounts.filter((account) => {
+        return account.toLowerCase().includes(searchInput.trim().toLowerCase())
+    })
     const fetchAccounts = async () => {
         if (!connection) return
         try {
@@ -88,7 +92,7 @@ const ManageCandyMachines: NextPage = () => {
                         )}
                     </div>
                 ) : (
-                    <CandyMachineList candyMachineAccounts={accounts} />
+                    <CandyMachineList candyMachineAccounts={searchResults} />
                 )}
             </div>
         </>
