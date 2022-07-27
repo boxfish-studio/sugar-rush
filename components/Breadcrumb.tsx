@@ -31,9 +31,8 @@ const Breadcrumb: FC = () => {
             <Breadcrumbs className='d-none d-md-flex flex-row ml-3'>
                 {breadcrumbs.map((element) => {
                     return (
-                        <Link href={element.url} key={element.url}>
+                        <Link href={element.url} key={element.title}>
                             <Breadcrumbs.Item
-                                key={element.url}
                                 className={`${router.asPath === element.url ? 'text-bold' : ''} color-fg-on-emphasis`}
                                 style={{ cursor: 'pointer' }}
                             >
@@ -64,13 +63,17 @@ const Breadcrumb: FC = () => {
             {open && (
                 <NavList
                     className='d-flex position-absolute top-8 color-bg-emphasis color-fg-subtle width-full left-0'
+                    style={{
+                        transition: 'transform 0.2s ease-in-out',
+                        transform: `${!open ? 'scaleY(0)' : 'scaleY(1)'}`,
+                        transformOrigin: 'top',
+                    }}
                     sx={{ height: '100vh' }}
                 >
                     {breadcrumbs.map((element) => {
                         return (
                             <Link href={element.url} key={element.title}>
                                 <NavList.Item
-                                    key={element.url}
                                     onClick={() => setOpen(!open)}
                                     className={`${
                                         router.asPath === element.url ? 'text-bold' : ''
