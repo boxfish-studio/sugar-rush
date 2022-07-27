@@ -14,6 +14,7 @@ const useMintCandyMachine = (account: string) => {
     const { connection } = useRPC()
     const [isUserMinting, setIsUserMinting] = useState(false)
     const [itemsRemaining, setItemsRemaining] = useState(0)
+    const [itemsAvailable, setItemsAvailable] = useState(0)
     const [nftPrice, setNftPrice] = useState(0)
     const [isActive, setIsActive] = useState(false)
     const [isCaptcha, setIsCaptcha] = useState(false)
@@ -34,7 +35,6 @@ const useMintCandyMachine = (account: string) => {
 
             const program = new Program(idl!, CANDY_MACHINE_PROGRAM_V2_ID, provider)
             const state: any = await program.account.candyMachine.fetch(new PublicKey(account))
-
             const itemsAvailable = state.data.itemsAvailable.toNumber()
             const itemsRedeemed = state.itemsRedeemed.toNumber()
             const itemsRemaining = itemsAvailable - itemsRedeemed
@@ -43,6 +43,7 @@ const useMintCandyMachine = (account: string) => {
             let active = new BN(state.goLiveDate).toNumber() < new Date().getTime() / 1000
 
             setItemsRemaining(itemsRemaining)
+            setItemsAvailable(itemsAvailable)
             setNftPrice(nftPrice)
             setIsActive(active)
             setIsCaptcha(captcha)
@@ -153,6 +154,7 @@ const useMintCandyMachine = (account: string) => {
         mintAccount,
         isUserMinting,
         itemsRemaining,
+        itemsAvailable,
         nftPrice,
         isActive,
         refreshCandyMachineState,

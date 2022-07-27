@@ -41,7 +41,6 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <Navbar />
                         <CheckConnectedWallet>
                             <div className='container-xl p-responsive height-full my-11'>
-                                <TopActions />
                                 <Component {...pageProps} />
                                 <NotificationManager />
                             </div>
