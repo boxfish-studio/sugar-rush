@@ -28,6 +28,9 @@ const VerifyCandyMachine: FC<{
             <div className='d-flex flex-column flex-justify-between height-full'>
                 <div>
                     <h3 className='wb-break-all f3'>{candyMachineAccount}</h3>
+                    <div className='mt-2'>
+                        <span>{cache?.name}</span>
+                    </div>
                     <div className='my-3 my-md-5'>
                         <label
                             htmlFor='cache'
