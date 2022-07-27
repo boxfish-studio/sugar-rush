@@ -33,9 +33,9 @@ const Breadcrumb: FC = () => {
                     return (
                         <Link href={element.url} key={element.url}>
                             <Breadcrumbs.Item
-                                href={element.url}
                                 key={element.url}
                                 className={`${router.asPath === element.url ? 'text-bold' : ''} color-fg-on-emphasis`}
+                                style={{ cursor: 'pointer' }}
                             >
                                 {element.title}
                             </Breadcrumbs.Item>
@@ -71,7 +71,6 @@ const Breadcrumb: FC = () => {
                             <Link href={element.url} key={element.title}>
                                 <NavList.Item
                                     key={element.url}
-                                    href={element.url}
                                     onClick={() => setOpen(!open)}
                                     className={`${
                                         router.asPath === element.url ? 'text-bold' : ''
