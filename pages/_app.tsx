@@ -9,7 +9,7 @@ import {
     SolletWalletAdapter,
     TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
-import { Navbar, TopActions, Footer, CheckConnectedWallet, NotificationManager } from 'components'
+import { Navbar, Footer, CheckConnectedWallet, NotificationManager } from 'components'
 import type { AppProps } from 'next/app'
 import { useMemo } from 'react'
 import { RecoilRoot } from 'recoil'
