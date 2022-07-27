@@ -17,7 +17,8 @@ import type { NextPage } from 'next'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
-    const candyMachineAccount = router.query.id as string
+
+    const candyMachineAccount = router.query.candy_machine_ID as string
 
     const anchorWallet = useAnchorWallet()
     const { connection } = useRPC()
