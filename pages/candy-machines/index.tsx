@@ -38,8 +38,8 @@ const ManageCandyMachines: NextPage = () => {
     }
 
     const refreshCandyMachines = async () => {
-        setIsRefreshLoading(true)
         if (!connection) return
+        setIsRefreshLoading(true)
         try {
             const candyMachines = await fetchCandyMachineAccounts(connection, publicKey!)
             setCandyMachines(candyMachines)

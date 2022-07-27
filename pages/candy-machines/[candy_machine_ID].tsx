@@ -5,7 +5,7 @@ import { getAllNftsByCM, getNftByMint } from 'lib/nft/actions'
 import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Nft } from 'lib/nft/interfaces'
 import { nftsState } from 'lib/recoil-store/atoms'
-import { NftCard, Popup, RefreshButton, UpdateCandyMachine } from 'components'
+import { NftCard, Popup, RefreshButton, UpdateCandyMachine, DeleteCandyMachine, VerifyCandyMachine } from 'components'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
@@ -14,8 +14,6 @@ import { useRouter } from 'next/router'
 import { PublicKey } from '@solana/web3.js'
 import Head from 'next/head'
 import type { NextPage } from 'next'
-import DeleteCandyMachine from 'components/DeleteCandyMachine'
-import VerifyCandyMachine from 'components/VerifyCandyMachine'
 import { LinkExternalIcon } from '@primer/octicons-react'
 
 const CandyMachine: NextPage = () => {
@@ -153,7 +151,6 @@ const CandyMachine: NextPage = () => {
                 <link rel='icon' href='/favicon.ico' />
             </Head>
             <div className='d-flex flex-justify-end column-gap-1 flex-row flex-md-row'>
-                {' '}
                 <Button variant='danger' onClick={() => setIsDeleteOpen(true)}>
                     Delete
                 </Button>
