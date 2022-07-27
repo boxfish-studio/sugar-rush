@@ -42,7 +42,7 @@ const TopActions: FC = () => {
 
     return (
         <div className='d-flex flex-justify-end column-gap-1 d-flex flex-column flex-md-row'>
-            {pathname === '/' ? (
+            {pathname === '/candy-machines' ? (
                 <>
                     <SearchBar
                         searchValue={searchValue}

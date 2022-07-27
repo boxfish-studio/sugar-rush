@@ -13,7 +13,7 @@ const Navbar: FC = () => {
     const NAVBAR_ELEMENTS: INavbarElement[] = [
         {
             title: 'Dashboard / Candy Machines',
-            url: '/',
+            url: '/candy-machines',
         },
     ]
 
