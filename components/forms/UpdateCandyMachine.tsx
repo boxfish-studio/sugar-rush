@@ -1,6 +1,6 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
-import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
+import { LAMPORTS_PER_SOL, PublicKey, Connection } from '@solana/web3.js'
 import { useForm, useRPC, useUploadCache } from 'hooks'
 import { updateV2 } from 'lib/candy-machine'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
@@ -18,7 +18,7 @@ const UpdateCreateCandyMachineForm: FC<{
 }> = ({ fetchedValues, candyMachinePubkey }) => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
-    const { connection } = useRPC()
+    const { connection, network } = useRPC()
 
     const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
@@ -88,8 +88,8 @@ const UpdateCreateCandyMachineForm: FC<{
                 uuid: null,
             }
 
-            if (publicKey && anchorWallet && candyMachinePubkey && connection) {
-                const provider = new AnchorProvider(connection, anchorWallet, {
+            if (publicKey && anchorWallet && candyMachinePubkey && connection && network) {
+                const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
                     preflightCommitment: 'recent',
                 })
 

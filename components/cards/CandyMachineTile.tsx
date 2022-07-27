@@ -23,7 +23,7 @@ const CandyMachineTile: FC<{
                             <Button leadingIcon={LinkExternalIcon}>View in Solscan</Button>
                         </a>
                     </Link>
-                    <Link href={`/${account}`}>
+                    <Link href={`/candy-machines/${account}`}>
                         <Button variant='outline' sx={{ ml: '16px' }}>
                             Inspect
                         </Button>
