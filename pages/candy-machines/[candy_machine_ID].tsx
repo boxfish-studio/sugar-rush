@@ -305,46 +305,6 @@ const CandyMachine: NextPage = () => {
                                             )}
                                         </div>
                                     </div>
-                                    <div className='mt-5'>
-                                        <h4>Unminted NFTs - {itemsRemaining}</h4>
-                                        <div className='mt-3 nfts-grid'>
-                                            {new Array(5).fill(0).map((_, index) => (
-                                                <NftCard
-                                                    title={`CryptoDude #${index}`}
-                                                    key={index}
-                                                    imageLink={'/favicon.ico'}
-                                                    buttons={[
-                                                        {
-                                                            text: 'View in Solscan',
-                                                            as: 'link',
-                                                            variant: 'invisible',
-                                                            hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
-                                                        },
-                                                    ]}
-                                                />
-                                            ))}
-                                        </div>
-                                        <div className='mt-2'>
-                                            <span>{cache?.name}</span>
-                                        </div>
-                                        <div className='mt-7'>
-                                            <label
-                                                htmlFor='nftsCache'
-                                                className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
-                                                style={{ border: '1px solid #1b1f2426' }}
-                                            >
-                                                Upload Cache file
-                                            </label>
-                                            <input
-                                                id='nftsCache'
-                                                type='file'
-                                                name='cache'
-                                                onChange={viewNfts}
-                                                className='w-full p-2 d-none'
-                                                required
-                                            />
-                                        </div>
-                                    </div>
                                 </>
                             )}
                         </div>
