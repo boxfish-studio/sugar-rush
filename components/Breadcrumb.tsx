@@ -9,12 +9,12 @@ const Breadcrumb: FC = () => {
     const router = useRouter()
     const [open, setOpen] = useState(false)
     const [breadcrumbs, setBreadcrumbs] = useState<INavbarElement[]>([])
-    const isCM = (path: string): boolean => {
-        return router.query.candy_machine_ID === path
-    }
 
     useEffect(() => {
         if (router) {
+            const isCM = (path: string): boolean => {
+                return router.query.candy_machine_ID === path
+            }
             const linkPath = router.asPath.split('/')
             linkPath.shift()
             const pathArray = linkPath?.map((path, i) => ({
