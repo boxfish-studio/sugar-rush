@@ -1,13 +1,13 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
-import { Connection, LAMPORTS_PER_SOL } from '@solana/web3.js'
-import { useForm, useRPC, useUploadCache, useUploadFiles } from 'hooks'
+import { Connection } from '@solana/web3.js'
+import { useForm, useRPC, useUploadFiles } from 'hooks'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
 import { StorageType } from 'lib/candy-machine/enums'
-import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
+import { ICandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/candy-machine/upload/config'
 import { uploadV2 } from 'lib/candy-machine/upload/upload'
-import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
+import { getCurrentDate, getCurrentTime, parseDateToUTC } from 'lib/utils'
 import React, { FC, useState, useEffect } from 'react'
 import { Box, Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
@@ -267,6 +267,11 @@ const CreateCandyMachine: FC = () => {
                                     </option>
                                 ))}
                         </select>
+                    </div>
+                    <div className='d-flex flex-column flex-items-start p-0 gap-2'>
+                        {files?.map((file, index) => (
+                            <span key={index}>{file.name}</span>
+                        ))}
                     </div>
                     <div className='mt-4 '>
                         <label

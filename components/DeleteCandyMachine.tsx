@@ -72,7 +72,7 @@ const DeleteCandyMachine: FC<{
                         variant='outline'
                         state='rest'
                         size='medium'
-                        onClick={() => router.push('/')}
+                        onClick={() => router.push('/candy-machines')}
                     >
                         Go Home
                     </Button>
