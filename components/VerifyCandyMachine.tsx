@@ -33,16 +33,16 @@ const VerifyCandyMachine: FC<{
                     </div>
                     <div className='my-3 my-md-5'>
                         <label
-                            htmlFor='cache'
+                            htmlFor='verify-cache'
                             className='px-4 py-2 rounded-2 cursor-pointer'
                             style={{ border: '1px solid #1b1f2426' }}
                         >
                             Upload cache file
                         </label>
                         <input
-                            id='cache'
+                            id='verify-cache'
                             type='file'
-                            name='cache'
+                            name='verify-cache'
                             multiple
                             onChange={uploadCache}
                             className='d-none'
