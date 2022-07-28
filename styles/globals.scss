@@ -92,6 +92,13 @@ body {
     cursor: default;
 }
 
+.upload-button {
+    border: 1px solid #1b1f2426;
+    padding: 8px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #f6f8fa;
+}
 .cursor-pointer {
     cursor: pointer;
 }
