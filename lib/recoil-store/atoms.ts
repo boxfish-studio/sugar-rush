@@ -28,12 +28,7 @@ export const networkState = atom<null | {
     default: null,
 })
 
-export const notificationState: RecoilState<INotification> = atom<INotification>({
+export const notificationState: RecoilState<INotification[]> = atom<INotification[]>({
     key: 'notificationState',
-    default: {
-        open: false,
-        message: '',
-        type: NotificationType.Default,
-        timeout: 8000,
-    },
+    default: [],
 })
