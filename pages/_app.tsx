@@ -42,10 +42,10 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <CheckConnectedWallet>
                             <div className='container-xl p-responsive height-full my-11'>
                                 <Component {...pageProps} />
-                                <NotificationManager />
                             </div>
                         </CheckConnectedWallet>
                     </WalletModalProvider>
+                    <NotificationManager />
                     <Footer />
                 </RecoilRoot>
             </WalletProvider>
