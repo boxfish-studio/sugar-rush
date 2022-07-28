@@ -60,32 +60,28 @@ const Breadcrumb: FC = () => {
                     />
                 </div>
             </div>
-            {open && (
-                <NavList
-                    className='d-flex position-absolute top-8 color-bg-emphasis color-fg-subtle width-full left-0'
-                    style={{
-                        transition: 'transform 0.2s ease-in-out',
-                        transform: `${!open ? 'scaleY(0)' : 'scaleY(1)'}`,
-                        transformOrigin: 'top',
-                    }}
-                    sx={{ height: '100vh' }}
-                >
-                    {breadcrumbs.map((element) => {
-                        return (
-                            <Link href={element.url} key={element.title}>
-                                <NavList.Item
-                                    onClick={() => setOpen(!open)}
-                                    className={`${
-                                        router.asPath === element.url ? 'text-bold' : ''
-                                    } color-fg-on-emphasis`}
-                                >
-                                    {element.title}
-                                </NavList.Item>
-                            </Link>
-                        )
-                    })}
-                </NavList>
-            )}
+            <NavList
+                className='d-flex position-absolute top-8 color-bg-emphasis color-fg-subtle width-full left-0'
+                style={{
+                    transition: 'transform 0.2s ease-in-out',
+                    transform: `${!open ? 'scaleY(0)' : 'scaleY(1)'}`,
+                    transformOrigin: 'top',
+                }}
+                sx={{ height: '100vh' }}
+            >
+                {breadcrumbs.map((element) => {
+                    return (
+                        <Link href={element.url} key={element.title}>
+                            <NavList.Item
+                                onClick={() => setOpen(!open)}
+                                className={`${router.asPath === element.url ? 'text-bold' : ''} color-fg-on-emphasis`}
+                            >
+                                {element.title}
+                            </NavList.Item>
+                        </Link>
+                    )
+                })}
+            </NavList>
         </>
     )
 }
