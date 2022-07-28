@@ -268,6 +268,11 @@ const CreateCandyMachine: FC = () => {
                                 ))}
                         </select>
                     </div>
+                    <div className='d-flex flex-column flex-items-start p-0 gap-2'>
+                        {files?.map((file, index) => (
+                            <span key={index}>{file.name}</span>
+                        ))}
+                    </div>
                     <div className='mt-4 '>
                         <label
                             htmlFor='file'
