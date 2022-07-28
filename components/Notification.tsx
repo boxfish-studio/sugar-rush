@@ -11,7 +11,7 @@ const Notification = (props: INotification) => {
                 <div className='d-flex flex-justify-between'>
                     <div className='mr-3 d-flex width-full flex-items-center'>
                         <StyledOcticon icon={icon} />
-                        <div className='f4'>{message}</div>
+                        <div className='f4 wb-break-word'>{message}</div>
                     </div>
                     <div className=' d-flex flex-items-center flex-justify-end' title='Close' onClick={onClose}>
                         <StyledOcticon icon={XCircleIcon} size={16} />
