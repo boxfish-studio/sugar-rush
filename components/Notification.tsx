@@ -1,4 +1,4 @@
-import { Flash, Text } from '@primer/react'
+import { Flash } from '@primer/react'
 import { INotification } from 'lib/interfaces'
 import { StyledOcticon } from '@primer/react'
 import { XCircleIcon } from '@primer/octicons-react'
