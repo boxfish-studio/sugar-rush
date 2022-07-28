@@ -21,7 +21,9 @@ const Breadcrumb: FC = () => {
                 title: isCM(path) ? '[CM]: ' + path.substring(0, 12).concat('...') : path,
                 url: '/' + linkPath.slice(0, i + 1).join('/'),
             }))
-            pathArray.unshift({ title: 'Dashboard', url: '/' })
+            pathArray[0].title === ''
+                ? (pathArray[0].title = 'Dashboard')
+                : pathArray.unshift({ title: 'Dashboard', url: '/' })
             setBreadcrumbs(pathArray)
         }
     }, [router])
