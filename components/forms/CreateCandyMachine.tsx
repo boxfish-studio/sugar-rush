@@ -171,7 +171,7 @@ const CreateCandyMachine: FC = () => {
                 if (typeof _candyMachine === 'string') candyMachine = _candyMachine
                 showNotification({
                     open: true,
-                    message: `Candy Machine created successfully!`,
+                    message: `Candy Machine created successfully! ${candyMachine}`,
                     type: NotificationType.Success,
                 })
             } catch (err) {
