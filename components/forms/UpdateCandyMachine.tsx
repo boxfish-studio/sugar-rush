@@ -11,6 +11,7 @@ import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, pa
 import React, { FC, useState } from 'react'
 import { Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
+import { NotificationType } from 'lib/interfaces'
 
 const UpdateCreateCandyMachineForm: FC<{
     fetchedValues?: IFetchedCandyMachineConfig
@@ -149,7 +150,7 @@ const UpdateCreateCandyMachineForm: FC<{
                 showNotification({
                     open: true,
                     message: `Candy Machine updated successfully!`,
-                    type: 'success',
+                    type: NotificationType.Success,
                     timeout: 8000,
                 })
             }
@@ -157,7 +158,7 @@ const UpdateCreateCandyMachineForm: FC<{
             showNotification({
                 open: true,
                 message: `An error occurred while updating the Candy Machine`,
-                type: 'danger',
+                type: NotificationType.Error,
                 timeout: 8000,
             })
         }

@@ -3,6 +3,7 @@ import { FC, useState } from 'react'
 import { Button, Spinner, Text } from '@primer/react'
 import { useRemoveCandyMachineAccount, useNotification } from 'hooks'
 import { useRouter } from 'next/router'
+import { NotificationType } from 'lib/interfaces'
 
 const DeleteCandyMachine: FC<{
     candyMachineAccount: string
@@ -23,7 +24,7 @@ const DeleteCandyMachine: FC<{
             showNotification({
                 open: true,
                 message: `Candy Machine deleted successfully!`,
-                type: 'success',
+                type: NotificationType.Success,
                 timeout: 8000,
             })
         } catch (error) {
@@ -31,7 +32,7 @@ const DeleteCandyMachine: FC<{
             showNotification({
                 open: true,
                 message: `An error occurred while deleting the Candy Machine`,
-                type: 'danger',
+                type: NotificationType.Error,
                 timeout: 8000,
             })
         }

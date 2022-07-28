@@ -8,8 +8,15 @@ export interface INavbarElement {
 export interface INotification {
     open?: boolean
     icon?: any
-    type?: 'default' | 'success' | 'danger' | 'warning'
+    type?: NotificationType
     message?: string
     onClose?: () => void
     timeout?: number
+}
+
+export enum NotificationType {
+    Default = 'default',
+    Success = 'success',
+    Error = 'danger',
+    Warning = 'warning',
 }

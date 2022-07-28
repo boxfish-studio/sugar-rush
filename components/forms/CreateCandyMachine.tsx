@@ -11,6 +11,7 @@ import { getCurrentDate, getCurrentTime, parseDateToUTC } from 'lib/utils'
 import React, { FC, useState, useEffect } from 'react'
 import { Box, Button, Spinner } from '@primer/react'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
+import { NotificationType } from 'lib/interfaces'
 
 const CreateCandyMachine: FC = () => {
     const { publicKey } = useWallet()
@@ -171,14 +172,14 @@ const CreateCandyMachine: FC = () => {
                 showNotification({
                     open: true,
                     message: `Candy Machine created successfully!`,
-                    type: 'success',
+                    type: NotificationType.Success,
                     timeout: 8000,
                 })
             } catch (err) {
                 showNotification({
                     open: true,
                     message: `An error occurred while creating the Candy Machine`,
-                    type: 'danger',
+                    type: NotificationType.Error,
                     timeout: 8000,
                 })
             }
