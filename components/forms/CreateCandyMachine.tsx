@@ -173,14 +173,12 @@ const CreateCandyMachine: FC = () => {
                     open: true,
                     message: `Candy Machine created successfully!`,
                     type: NotificationType.Success,
-                    timeout: 8000,
                 })
             } catch (err) {
                 showNotification({
                     open: true,
                     message: `An error occurred while creating the Candy Machine`,
                     type: NotificationType.Error,
-                    timeout: 8000,
                 })
             }
             const endMilliseconds = Date.now()

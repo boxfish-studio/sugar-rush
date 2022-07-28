@@ -25,7 +25,6 @@ const DeleteCandyMachine: FC<{
                 open: true,
                 message: `Candy Machine deleted successfully!`,
                 type: NotificationType.Success,
-                timeout: 8000,
             })
         } catch (error) {
             console.log(error)
@@ -33,7 +32,6 @@ const DeleteCandyMachine: FC<{
                 open: true,
                 message: `An error occurred while deleting the Candy Machine`,
                 type: NotificationType.Error,
-                timeout: 8000,
             })
         }
         setIsDeleting(false)

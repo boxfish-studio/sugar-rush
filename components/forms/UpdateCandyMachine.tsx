@@ -151,7 +151,6 @@ const UpdateCreateCandyMachineForm: FC<{
                     open: true,
                     message: `Candy Machine updated successfully!`,
                     type: NotificationType.Success,
-                    timeout: 8000,
                 })
             }
         } catch (err) {
@@ -159,7 +158,6 @@ const UpdateCreateCandyMachineForm: FC<{
                 open: true,
                 message: `An error occurred while updating the Candy Machine`,
                 type: NotificationType.Error,
-                timeout: 8000,
             })
         }
         setIsInteractingWithCM(false)
