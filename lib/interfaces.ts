@@ -10,7 +10,6 @@ export interface INotification {
     icon?: any
     type?: NotificationType
     message?: string
-    onClose?: () => void
     timeout?: number
     id?: string
 }
