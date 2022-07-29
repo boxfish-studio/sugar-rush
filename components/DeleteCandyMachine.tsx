@@ -22,14 +22,12 @@ const DeleteCandyMachine: FC<{
             const result = await removeAccount(candyMachineAccount)
             result && setTransaction(result.txid)
             showNotification({
-                open: true,
                 message: `Candy Machine deleted successfully!`,
                 type: NotificationType.Success,
             })
         } catch (error) {
             console.log(error)
             showNotification({
-                open: true,
                 message: `An error occurred while deleting the Candy Machine`,
                 type: NotificationType.Error,
             })

@@ -103,8 +103,8 @@ body {
         right: 50px;
         width: 40%;
     }
-    div {
-        gap: 8px;
+    > div {
+        margin-top: 8px;
     }
 }
 

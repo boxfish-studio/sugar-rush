@@ -22,7 +22,7 @@ const useNotification = () => {
             notifications.forEach((notification) => {
                 setTimeout(() => {
                     removeNotification(notification)
-                }, notification?.timeout)
+                }, notification?.timeout ?? NOTIFICATION_TIMEOUT_DEFAULT)
             })
         }
     }, [notifications])

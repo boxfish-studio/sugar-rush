@@ -2,24 +2,14 @@ import { useNotification } from 'hooks'
 import { Notification } from 'components'
 import { INotification, NotificationType } from 'lib/interfaces'
 import { CheckIcon, XIcon, AlertIcon, InfoIcon } from '@primer/octicons-react'
-import { useEffect } from 'react'
 
 export default function NotificationManager() {
     const { notifications, removeNotification } = useNotification()
-    console.log('notifications', notifications)
-    // useEffect(() => {
-    //     if (notifications.length) {
-    //         notifications.map((notification) => {
-    //             setTimeout(() => {
-    //                 removeNotification(notification)
-    //             }, notification?.timeout)
-    //         })
-    //     }
-    // }, [notifications])
 
     const onClose = (notification: INotification) => {
         removeNotification(notification)
     }
+
     const InfoNotification = (props: INotification) => {
         return <Notification {...props} type={NotificationType.Default} />
     }
