@@ -6,6 +6,7 @@ export interface INavbarElement {
 }
 
 export interface INotification {
+    id?: string
     icon?: any
     type?: NotificationType
     message?: string

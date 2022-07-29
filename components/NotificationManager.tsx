@@ -7,7 +7,7 @@ export default function NotificationManager() {
     const { notifications, removeNotification } = useNotification()
 
     const onClose = (notification: INotification) => {
-        removeNotification(notification)
+        removeNotification(notification.id!)
     }
 
     const InfoNotification = (props: INotification) => {

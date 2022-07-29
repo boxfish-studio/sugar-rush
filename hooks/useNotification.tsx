@@ -1,32 +1,21 @@
 import { useRecoilState } from 'recoil'
 import { notificationState } from 'lib/recoil-store/atoms'
 import { INotification } from 'lib/interfaces'
-import { useEffect } from 'react'
-
-export const NOTIFICATION_TIMEOUT_DEFAULT = 8000
-export const NOTIFICATION_TIMEOUT_NEVER = -1
+import { generateRandomId } from 'lib/utils'
 
 const useNotification = () => {
     const [notifications, setNotifications] = useRecoilState<INotification[]>(notificationState)
 
-    const showNotification = (notification: INotification): void => {
-        setNotifications([...notifications, { ...notification }])
+    const createNotification = (notification: INotification): void => {
+        const id = notification.id ?? generateRandomId()
+        setNotifications([...notifications, { ...notification, id }])
     }
 
-    const removeNotification = (notification: INotification): void => {
-        setNotifications(notifications.filter((n) => n !== notification))
+    const removeNotification = (id: string): void => {
+        const _notifications = notifications.filter((n) => n.id !== id)
+        setNotifications(_notifications)
     }
 
-    useEffect(() => {
-        if (notifications?.length) {
-            notifications.forEach((notification) => {
-                setTimeout(() => {
-                    removeNotification(notification)
-                }, notification?.timeout ?? NOTIFICATION_TIMEOUT_DEFAULT)
-            })
-        }
-    }, [notifications])
-
-    return { notifications, showNotification, removeNotification }
+    return { notifications, createNotification, removeNotification }
 }
 export default useNotification

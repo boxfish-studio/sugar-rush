@@ -20,7 +20,7 @@ const UpdateCreateCandyMachineForm: FC<{
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
-    const { showNotification } = useNotification()
+    const { createNotification } = useNotification()
     const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
     const [status, setStatus] = useState('')
@@ -147,13 +147,13 @@ const UpdateCreateCandyMachineForm: FC<{
                     cache: await cache.text(),
                     newAuthority: values['new-authority'],
                 })
-                showNotification({
+                createNotification({
                     message: `Candy Machine updated successfully!`,
                     type: NotificationType.Success,
                 })
             }
         } catch (err) {
-            showNotification({
+            createNotification({
                 message: `An error occurred while updating the Candy Machine`,
                 type: NotificationType.Error,
             })
