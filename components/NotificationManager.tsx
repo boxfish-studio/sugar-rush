@@ -2,10 +2,24 @@ import { useNotification } from 'hooks'
 import { Notification } from 'components'
 import { INotification, NotificationType } from 'lib/interfaces'
 import { CheckIcon, XIcon, AlertIcon, InfoIcon } from '@primer/octicons-react'
+import { useEffect } from 'react'
 
 export default function NotificationManager() {
-    const { notifications } = useNotification()
+    const { notifications, removeNotification } = useNotification()
+    console.log('notifications', notifications)
+    // useEffect(() => {
+    //     if (notifications.length) {
+    //         notifications.map((notification) => {
+    //             setTimeout(() => {
+    //                 removeNotification(notification)
+    //             }, notification?.timeout)
+    //         })
+    //     }
+    // }, [notifications])
 
+    const onClose = (notification: INotification) => {
+        removeNotification(notification)
+    }
     const InfoNotification = (props: INotification) => {
         return <Notification {...props} type={NotificationType.Default} />
     }
@@ -20,25 +34,49 @@ export default function NotificationManager() {
     }
 
     return (
-        <>
-            {notifications?.map((notification) => {
-                return (
-                    <>
-                        {notification.type === NotificationType.Default && notification.open && (
-                            <InfoNotification message={notification.message} icon={InfoIcon} />
-                        )}
-                        {notification.type === NotificationType.Error && notification.open && (
-                            <ErrorNotification message={notification.message} icon={XIcon} />
-                        )}
-                        {notification.type === NotificationType.Warning && notification.open && (
-                            <WarningNotification message={notification.message} icon={AlertIcon} />
-                        )}
-                        {notification.type === NotificationType.Success && notification.open && (
-                            <SuccessNotification message={notification.message} icon={CheckIcon} />
-                        )}
-                    </>
-                )
+        <div className='notifications'>
+            {notifications?.map((notification, index) => {
+                if (notification.type === NotificationType.Default) {
+                    return (
+                        <InfoNotification
+                            key={index}
+                            {...notification}
+                            icon={InfoIcon}
+                            onClose={() => onClose(notification)}
+                        />
+                    )
+                }
+                if (notification.type === NotificationType.Error) {
+                    return (
+                        <ErrorNotification
+                            key={index}
+                            {...notification}
+                            icon={XIcon}
+                            onClose={() => onClose(notification)}
+                        />
+                    )
+                }
+                if (notification.type === NotificationType.Warning) {
+                    return (
+                        <WarningNotification
+                            key={index}
+                            {...notification}
+                            icon={AlertIcon}
+                            onClose={() => onClose(notification)}
+                        />
+                    )
+                }
+                if (notification.type === NotificationType.Success) {
+                    return (
+                        <SuccessNotification
+                            key={index}
+                            {...notification}
+                            icon={CheckIcon}
+                            onClose={() => onClose(notification)}
+                        />
+                    )
+                }
             })}
-        </>
+        </div>
     )
 }

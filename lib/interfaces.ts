@@ -11,7 +11,7 @@ export interface INotification {
     type?: NotificationType
     message?: string
     timeout?: number
-    id?: string
+    onClose?: () => void
 }
 
 export enum NotificationType {

@@ -92,7 +92,7 @@ body {
     cursor: default;
 }
 
-.notification {
+.notifications {
     z-index: 100;
     position: absolute;
     bottom: 0px;
@@ -102,6 +102,9 @@ body {
         bottom: 100px;
         right: 50px;
         width: 40%;
+    }
+    div {
+        gap: 8px;
     }
 }
 
