@@ -4,6 +4,7 @@ import { Button, Spinner, Text } from '@primer/react'
 import { useRemoveCandyMachineAccount, useNotification } from 'hooks'
 import { useRouter } from 'next/router'
 import { NotificationType } from 'lib/interfaces'
+import { NOTIFICATION_TIMEOUT_NEVER } from 'lib/constants'
 
 const DeleteCandyMachine: FC<{
     candyMachineAccount: string

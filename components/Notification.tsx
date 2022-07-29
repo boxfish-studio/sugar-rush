@@ -4,14 +4,16 @@ import { StyledOcticon } from '@primer/react'
 import { XCircleIcon } from '@primer/octicons-react'
 import { FC, useEffect } from 'react'
 import { useNotification } from 'hooks'
-import { NOTIFICATION_TIMEOUT_DEFAULT } from 'lib/constants'
+import { NOTIFICATION_TIMEOUT_DEFAULT, NOTIFICATION_TIMEOUT_NEVER } from 'lib/constants'
 
 const Notification: FC<INotification> = ({ type, message, onClose, icon, timeout, id }) => {
     const { removeNotification } = useNotification()
 
     useEffect(() => {
-        const destroyTimeout = setTimeout(() => removeNotification(id!), timeout ?? NOTIFICATION_TIMEOUT_DEFAULT)
-        return () => clearTimeout(destroyTimeout)
+        if (!timeout || timeout !== NOTIFICATION_TIMEOUT_NEVER) {
+            const destroyTimeout = setTimeout(() => removeNotification(id!), timeout ?? NOTIFICATION_TIMEOUT_DEFAULT)
+            return () => clearTimeout(destroyTimeout)
+        }
     }, [])
 
     return (
