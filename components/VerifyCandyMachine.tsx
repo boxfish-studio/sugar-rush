@@ -32,11 +32,7 @@ const VerifyCandyMachine: FC<{
                         <span>{cache?.name}</span>
                     </div>
                     <div className='my-3 my-md-5'>
-                        <label
-                            htmlFor='cache'
-                            className='px-4 py-2 rounded-2 cursor-pointer'
-                            style={{ border: '1px solid #1b1f2426' }}
-                        >
+                        <label htmlFor='cache' className='upload-button'>
                             Upload cache file
                         </label>
                         <input
