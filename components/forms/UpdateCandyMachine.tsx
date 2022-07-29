@@ -148,14 +148,12 @@ const UpdateCreateCandyMachineForm: FC<{
                     newAuthority: values['new-authority'],
                 })
                 showNotification({
-                    open: true,
                     message: `Candy Machine updated successfully!`,
                     type: NotificationType.Success,
                 })
             }
         } catch (err) {
             showNotification({
-                open: true,
                 message: `An error occurred while updating the Candy Machine`,
                 type: NotificationType.Error,
             })

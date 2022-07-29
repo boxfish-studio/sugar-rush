@@ -170,13 +170,11 @@ const CreateCandyMachine: FC = () => {
 
                 if (typeof _candyMachine === 'string') candyMachine = _candyMachine
                 showNotification({
-                    open: true,
                     message: `Candy Machine created successfully! ${candyMachine}`,
                     type: NotificationType.Success,
                 })
             } catch (err) {
                 showNotification({
-                    open: true,
                     message: `An error occurred while creating the Candy Machine`,
                     type: NotificationType.Error,
                 })
