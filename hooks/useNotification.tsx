@@ -11,12 +11,14 @@ const useNotification = () => {
     const [notifications, setNotifications] = useRecoilState(notificationState)
     let currentNotifications: INotification[] = notifications
 
-    const showNotification = (notification: INotification): string => {
-        notification.id = generateRandomId()
-        notification.timeout = notification.timeout ?? NOTIFICATION_TIMEOUT_DEFAULT
-        currentNotifications = [...notifications, notification]
-        console.log('currentNotifications after psuh', currentNotifications)
-        setNotifications(currentNotifications)
+    const showNotification = (notification: INotification) => {
+        if (!notification.id) {
+            notification.id = generateRandomId()
+            notification.timeout = notification.timeout ?? NOTIFICATION_TIMEOUT_DEFAULT
+            currentNotifications = [...notifications, notification]
+            console.log('currentNotifications after psuh', currentNotifications)
+            setNotifications(currentNotifications)
+        }
         if (notification.timeout !== NOTIFICATION_TIMEOUT_NEVER) {
             setTimeout(() => removeNotification(notification.id), notification.timeout)
         }
@@ -25,30 +27,23 @@ const useNotification = () => {
     }
 
     function removeNotification(id: string | undefined): void {
-        let _currentNotifications = [...currentNotifications]
-        const idx = _currentNotifications?.findIndex((n) => n.id === id)
-        console.log('idx', idx)
-        if (idx >= 0) {
-            console.log('removing notification', idx)
-            _currentNotifications.splice(idx, 1)
-        }
-        _currentNotifications = currentNotifications
-        // setNotifications(_currentNotifications)
+        currentNotifications.filter((n) => n.id !== id)
+        console.log('currentNotifications after remove', currentNotifications)
         setNotifications(currentNotifications)
     }
 
     useEffect(() => {
-        if (currentNotifications.length > 0) {
-            currentNotifications.map((notification) => {
-                if (notification?.open && notification?.timeout) {
-                    setTimeout(() => {
-                        showNotification(notification)
-                    }, notification?.timeout)
-                }
+        if (notifications.length > 0) {
+            notifications.map((notification) => {
+                setTimeout(() => {
+                    showNotification(notification)
+                }, notification?.timeout)
             })
         }
-    }, [currentNotifications])
+        setNotifications(notifications)
+        console.log('notifications after useEffect', notifications)
+    }, [notifications])
 
-    return { currentNotifications, showNotification }
+    return { notifications, showNotification }
 }
 export default useNotification
