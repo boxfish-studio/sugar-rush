@@ -23,7 +23,11 @@ const Notification: FC<INotification> = ({ type, message, onClose, icon, timeout
                     <StyledOcticon icon={icon} />
                     <div className='f4 wb-break-word'>{message}</div>
                 </div>
-                <div className=' d-flex flex-items-center flex-justify-end' title='Close' onClick={onClose}>
+                <div
+                    className='d-flex flex-items-center flex-justify-end cursor-pointer'
+                    title='Close'
+                    onClick={onClose}
+                >
                     <StyledOcticon icon={XCircleIcon} size={16} />
                 </div>
             </div>
