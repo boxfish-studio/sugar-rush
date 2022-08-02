@@ -214,6 +214,9 @@ const CandyMachine: NextPage = () => {
                                         <Text as='p' className='mt-3 mb-4'>
                                             Upload cache file to preview NFTs
                                         </Text>
+                                        <Text as='p' className='my-3'>
+                                            {cache?.name}
+                                        </Text>
                                     </>
                                 ) : (
                                     <>
