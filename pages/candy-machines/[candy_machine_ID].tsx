@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
 import { useRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
-import { PublicKey } from '@solana/web3.js'
+import { Connection, PublicKey } from '@solana/web3.js'
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import { LinkExternalIcon } from '@primer/octicons-react'
@@ -69,7 +69,7 @@ const CandyMachine: NextPage = () => {
             setError('')
             try {
                 setIsLoading(true)
-                const provider = new AnchorProvider(connection, anchorWallet, {
+                const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
                     preflightCommitment: 'processed',
                 })
 

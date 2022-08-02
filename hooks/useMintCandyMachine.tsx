@@ -1,7 +1,7 @@
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { AnchorProvider, Program, BN } from '@project-serum/anchor'
 import { useRPC } from 'hooks'
-import { PublicKey, LAMPORTS_PER_SOL, Transaction } from '@solana/web3.js'
+import { PublicKey, LAMPORTS_PER_SOL, Transaction, Connection } from '@solana/web3.js'
 import { awaitTransactionSignatureConfirmation } from 'lib/candy-machine/upload/transactions'
 import { useState } from 'react'
 import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/mint/constants'
@@ -11,7 +11,7 @@ import { createAccountsForMint, mintOneNft } from 'lib/candy-machine/mint/mint'
 
 const useMintCandyMachine = (account: string) => {
     const anchorWallet = useAnchorWallet()
-    const { connection } = useRPC()
+    const { connection, network } = useRPC()
     const [isUserMinting, setIsUserMinting] = useState(false)
     const [itemsRemaining, setItemsRemaining] = useState(0)
     const [itemsAvailable, setItemsAvailable] = useState(0)
@@ -26,8 +26,8 @@ const useMintCandyMachine = (account: string) => {
 
     async function refreshCandyMachineState() {
         try {
-            if (!anchorWallet || !wallet.publicKey || !connection) return
-            const provider = new AnchorProvider(connection, anchorWallet, {
+            if (!anchorWallet || !wallet.publicKey || !connection || !network) return
+            const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
                 preflightCommitment: 'recent',
             })
 
@@ -82,6 +82,10 @@ const useMintCandyMachine = (account: string) => {
             setIsUserMinting(true)
             refreshCandyMachineState()
 
+            const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
+                preflightCommitment: 'recent',
+            })
+
             let setupMint: SetupState | undefined = await createAccountsForMint(candyMachine, wallet.publicKey)
 
             let status: any = { err: true }
@@ -89,7 +93,7 @@ const useMintCandyMachine = (account: string) => {
                 status = await awaitTransactionSignatureConfirmation(
                     setupMint.transaction,
                     DEFAULT_TIMEOUT,
-                    connection,
+                    provider.connection,
                     undefined,
                     true
                 )
@@ -115,7 +119,7 @@ const useMintCandyMachine = (account: string) => {
                 status = await awaitTransactionSignatureConfirmation(
                     mintResult.mintTxId,
                     DEFAULT_TIMEOUT,
-                    connection,
+                    provider.connection,
                     undefined,
                     true
                 )
