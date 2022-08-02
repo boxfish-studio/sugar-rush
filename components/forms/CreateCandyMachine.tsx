@@ -274,11 +274,7 @@ const CreateCandyMachine: FC = () => {
                         ))}
                     </div>
                     <div className='mt-4 '>
-                        <label
-                            htmlFor='file'
-                            className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
-                            style={{ border: '1px solid #1b1f2426' }}
-                        >
+                        <label htmlFor='file' className='upload-button'>
                             Upload NFT files
                         </label>
                         <input
