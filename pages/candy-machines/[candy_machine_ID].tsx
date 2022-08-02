@@ -328,6 +328,11 @@ const CandyMachine: NextPage = () => {
                                     </div>
                                 </>
                             )}
+                            {error?.includes('Error to fetch data') && (
+                                <Text as='p' className='mt-3 mb-4'>
+                                    {error}
+                                </Text>
+                            )}
                         </div>
                     </>
                 )}
