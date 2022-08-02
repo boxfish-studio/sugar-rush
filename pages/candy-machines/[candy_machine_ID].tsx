@@ -47,7 +47,9 @@ const CandyMachine: NextPage = () => {
         setCache(e.target.files[0])
         let cacheData = await e.target.files[0].text()
         let cacheDataJson = JSON.parse(cacheData)
-        if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
+        if (!cacheDataJson.items) {
+            alert('NFTs Preview not available in cache file')
+        } else if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
             const nfts = Object.values(cacheDataJson.items).map((nft: any) => {
                 return {
                     image: nft.imageLink,
@@ -56,9 +58,6 @@ const CandyMachine: NextPage = () => {
             })
 
             setNfts(nfts)
-            if (!!cacheDataJson.items) {
-                alert('NFTs Preview not available in cache file')
-            }
         } else {
             alert('This cache file is not from this candy machine')
         }
