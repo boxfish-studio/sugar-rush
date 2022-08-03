@@ -11,7 +11,6 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import { LinkExternalIcon } from '@primer/octicons-react'
-import UpdateCreateCandyMachine from 'components/candy-machine/UpdateCandyMachine'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -138,7 +137,7 @@ const CandyMachine: NextPage = () => {
                 <h2 className='my-5 wb-break-all'>[CM]: {candyMachineAccount}</h2>
                 {
                     <>
-                        <UpdateCreateCandyMachine candyMachineAccount={candyMachineAccount} />
+                        <UpdateCandyMachine candyMachineAccount={candyMachineAccount} />
                         <div className='d-flex flex-justify-center flex-items-start flex-column mb-10 width-full p-0'>
                             <div className='d-flex flex-justify-between flex-items-center width-full mb-4'>
                                 <h3 className='r-0'>NFTs</h3>

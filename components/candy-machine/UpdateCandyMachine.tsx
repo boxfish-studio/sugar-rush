@@ -12,7 +12,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
 
-const UpdateCreateCandyMachine: FC<{
+const UpdateCandyMachine: FC<{
     candyMachineAccount?: string | string[]
 }> = ({ candyMachineAccount }) => {
     const { publicKey } = useWallet()
@@ -396,4 +396,4 @@ const FormInput: FC<Input> = ({
     )
 }
 
-export default UpdateCreateCandyMachine
+export default UpdateCandyMachine
