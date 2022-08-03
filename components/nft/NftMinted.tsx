@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { Spinner } from '@primer/react'
 import { Nft } from 'lib/nft/interfaces'
 import NftCard from './NftCard'
@@ -9,8 +9,7 @@ const NftMinted: FC<{
     nfts: Nft[]
     isLoading: boolean
     fetchNfts: () => void
-    collectionNft?: Nft
-}> = ({ candyMachineAccount, collectionNft, fetchNfts, nfts, isLoading }) => {
+}> = ({ candyMachineAccount, fetchNfts, nfts, isLoading }) => {
     const { isUserMinting, itemsRemaining, mintAccount, isCaptcha, itemsAvailable } = useMintCandyMachine(
         candyMachineAccount as string
     )
@@ -25,79 +24,56 @@ const NftMinted: FC<{
     }
 
     return (
-        <>
-            {collectionNft && (
-                <>
-                    <div className='mb-5'>
-                        <h4>Collection</h4>
-                        <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
+        <div>
+            <h4>Minted NFTs - {nfts.length}</h4>
+            <div className='nfts-grid mt-3'>
+                {itemsRemaining > 0 && isCaptcha && (
+                    <NftCard
+                        title={'New NFT'}
+                        buttons={[
+                            {
+                                text: 'Captcha enabled',
+                                as: 'button',
+                                variant: 'outline',
+                                disabled: true,
+                            },
+                        ]}
+                    />
+                )}
+                {itemsRemaining > 0 && !isCaptcha && (
+                    <NftCard
+                        title={'New NFT'}
+                        buttons={[
+                            {
+                                text: 'Mint 1 NFT',
+                                isLoading: isUserMinting,
+                                as: 'button',
+                                variant: 'primary',
+                                onClick: () => mintAccount().then(fetchNfts),
+                            },
+                        ]}
+                    />
+                )}
+                {nfts.map(
+                    ({ name, image, mint }, index) =>
+                        index < 10 && (
                             <NftCard
-                                title={collectionNft.name}
-                                imageLink={collectionNft.image}
+                                title={name}
+                                imageLink={image}
+                                key={index}
                                 buttons={[
                                     {
                                         text: 'View in Solscan',
                                         as: 'link',
                                         variant: 'invisible',
-                                        hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
+                                        hash: mint?.toBase58(),
                                     },
                                 ]}
                             />
-                        </div>
-                    </div>
-                </>
-            )}
-            <div>
-                <h4>Minted NFTs - {nfts.length}</h4>
-                <div className='nfts-grid mt-3'>
-                    {itemsRemaining > 0 && isCaptcha && (
-                        <NftCard
-                            title={'New NFT'}
-                            buttons={[
-                                {
-                                    text: 'Captcha enabled',
-                                    as: 'button',
-                                    variant: 'outline',
-                                    disabled: true,
-                                },
-                            ]}
-                        />
-                    )}
-                    {itemsRemaining > 0 && !isCaptcha && (
-                        <NftCard
-                            title={'New NFT'}
-                            buttons={[
-                                {
-                                    text: 'Mint 1 NFT',
-                                    isLoading: isUserMinting,
-                                    as: 'button',
-                                    variant: 'primary',
-                                    onClick: () => mintAccount().then(fetchNfts),
-                                },
-                            ]}
-                        />
-                    )}
-                    {nfts.map(
-                        ({ name, image, mint }, index) =>
-                            index < 10 && (
-                                <NftCard
-                                    title={name}
-                                    imageLink={image}
-                                    key={index}
-                                    buttons={[
-                                        {
-                                            text: 'View in Solscan',
-                                            as: 'link',
-                                            variant: 'invisible',
-                                            hash: mint?.toBase58(),
-                                        },
-                                    ]}
-                                />
-                            )
-                    )}
-                </div>
+                        )
+                )}
             </div>
-        </>
+        </div>
     )
 }
 

@@ -10,6 +10,7 @@ import {
     VerifyCandyMachine,
     NftPreview,
     NftMinted,
+    NftCollection,
 } from 'components'
 import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
@@ -118,6 +119,7 @@ const CandyMachine: NextPage = () => {
                         </div>
                     </div>
                     <div className='border-y width-full' />
+                    {collectionNft && <NftCollection nft={collectionNft} />}
                     <NftPreview
                         candyMachineAccount={candyMachineAccount}
                         itemsRemaining={itemsRemaining}
@@ -126,7 +128,6 @@ const CandyMachine: NextPage = () => {
                     />
                     <NftMinted
                         candyMachineAccount={candyMachineAccount}
-                        collectionNft={collectionNft}
                         fetchNfts={fetchNfts}
                         nfts={mintedNfts}
                         isLoading={isLoadingNfts}

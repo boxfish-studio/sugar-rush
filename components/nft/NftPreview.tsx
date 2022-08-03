@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from 'react'
-import { Button, Spinner, Text } from '@primer/react'
+import { FC, useState } from 'react'
+import { Text } from '@primer/react'
 import { Nft } from 'lib/nft/interfaces'
 import NftCard from './NftCard'
 
@@ -37,7 +37,7 @@ const NftPreview: FC<{
     }
 
     return (
-        <div className='mt-5 mb-7'>
+        <div className='mb-7'>
             {!nfts.length ? (
                 <>
                     <h4>NFTs Preview · {itemsRemaining}</h4>
