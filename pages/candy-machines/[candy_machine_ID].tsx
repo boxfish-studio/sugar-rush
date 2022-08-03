@@ -30,14 +30,24 @@ const CandyMachine: NextPage = () => {
     const [isLoadingNfts, setIsLoadingNfts] = useState(false)
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft>()
-    const { isUserMinting, itemsRemaining, mintAccount, refreshCandyMachineState, isCaptcha, itemsAvailable } =
-        useMintCandyMachine(candyMachineAccount as string)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const {
+        isUserMinting,
+        itemsRemaining,
+        mintAccount,
+        refreshCandyMachineState,
+        isCaptcha,
+        setIsCaptcha,
+        itemsAvailable,
+    } = useMintCandyMachine(candyMachineAccount as string)
+    const [hasCollection, setHasCollection] = useState<boolean>(false)
     const [nftsRecoilState, setNftsRecoilState] = useRecoilState(nftsState)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
 
     const fetchNfts = async () => {
         setIsLoadingNfts(true)
+        setError('')
         try {
             if (!connection) return
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
@@ -51,12 +61,15 @@ const CandyMachine: NextPage = () => {
                     setCollectionNft(nftCollectionData)
                 }
             }
-        } catch (e) {
+        } catch (err) {
             setNftsRecoilState([])
-            console.error(e)
+            setError((err as Error).message)
+            console.error(err)
         }
         setIsLoadingNfts(false)
     }
+
+    const reloadMintCard = (value: boolean) => setIsCaptcha(value)
 
     useEffect(() => {
         setError('')
@@ -107,7 +120,7 @@ const CandyMachine: NextPage = () => {
             </div>
             <div className='d-flex flex-justify-center flex-column'>
                 <h2 className='my-5 wb-break-all'>[CM]: {candyMachineAccount}</h2>
-                <UpdateCandyMachine candyMachineAccount={candyMachineAccount} />
+                <UpdateCandyMachine candyMachineAccount={candyMachineAccount} reloadMintCard={reloadMintCard} />
                 <div className='d-flex flex-justify-center flex-items-start flex-column mb-10 width-full p-0'>
                     <div className='d-flex flex-justify-between flex-items-center width-full mb-4'>
                         <h3 className='r-0'>NFTs</h3>
@@ -126,6 +139,11 @@ const CandyMachine: NextPage = () => {
                         itemsAvailable={itemsAvailable}
                         mintedNfts={mintedNfts}
                     />
+                    {error?.includes('Error to fetch data') && (
+                        <Text as='p' className='mt-3 mb-4'>
+                            Error to fetch data. Please, click the refresh button to try again.
+                        </Text>
+                    )}
                     <NftMinted
                         candyMachineAccount={candyMachineAccount}
                         fetchNfts={fetchNfts}

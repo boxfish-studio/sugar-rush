@@ -9,12 +9,13 @@ import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machi
 import { getCandyMachineV2Config, loadCandyProgramV2 } from 'lib/candy-machine/upload/config'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
 import React, { FC, useEffect, useState } from 'react'
-import { Button, Spinner, StyledOcticon } from '@primer/react'
+import { Button, Spinner, StyledOcticon, Text } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
 
 const UpdateCandyMachine: FC<{
     candyMachineAccount?: string | string[]
-}> = ({ candyMachineAccount }) => {
+    reloadMintCard: (value: boolean) => void
+}> = ({ candyMachineAccount, reloadMintCard }) => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
@@ -151,6 +152,7 @@ const UpdateCandyMachine: FC<{
                     cache: await cache.text(),
                     newAuthority: values['new-authority'],
                 })
+                reloadMintCard(!!newSettings.gatekeeper)
                 setStatus('Candy Machine updated successfully!')
             }
         } catch (err) {
@@ -164,7 +166,7 @@ const UpdateCandyMachine: FC<{
             setErrorMessage('')
             try {
                 setIsLoading(true)
-                const provider = new AnchorProvider(connection, anchorWallet, {
+                const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
                     preflightCommitment: 'processed',
                 })
 
@@ -292,12 +294,14 @@ const UpdateCandyMachine: FC<{
                                     onChange={onChange}
                                 />
 
-                                <div className='my-5'>
-                                    <label
-                                        htmlFor='cache'
-                                        className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
-                                        style={{ border: '1px solid #1b1f2426' }}
-                                    >
+                                {cache && (
+                                    <Text as='p' className='mt-3'>
+                                        {cache?.name}
+                                    </Text>
+                                )}
+
+                                <div className={cache ? 'mb-5' : 'my-5'}>
+                                    <label htmlFor='cache' className='upload-button'>
                                         Upload Cache file
                                     </label>
                                     <input
@@ -309,7 +313,6 @@ const UpdateCandyMachine: FC<{
                                         required
                                     />
                                 </div>
-
                                 {errorMessage.length > 0 && (
                                     <div className='my-3 color-fg-closed color-bg-closed border color-border-closed-emphasis p-3 rounded-2'>
                                         <span>
@@ -323,7 +326,6 @@ const UpdateCandyMachine: FC<{
                                         </span>
                                     </div>
                                 )}
-
                                 {!isInteractingWithCM && (
                                     <Button variant='primary' size='medium' type='submit' sx={{ width: 'fit-content' }}>
                                         Update Candy Machine
