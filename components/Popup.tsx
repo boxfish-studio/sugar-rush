@@ -2,11 +2,13 @@ import { FC, useEffect } from 'react'
 import { Box, StyledOcticon } from '@primer/react'
 import { XCircleIcon } from '@primer/octicons-react'
 
+type Size = 'small' | 'large'
+
 const Popup: FC<{
     children: any
     title: string
     onClose: () => void
-    size: 'small' | 'large'
+    size: Size
 }> = ({ children, title, onClose, size }) => {
     useEffect(() => {
         document.body.style.overflowY = 'hidden'

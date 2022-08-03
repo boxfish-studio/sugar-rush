@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
 import { useRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
-import { PublicKey } from '@solana/web3.js'
+import { Connection, PublicKey } from '@solana/web3.js'
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import { LinkExternalIcon } from '@primer/octicons-react'
@@ -30,8 +30,15 @@ const CandyMachine: NextPage = () => {
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft>()
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const { isUserMinting, itemsRemaining, mintAccount, refreshCandyMachineState, isCaptcha, itemsAvailable } =
-        useMintCandyMachine(candyMachineAccount as string)
+    const {
+        isUserMinting,
+        itemsRemaining,
+        mintAccount,
+        refreshCandyMachineState,
+        isCaptcha,
+        setIsCaptcha,
+        itemsAvailable,
+    } = useMintCandyMachine(candyMachineAccount as string)
     const [hasCollection, setHasCollection] = useState<boolean>(false)
     const [nftsRecoilState, setNftsRecoilState] = useRecoilState(nftsState)
     const [cache, setCache] = useState<File>()
@@ -47,7 +54,9 @@ const CandyMachine: NextPage = () => {
         setCache(e.target.files[0])
         let cacheData = await e.target.files[0].text()
         let cacheDataJson = JSON.parse(cacheData)
-        if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
+        if (!cacheDataJson.items) {
+            alert('NFTs Preview not available in cache file')
+        } else if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
             const nfts = Object.values(cacheDataJson.items).map((nft: any) => {
                 return {
                     image: nft.imageLink,
@@ -56,9 +65,6 @@ const CandyMachine: NextPage = () => {
             })
 
             setNfts(nfts)
-            if (!!cacheDataJson.items) {
-                alert('NFTs Preview not available in cache file')
-            }
         } else {
             alert('This cache file is not from this candy machine')
         }
@@ -70,7 +76,7 @@ const CandyMachine: NextPage = () => {
             setError('')
             try {
                 setIsLoading(true)
-                const provider = new AnchorProvider(connection, anchorWallet, {
+                const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
                     preflightCommitment: 'processed',
                 })
 
@@ -93,6 +99,7 @@ const CandyMachine: NextPage = () => {
 
     const fetchNfts = async () => {
         setIsLoadingNfts(true)
+        setError('')
         try {
             if (!connection) return
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
@@ -107,12 +114,15 @@ const CandyMachine: NextPage = () => {
                     setCollectionNft(nftCollectionData)
                 }
             }
-        } catch (e) {
+        } catch (err) {
             setNftsRecoilState([])
-            console.error(e)
+            setError((err as Error).message)
+            console.error(err)
         }
         setIsLoadingNfts(false)
     }
+
+    const reloadMintCard = (value: boolean) => setIsCaptcha(value)
 
     useEffect(() => {
         setError('')
@@ -192,6 +202,7 @@ const CandyMachine: NextPage = () => {
                                         <UpdateCandyMachine
                                             fetchedValues={candyMachineConfig}
                                             candyMachinePubkey={candyMachineAccount}
+                                            reloadMintCard={reloadMintCard}
                                         />
                                     </div>
                                 </div>
@@ -214,6 +225,9 @@ const CandyMachine: NextPage = () => {
                                         <h4>NFTs Preview · {itemsRemaining}</h4>
                                         <Text as='p' className='mt-3 mb-4'>
                                             Upload cache file to preview NFTs
+                                        </Text>
+                                        <Text as='p' className='my-3'>
+                                            {cache?.name}
                                         </Text>
                                     </>
                                 ) : (
@@ -273,7 +287,11 @@ const CandyMachine: NextPage = () => {
                                             )}
                                         </div>
                                     )}
-
+                                    {error?.includes('Error to fetch data') && (
+                                        <Text as='p' className='mt-3 mb-4'>
+                                            Error to fetch data. Please, click the refresh button to try again.
+                                        </Text>
+                                    )}
                                     <div>
                                         <h4>Minted NFTs - {mintedNfts.length}</h4>
                                         <div className='nfts-grid mt-3'>

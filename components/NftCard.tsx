@@ -4,12 +4,14 @@ import { LinkExternalIcon } from '@primer/octicons-react'
 import { VariantType } from '@primer/react/lib/Button/types'
 import { useRPC } from 'hooks'
 
+type ButtonType = 'link' | 'button'
+
 const NftCard: FC<{
     title: string
     imageLink?: string
     buttons?: {
         text: string
-        as: 'link' | 'button'
+        as: ButtonType
         hash?: string
         isLoading?: boolean
         variant: VariantType

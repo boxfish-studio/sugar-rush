@@ -93,22 +93,6 @@ body {
     cursor: default;
 }
 
-.notifications {
-    z-index: 100;
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    width: 100%;
-    @media (min-width: 780px) {
-        bottom: 100px;
-        right: 50px;
-        width: 40%;
-    }
-    > div {
-        margin-top: 8px;
-    }
-}
-
 .upload-button {
     border: 1px solid #1b1f2426;
     padding: 8px 24px;
@@ -120,9 +104,9 @@ body {
     cursor: pointer;
 }
 #notification {
-
-        animation: slide-in 1s ease-in-out normal;
+    animation: slide-in 1s ease-in-out normal;
 }
+
 @keyframes slide-in {
     0% {
       opacity: 0;
@@ -132,7 +116,8 @@ body {
       opacity: 1;
       transform: translateY(0);
     }
-  }
+}
+
 #notification::after {
     content: "";
     display: block;

@@ -4,6 +4,7 @@ import { PublicKey } from '@solana/web3.js'
 import { PromisePool } from '@supercharge/promise-pool'
 import { ICache, saveCache } from 'lib/cache'
 import { StorageType } from 'lib/candy-machine/enums'
+import { JSON_EXTENSION } from 'lib/constants'
 // import {
 //   makeArweaveBundleUploadGenerator,
 //   withdrawBundlr,
@@ -19,6 +20,7 @@ import { createCandyMachineV2, getFileExtension, getFileName, sleep } from './he
 // import { setCollection } from './set-collection';
 
 type AssetKey = { mediaExt: string; index: string }
+type Env = 'mainnet-beta' | 'devnet'
 
 export async function uploadV2({
     files,
@@ -54,7 +56,7 @@ export async function uploadV2({
 {
     files: File[]
     cacheName: string
-    env: 'mainnet-beta' | 'devnet'
+    env: Env
     totalNFTs: number
     storage: string
     retainAuthority: boolean
@@ -210,7 +212,7 @@ export async function uploadV2({
             .process(async (asset) => {
                 console.log('processing asset: ', asset)
                 const jsonFile = files.find(
-                    (file) => getFileName(file.name) === asset.index && file.type === 'application/json'
+                    (file) => getFileName(file.name) === asset.index && file.type === JSON_EXTENSION
                 )
                 const imageFile = files.find(
                     (file) => getFileName(file.name) === asset.index && file.type.startsWith('image/')
