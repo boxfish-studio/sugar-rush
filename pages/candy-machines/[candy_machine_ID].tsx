@@ -99,6 +99,7 @@ const CandyMachine: NextPage = () => {
 
     const fetchNfts = async () => {
         setIsLoadingNfts(true)
+        setError('')
         try {
             if (!connection) return
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
@@ -113,9 +114,10 @@ const CandyMachine: NextPage = () => {
                     setCollectionNft(nftCollectionData)
                 }
             }
-        } catch (e) {
+        } catch (err) {
             setNftsRecoilState([])
-            console.error(e)
+            setError((err as Error).message)
+            console.error(err)
         }
         setIsLoadingNfts(false)
     }
@@ -340,7 +342,7 @@ const CandyMachine: NextPage = () => {
                             )}
                             {error?.includes('Error to fetch data') && (
                                 <Text as='p' className='mt-3 mb-4'>
-                                    {error}
+                                    Error to fetch data. Please, click the refresh button
                                 </Text>
                             )}
                         </div>
