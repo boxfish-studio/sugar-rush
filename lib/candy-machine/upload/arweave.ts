@@ -2,6 +2,7 @@ import { calculate } from '@metaplex/arweave-cost'
 import * as anchor from '@project-serum/anchor'
 import { AnchorWallet } from '@solana/wallet-adapter-react'
 import { ARWEAVE_PAYMENT_WALLET, ARWEAVE_UPLOAD_ENDPOINT } from 'lib/candy-machine/constants'
+import { JSON_EXTENSION } from 'lib/constants'
 import { Manifest } from 'lib/types'
 import { getFileExtension } from './helpers'
 import { sendTransactionWithRetryWithKeypair } from './transactions'
@@ -93,7 +94,7 @@ export async function arweaveUpload(
     console.log(`solana transaction (${env}) for arweave payment:`, tx)
 
     const data = new FormData()
-    const manifestBlob = new Blob([manifestBuffer], { type: 'application/json' })
+    const manifestBlob = new Blob([manifestBuffer], { type: JSON_EXTENSION })
 
     data.append('transaction', tx['txid'])
     data.append('env', env)

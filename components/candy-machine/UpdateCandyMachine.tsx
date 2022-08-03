@@ -9,13 +9,14 @@ import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machi
 import { getCandyMachineV2Config, loadCandyProgramV2 } from 'lib/candy-machine/upload/config'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
 import React, { FC, useState } from 'react'
-import { Button, Spinner, StyledOcticon } from '@primer/react'
+import { Button, Spinner, StyledOcticon, Text } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
 
 const UpdateCreateCandyMachineForm: FC<{
     fetchedValues?: IFetchedCandyMachineConfig
     candyMachinePubkey?: string | string[]
-}> = ({ fetchedValues, candyMachinePubkey }) => {
+    reloadMintCard: (value: boolean) => void
+}> = ({ fetchedValues, candyMachinePubkey, reloadMintCard }) => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
@@ -146,6 +147,7 @@ const UpdateCreateCandyMachineForm: FC<{
                     cache: await cache.text(),
                     newAuthority: values['new-authority'],
                 })
+                reloadMintCard(!!newSettings.gatekeeper)
                 setStatus('Candy Machine updated successfully!')
             }
         } catch (err) {
@@ -219,12 +221,14 @@ const UpdateCreateCandyMachineForm: FC<{
                     onChange={onChange}
                 />
 
-                <div className='my-5'>
-                    <label
-                        htmlFor='cache'
-                        className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
-                        style={{ border: '1px solid #1b1f2426' }}
-                    >
+                {cache && (
+                    <Text as='p' className='mt-3'>
+                        {cache?.name}
+                    </Text>
+                )}
+
+                <div className={cache ? 'mb-5' : 'my-5'}>
+                    <label htmlFor='cache' className='upload-button'>
                         Upload Cache file
                     </label>
                     <input
