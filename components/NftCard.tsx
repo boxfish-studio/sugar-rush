@@ -4,12 +4,14 @@ import { LinkExternalIcon } from '@primer/octicons-react'
 import { VariantType } from '@primer/react/lib/Button/types'
 import { useRPC } from 'hooks'
 
+type ButtonType = 'link' | 'button'
+
 const NftCard: FC<{
     title: string
     imageLink?: string
     buttons?: {
         text: string
-        as: 'link' | 'button'
+        as: ButtonType
         hash?: string
         isLoading?: boolean
         variant: VariantType
@@ -20,15 +22,15 @@ const NftCard: FC<{
     const { isDevnet } = useRPC()
     return (
         <div
-            className='d-flex flex-column flex-justify-center flex-items-center border rounded-3 py-2'
+            className='d-flex flex-column flex-justify-center flex-items-center border rounded-3 p-2'
             style={{ width: '185px' }}
         >
-            <Text as='p' fontWeight='bold' className='width-full text-center'>
+            <Text as='p' fontWeight='bold' className='width-full text-center mb-0'>
                 {title}
             </Text>
             <div
                 className='border color-bg-inset rounded-3 mb-2 overflow-hidden d-flex flex-items-center flex-justify-center'
-                style={{ height: '168px', width: '168px' }}
+                style={{ height: '168px', width: '168px', margin: '12px 0' }}
             >
                 <div className='width-full height-full position-relative'>
                     {imageLink?.length ? (
