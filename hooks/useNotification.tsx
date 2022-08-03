@@ -6,7 +6,7 @@ import { generateRandomId } from 'lib/utils'
 const useNotification = () => {
     const [notifications, setNotifications] = useRecoilState<INotification[]>(notificationState)
 
-    const createNotification = (notification: INotification): void => {
+    const addNotification = (notification: INotification): void => {
         const id = notification.id ?? generateRandomId()
         setNotifications([...notifications, { ...notification, id }])
     }
@@ -16,6 +16,6 @@ const useNotification = () => {
         setNotifications(_notifications)
     }
 
-    return { notifications, createNotification, removeNotification }
+    return { notifications, addNotification, removeNotification }
 }
 export default useNotification
