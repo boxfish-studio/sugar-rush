@@ -287,7 +287,11 @@ const CandyMachine: NextPage = () => {
                                             )}
                                         </div>
                                     )}
-
+                                    {error?.includes('Error to fetch data') && (
+                                        <Text as='p' className='mt-3 mb-4'>
+                                            Error to fetch data. Please, click the refresh button to try again.
+                                        </Text>
+                                    )}
                                     <div>
                                         <h4>Minted NFTs - {mintedNfts.length}</h4>
                                         <div className='nfts-grid mt-3'>
@@ -339,11 +343,6 @@ const CandyMachine: NextPage = () => {
                                         </div>
                                     </div>
                                 </>
-                            )}
-                            {error?.includes('Error to fetch data') && (
-                                <Text as='p' className='mt-3 mb-4'>
-                                    Error to fetch data. Please, click the refresh button
-                                </Text>
                             )}
                         </div>
                     </>
