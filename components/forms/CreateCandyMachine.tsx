@@ -17,7 +17,7 @@ const CreateCandyMachine: FC = () => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
-    const { createNotification } = useNotification()
+    const { addNotification } = useNotification()
 
     const { files, uploadAssets } = useUploadFiles()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
@@ -169,12 +169,12 @@ const CreateCandyMachine: FC = () => {
                 })
 
                 if (typeof _candyMachine === 'string') candyMachine = _candyMachine
-                createNotification({
+                addNotification({
                     message: `Candy Machine created successfully! ${candyMachine}`,
                     type: NotificationType.Success,
                 })
             } catch (err) {
-                createNotification({
+                addNotification({
                     message: `An error occurred while creating the Candy Machine`,
                     type: NotificationType.Error,
                 })

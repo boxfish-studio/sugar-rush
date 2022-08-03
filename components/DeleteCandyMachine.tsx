@@ -13,7 +13,7 @@ const DeleteCandyMachine: FC<{
     const [transaction, setTransaction] = useState('')
     const { removeAccount } = useRemoveCandyMachineAccount([candyMachineAccount])
     const router = useRouter()
-    const { createNotification } = useNotification()
+    const { addNotification } = useNotification()
 
     const deleteCM = async () => {
         try {
@@ -21,13 +21,13 @@ const DeleteCandyMachine: FC<{
             setStatus({ error: false, message: '' })
             const result = await removeAccount(candyMachineAccount)
             result && setTransaction(result.txid)
-            createNotification({
+            addNotification({
                 message: `Candy Machine deleted successfully!`,
                 type: NotificationType.Success,
             })
         } catch (error) {
             console.log(error)
-            createNotification({
+            addNotification({
                 message: `An error occurred while deleting the Candy Machine`,
                 type: NotificationType.Error,
             })
