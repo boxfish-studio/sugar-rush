@@ -6,9 +6,11 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { INavbarElement } from 'lib/interfaces'
 import { NetworkSelector, NetworkTps } from 'components'
+import { useNotification } from 'hooks'
 
 const Navbar: FC = () => {
     const router = useRouter()
+    const { addNotification } = useNotification()
     const [open, setOpen] = useState(false)
     const NAVBAR_ELEMENTS: INavbarElement[] = [
         {
