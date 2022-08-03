@@ -30,8 +30,15 @@ const CandyMachine: NextPage = () => {
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft>()
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const { isUserMinting, itemsRemaining, mintAccount, refreshCandyMachineState, isCaptcha, itemsAvailable } =
-        useMintCandyMachine(candyMachineAccount as string)
+    const {
+        isUserMinting,
+        itemsRemaining,
+        mintAccount,
+        refreshCandyMachineState,
+        isCaptcha,
+        setIsCaptcha,
+        itemsAvailable,
+    } = useMintCandyMachine(candyMachineAccount as string)
     const [hasCollection, setHasCollection] = useState<boolean>(false)
     const [nftsRecoilState, setNftsRecoilState] = useRecoilState(nftsState)
     const [cache, setCache] = useState<File>()
@@ -114,6 +121,8 @@ const CandyMachine: NextPage = () => {
         setIsLoadingNfts(false)
     }
 
+    const reloadMintCard = (value: boolean) => setIsCaptcha(value)
+
     useEffect(() => {
         setError('')
         refreshCandyMachineState()
@@ -192,6 +201,7 @@ const CandyMachine: NextPage = () => {
                                         <UpdateCandyMachine
                                             fetchedValues={candyMachineConfig}
                                             candyMachinePubkey={candyMachineAccount}
+                                            reloadMintCard={reloadMintCard}
                                         />
                                     </div>
                                 </div>

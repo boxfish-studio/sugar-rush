@@ -16,7 +16,8 @@ import { NotificationType } from 'lib/interfaces'
 const UpdateCreateCandyMachineForm: FC<{
     fetchedValues?: IFetchedCandyMachineConfig
     candyMachinePubkey?: string | string[]
-}> = ({ fetchedValues, candyMachinePubkey }) => {
+    reloadMintCard: (value: boolean) => void
+}> = ({ fetchedValues, candyMachinePubkey, reloadMintCard }) => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
@@ -147,6 +148,8 @@ const UpdateCreateCandyMachineForm: FC<{
                     cache: await cache.text(),
                     newAuthority: values['new-authority'],
                 })
+                reloadMintCard(!!newSettings.gatekeeper)
+                setStatus('Candy Machine updated successfully!')
                 addNotification({
                     message: `Candy Machine updated successfully!`,
                     type: NotificationType.Success,
