@@ -6,10 +6,6 @@ import { INotification, NotificationType } from 'lib/interfaces'
 export default function NotificationManager() {
     const { notifications, removeNotification } = useNotification()
 
-    const onClose = (notification: INotification) => {
-        removeNotification(notification.id!)
-    }
-
     function getNotificationIcon(type: NotificationType | undefined) {
         switch (type) {
             case NotificationType.Error:
@@ -32,7 +28,6 @@ export default function NotificationManager() {
                         key={`notification-${notification.id}`}
                         {...notification}
                         icon={getNotificationIcon(notification?.type)}
-                        onClose={() => onClose(notification)}
                     />
                 )
             })}

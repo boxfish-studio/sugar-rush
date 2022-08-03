@@ -5,15 +5,9 @@ import { NOTIFICATION_TIMEOUT_NEVER } from 'lib/constants'
 import { INotification } from 'lib/interfaces'
 import { FC, useEffect, useRef } from 'react'
 
-const styles = Object.freeze({
-    opacity: '0',
-    transform: 'translateY(-50%)',
-    transition: 'all 0.5s',
-})
-
-const Notification: FC<INotification> = ({ type, message, onClose, icon, timeout, id }) => {
-    const { removeNotification } = useNotification()
+const Notification: FC<INotification> = ({ type, message, icon, timeout, id }) => {
     const flash = useRef<HTMLDivElement>(null)
+    const { removeNotification, setStyles } = useNotification(flash)
 
     useEffect(() => {
         if (timeout !== NOTIFICATION_TIMEOUT_NEVER) {
@@ -25,15 +19,16 @@ const Notification: FC<INotification> = ({ type, message, onClose, icon, timeout
     useEffect(() => {
         if (timeout !== NOTIFICATION_TIMEOUT_NEVER) {
             const destroyTimeout = setTimeout(() => {
-                const style = flash.current?.style!
-                style.transition = styles.transition
-                style.transform = styles.transform
-                style.opacity = styles.opacity
+                setStyles(flash)
             }, timeout! - 500)
 
             return () => clearTimeout(destroyTimeout)
         }
     }, [])
+
+    const onClose = (id: string) => {
+        removeNotification(id)
+    }
 
     return (
         <Flash
@@ -50,7 +45,7 @@ const Notification: FC<INotification> = ({ type, message, onClose, icon, timeout
                 <div
                     className='d-flex flex-items-center flex-justify-end cursor-pointer'
                     title='Close'
-                    onClick={onClose}
+                    onClick={() => onClose(id!)}
                 >
                     <StyledOcticon icon={XCircleIcon} size={16} />
                 </div>
