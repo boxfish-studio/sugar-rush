@@ -24,14 +24,14 @@ const Notification: FC<INotification> = ({ type, message, onClose, icon, timeout
 
     useEffect(() => {
         if (timeout !== NOTIFICATION_TIMEOUT_NEVER) {
-            const l = setTimeout(() => {
+            const destroyTimeout = setTimeout(() => {
                 const style = flash.current?.style!
                 style.transition = styles.transition
                 style.transform = styles.transform
                 style.opacity = styles.opacity
             }, timeout! - 500)
 
-            return () => clearTimeout(l)
+            return () => clearTimeout(destroyTimeout)
         }
     }, [])
 
