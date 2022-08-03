@@ -26,10 +26,10 @@ export default function NotificationManager() {
 
     return (
         <div className='notifications'>
-            {notifications?.map((notification, index) => {
+            {notifications?.map((notification) => {
                 return (
                     <Notification
-                        key={`notification-${index}`}
+                        key={`notification-${notification.id}`}
                         {...notification}
                         icon={getNotificationIcon(notification?.type)}
                         onClose={() => onClose(notification)}
