@@ -1,17 +1,16 @@
-import { Flash } from '@primer/react'
-import { INotification } from 'lib/interfaces'
-import { StyledOcticon } from '@primer/react'
 import { XCircleIcon } from '@primer/octicons-react'
-import { FC, useEffect } from 'react'
+import { Flash, StyledOcticon } from '@primer/react'
 import { useNotification } from 'hooks'
-import { NOTIFICATION_TIMEOUT_DEFAULT, NOTIFICATION_TIMEOUT_NEVER } from 'lib/constants'
+import { NOTIFICATION_TIMEOUT_NEVER } from 'lib/constants'
+import { INotification } from 'lib/interfaces'
+import { FC, useEffect } from 'react'
 
 const Notification: FC<INotification> = ({ type, message, onClose, icon, timeout, id }) => {
     const { removeNotification } = useNotification()
 
     useEffect(() => {
-        if (!timeout || timeout !== NOTIFICATION_TIMEOUT_NEVER) {
-            const destroyTimeout = setTimeout(() => removeNotification(id!), timeout ?? NOTIFICATION_TIMEOUT_DEFAULT)
+        if (timeout !== NOTIFICATION_TIMEOUT_NEVER) {
+            const destroyTimeout = setTimeout(() => removeNotification(id!), timeout)
             return () => clearTimeout(destroyTimeout)
         }
     }, [])

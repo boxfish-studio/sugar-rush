@@ -2,13 +2,15 @@ import { INotification } from 'lib/interfaces'
 import { notificationState } from 'lib/recoil-store/atoms'
 import { generateRandomId } from 'lib/utils'
 import { useRecoilState } from 'recoil'
+import { NOTIFICATION_TIMEOUT_DEFAULT } from 'lib/constants'
 
 const useNotification = () => {
     const [notifications, setNotifications] = useRecoilState<INotification[]>(notificationState)
 
     const addNotification = (notification: INotification): void => {
         const id = notification?.id ?? generateRandomId()
-        setNotifications((notificationsPrev) => [...notificationsPrev, { ...notification, id }])
+        const timeout = notification?.timeout ?? NOTIFICATION_TIMEOUT_DEFAULT
+        setNotifications((notificationsPrev) => [...notificationsPrev, { ...notification, id, timeout }])
     }
 
     const removeNotification = (id: string): void => {
