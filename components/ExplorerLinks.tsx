@@ -1,8 +1,10 @@
 import { useRPC } from 'hooks'
 import { FC } from 'react'
 
+type Link = 'account' | 'transaction'
+
 const ExplorerLinks: FC<{
-    type: 'account' | 'transaction'
+    type: Link
     value: string
     text: string
 }> = ({ type, value, text }) => {
