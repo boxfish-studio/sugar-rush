@@ -1,7 +1,7 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey, Connection } from '@solana/web3.js'
-import { useForm, useRPC, useUploadCache } from 'hooks'
+import { useForm, useRPC, useUploadCache, useNotification } from 'hooks'
 import { updateV2 } from 'lib/candy-machine'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
 import { StorageType } from 'lib/candy-machine/enums'
@@ -11,6 +11,7 @@ import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, pa
 import React, { FC, useState } from 'react'
 import { Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
+import { NotificationType } from 'lib/interfaces'
 
 const UpdateCreateCandyMachineForm: FC<{
     fetchedValues?: IFetchedCandyMachineConfig
@@ -20,7 +21,7 @@ const UpdateCreateCandyMachineForm: FC<{
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
-
+    const { addNotification } = useNotification()
     const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
     const [status, setStatus] = useState('')
@@ -149,9 +150,16 @@ const UpdateCreateCandyMachineForm: FC<{
                 })
                 reloadMintCard(!!newSettings.gatekeeper)
                 setStatus('Candy Machine updated successfully!')
+                addNotification({
+                    message: `Candy Machine updated successfully!`,
+                    type: NotificationType.Success,
+                })
             }
         } catch (err) {
-            setErrorMessage('Candy Machine update was not successful, please re-run.')
+            addNotification({
+                message: `An error occurred while updating the Candy Machine`,
+                type: NotificationType.Error,
+            })
         }
         setIsInteractingWithCM(false)
     }
@@ -254,12 +262,6 @@ const UpdateCreateCandyMachineForm: FC<{
                     <Button isLoading disabled size='medium' sx={{ width: 'fit-content' }}>
                         Updating Candy Machine... <Spinner size='small' />
                     </Button>
-                )}
-
-                {!isInteractingWithCM && status && (
-                    <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
-                        {status}
-                    </span>
                 )}
             </div>
         </form>
