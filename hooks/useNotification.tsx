@@ -7,7 +7,7 @@ const useNotification = () => {
     const [notifications, setNotifications] = useRecoilState<INotification[]>(notificationState)
 
     const addNotification = (notification: INotification): void => {
-        const id = notification.id ?? generateRandomId()
+        const id = notification?.id ?? generateRandomId()
         setNotifications((notificationsPrev) => [...notificationsPrev, { ...notification, id }])
     }
 
