@@ -160,6 +160,7 @@ const useMintCandyMachine = (account: string) => {
         refreshCandyMachineState,
         mintMessage,
         isCaptcha,
+        setIsCaptcha,
     }
 }
 
