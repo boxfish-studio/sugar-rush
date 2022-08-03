@@ -2,8 +2,15 @@ import { Button, Link, Spinner, Text } from '@primer/react'
 import { getAllNftsByCM, getNftByMint } from 'lib/nft/actions'
 import { Nft } from 'lib/nft/interfaces'
 import { nftsState } from 'lib/recoil-store/atoms'
-import { NftCard, Popup, RefreshButton, UpdateCandyMachine, DeleteCandyMachine, VerifyCandyMachine } from 'components'
-import { useAnchorWallet } from '@solana/wallet-adapter-react'
+import {
+    Popup,
+    RefreshButton,
+    UpdateCandyMachine,
+    DeleteCandyMachine,
+    VerifyCandyMachine,
+    NftPreview,
+    NftMinted,
+} from 'components'
 import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
 import { useRecoilState } from 'recoil'
@@ -17,48 +24,16 @@ const CandyMachine: NextPage = () => {
 
     const candyMachineAccount = router.query.candy_machine_ID as string
 
-    const anchorWallet = useAnchorWallet()
     const { connection, isDevnet } = useRPC()
-    // const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
     const [isLoadingNfts, setIsLoadingNfts] = useState(false)
-    const [nfts, setNfts] = useState<Nft[]>([])
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft>()
     const { isUserMinting, itemsRemaining, mintAccount, refreshCandyMachineState, isCaptcha, itemsAvailable } =
         useMintCandyMachine(candyMachineAccount as string)
-    const [hasCollection, setHasCollection] = useState<boolean>(false)
     const [nftsRecoilState, setNftsRecoilState] = useRecoilState(nftsState)
-    const [cache, setCache] = useState<File>()
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
-
-    const viewNfts = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        setIsLoadingNfts(true)
-        if (!e.target.files || e.target.files.length == 0) {
-            window.alert('No files uploaded')
-            return
-        }
-        setCache(e.target.files[0])
-        let cacheData = await e.target.files[0].text()
-        let cacheDataJson = JSON.parse(cacheData)
-        if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
-            const nfts = Object.values(cacheDataJson.items).map((nft: any) => {
-                return {
-                    image: nft.imageLink,
-                    name: nft.name,
-                }
-            })
-
-            setNfts(nfts)
-            if (!!cacheDataJson.items) {
-                alert('NFTs Preview not available in cache file')
-            }
-        } else {
-            alert('This cache file is not from this candy machine')
-        }
-        setIsLoadingNfts(false)
-    }
 
     const fetchNfts = async () => {
         setIsLoadingNfts(true)
@@ -69,7 +44,6 @@ const CandyMachine: NextPage = () => {
             setNftsRecoilState(nfts)
             // @ts-ignore
             if (nfts[0]?.collection?.key) {
-                setHasCollection(true)
                 // @ts-ignore
                 let nftCollectionData = await getNftByMint(nfts[0].collection.key, connection)
                 if (nftCollectionData.name !== '') {
@@ -86,15 +60,12 @@ const CandyMachine: NextPage = () => {
     useEffect(() => {
         setError('')
         refreshCandyMachineState()
-        fetchNfts()
     }, [connection])
 
-    const loadingText = (
-        <div className='d-flex flex-items-center'>
-            <h3 className='mr-3'>Loading...</h3>
-            <Spinner size='small' />
-        </div>
-    )
+    useEffect(() => {
+        fetchNfts()
+    }, [])
+
     if (error.includes('Account does not exist')) {
         return (
             <>
@@ -135,153 +106,43 @@ const CandyMachine: NextPage = () => {
             </div>
             <div className='d-flex flex-justify-center flex-column'>
                 <h2 className='my-5 wb-break-all'>[CM]: {candyMachineAccount}</h2>
-                {
-                    <>
-                        <UpdateCandyMachine candyMachineAccount={candyMachineAccount} />
-                        <div className='d-flex flex-justify-center flex-items-start flex-column mb-10 width-full p-0'>
-                            <div className='d-flex flex-justify-between flex-items-center width-full mb-4'>
-                                <h3 className='r-0'>NFTs</h3>
-                                <div className='l-0 d-flex flex-justify-end flex-items-center'>
-                                    <span className='pr-2'>
-                                        {isLoadingNfts ? '' : `${mintedNfts?.length}/${itemsAvailable} Minted`}
-                                    </span>
-                                    <RefreshButton onClick={fetchNfts} isLoading={isLoadingNfts} />
-                                </div>
-                            </div>
-                            <div className='border-y width-full' />
-                            <div className='mt-5 mb-7'>
-                                {!nfts.length ? (
-                                    <>
-                                        <h4>NFTs Preview · {itemsRemaining}</h4>
-                                        <Text as='p' className='mt-3 mb-4'>
-                                            Upload cache file to preview NFTs
-                                        </Text>
-                                    </>
-                                ) : (
-                                    <>
-                                        <h4>Unminted NFTs - {itemsAvailable - itemsRemaining}</h4>
-                                        <div className='mt-3 nfts-grid'>
-                                            {nfts.map(({ name, image }, index) => {
-                                                if (!mintedNfts?.some((minted) => minted.name === name)) {
-                                                    return <NftCard title={name} imageLink={image} key={index} />
-                                                }
-                                            })}
-                                        </div>
-                                        <Text as='p' className='my-3'>
-                                            {cache?.name}
-                                        </Text>
-                                    </>
-                                )}
-                                <label
-                                    htmlFor='nftsCache'
-                                    className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
-                                    style={{ border: '1px solid #1b1f2426' }}
-                                >
-                                    Upload Cache file
-                                </label>
-                                <input
-                                    id='nftsCache'
-                                    type='file'
-                                    name='cache'
-                                    onChange={viewNfts}
-                                    className='w-full p-2 d-none'
-                                    required
-                                />
-                            </div>
-                            {isLoadingNfts ? (
-                                loadingText
-                            ) : (
-                                <>
-                                    {hasCollection && (
-                                        <div className='mb-5'>
-                                            <h4>Collection</h4>
-
-                                            {collectionNft && (
-                                                <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
-                                                    <NftCard
-                                                        title={collectionNft.name}
-                                                        imageLink={collectionNft.image}
-                                                        buttons={[
-                                                            {
-                                                                text: 'View in Solscan',
-                                                                as: 'link',
-                                                                variant: 'invisible',
-                                                                hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
-                                                            },
-                                                        ]}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    <div>
-                                        <h4>Minted NFTs - {mintedNfts.length}</h4>
-                                        <div className='nfts-grid mt-3'>
-                                            {itemsRemaining > 0 && isCaptcha && (
-                                                <NftCard
-                                                    title={'New NFT'}
-                                                    buttons={[
-                                                        {
-                                                            text: 'Captcha enabled',
-                                                            as: 'button',
-                                                            variant: 'outline',
-                                                            disabled: true,
-                                                        },
-                                                    ]}
-                                                />
-                                            )}
-                                            {itemsRemaining > 0 && !isCaptcha && (
-                                                <NftCard
-                                                    title={'New NFT'}
-                                                    buttons={[
-                                                        {
-                                                            text: 'Mint 1 NFT',
-                                                            isLoading: isUserMinting,
-                                                            as: 'button',
-                                                            variant: 'primary',
-                                                            onClick: () => mintAccount().then(fetchNfts),
-                                                        },
-                                                    ]}
-                                                />
-                                            )}
-                                            {mintedNfts.map(
-                                                ({ name, image, mint }, index) =>
-                                                    index < 10 && (
-                                                        <NftCard
-                                                            title={name}
-                                                            imageLink={image}
-                                                            key={index}
-                                                            buttons={[
-                                                                {
-                                                                    text: 'View in Solscan',
-                                                                    as: 'link',
-                                                                    variant: 'invisible',
-                                                                    hash: mint?.toBase58(),
-                                                                },
-                                                            ]}
-                                                        />
-                                                    )
-                                            )}
-                                        </div>
-                                    </div>
-                                </>
-                            )}
+                <UpdateCandyMachine candyMachineAccount={candyMachineAccount} />
+                <div className='d-flex flex-justify-center flex-items-start flex-column mb-10 width-full p-0'>
+                    <div className='d-flex flex-justify-between flex-items-center width-full mb-4'>
+                        <h3 className='r-0'>NFTs</h3>
+                        <div className='l-0 d-flex flex-justify-end flex-items-center'>
+                            <span className='pr-2'>
+                                {isLoadingNfts ? '' : `${mintedNfts?.length}/${itemsAvailable} Minted`}
+                            </span>
+                            <RefreshButton onClick={fetchNfts} isLoading={isLoadingNfts} />
                         </div>
-                    </>
-                }
-
-                {isDeleteOpen && (
-                    <Popup onClose={() => setIsDeleteOpen(false)} title='Delete Candy Machine' size='small'>
-                        <DeleteCandyMachine candyMachineAccount={candyMachineAccount as string} />
-                    </Popup>
-                )}
-                {isVerifyOpen && (
-                    <Popup onClose={() => setIsVerifyOpen(false)} title={`Verify Candy Machine`} size='small'>
-                        <VerifyCandyMachine candyMachineAccount={candyMachineAccount as string} />
-                    </Popup>
-                )}
+                    </div>
+                    <div className='border-y width-full' />
+                    <NftPreview
+                        candyMachineAccount={candyMachineAccount}
+                        itemsRemaining={itemsRemaining}
+                        itemsAvailable={itemsAvailable}
+                        mintedNfts={mintedNfts}
+                    />
+                    <NftMinted
+                        candyMachineAccount={candyMachineAccount}
+                        collectionNft={collectionNft}
+                        fetchNfts={fetchNfts}
+                        nfts={mintedNfts}
+                        isLoading={isLoadingNfts}
+                    />
+                </div>
             </div>
+            {isDeleteOpen && (
+                <Popup onClose={() => setIsDeleteOpen(false)} title='Delete Candy Machine' size='small'>
+                    <DeleteCandyMachine candyMachineAccount={candyMachineAccount as string} />
+                </Popup>
+            )}
+            {isVerifyOpen && (
+                <Popup onClose={() => setIsVerifyOpen(false)} title='Verify Candy Machine' size='small'>
+                    <VerifyCandyMachine candyMachineAccount={candyMachineAccount as string} />
+                </Popup>
+            )}
         </>
     )
 }
