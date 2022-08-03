@@ -1,21 +1,20 @@
-import { AnchorProvider, BN } from '@project-serum/anchor'
+import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey, Connection } from '@solana/web3.js'
 import { useForm, useRPC, useUploadCache } from 'hooks'
 import { updateV2 } from 'lib/candy-machine'
-import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
+import { CANDY_MACHINE_PROGRAM_V2_ID, DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
 import { StorageType } from 'lib/candy-machine/enums'
 import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { getCandyMachineV2Config, loadCandyProgramV2 } from 'lib/candy-machine/upload/config'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Button, Spinner, StyledOcticon } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
 
-const UpdateCreateCandyMachineForm: FC<{
-    fetchedValues?: IFetchedCandyMachineConfig
-    candyMachinePubkey?: string | string[]
-}> = ({ fetchedValues, candyMachinePubkey }) => {
+const UpdateCreateCandyMachine: FC<{
+    candyMachineAccount?: string | string[]
+}> = ({ candyMachineAccount }) => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
@@ -24,15 +23,21 @@ const UpdateCreateCandyMachineForm: FC<{
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
     const [status, setStatus] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
 
     const initialState = {
-        price: fetchedValues?.price ? new BN(fetchedValues?.price).toNumber() / LAMPORTS_PER_SOL : 0,
+        price: candyMachineConfig?.price ? new BN(candyMachineConfig?.price).toNumber() / LAMPORTS_PER_SOL : 0,
         'number-of-nfts': 0,
-        'treasury-account': fetchedValues?.solTreasuryAccount?.toBase58() ?? '',
-        captcha: fetchedValues?.gatekeeper ?? false,
-        mutable: fetchedValues?.isMutable ?? false,
-        'date-mint': fetchedValues?.goLiveDate ? parseDateFromDateBN(fetchedValues?.goLiveDate) : getCurrentDate(),
-        'time-mint': fetchedValues?.goLiveDate ? parseTimeFromDateBN(fetchedValues?.goLiveDate) : getCurrentTime(),
+        'treasury-account': candyMachineConfig?.solTreasuryAccount?.toBase58() ?? '',
+        captcha: candyMachineConfig?.gatekeeper ?? false,
+        mutable: candyMachineConfig?.isMutable ?? false,
+        'date-mint': candyMachineConfig?.goLiveDate
+            ? parseDateFromDateBN(candyMachineConfig?.goLiveDate)
+            : getCurrentDate(),
+        'time-mint': candyMachineConfig?.goLiveDate
+            ? parseTimeFromDateBN(candyMachineConfig?.goLiveDate)
+            : getCurrentTime(),
 
         storage: '',
         files: [],
@@ -88,7 +93,7 @@ const UpdateCreateCandyMachineForm: FC<{
                 uuid: null,
             }
 
-            if (publicKey && anchorWallet && candyMachinePubkey && connection && network) {
+            if (publicKey && anchorWallet && candyMachineAccount && connection && network) {
                 const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
                     preflightCommitment: 'recent',
                 })
@@ -96,7 +101,7 @@ const UpdateCreateCandyMachineForm: FC<{
                 const anchorProgram = await loadCandyProgramV2(provider)
 
                 const candyMachineObj: any = await anchorProgram.account.candyMachine.fetch(
-                    new PublicKey(candyMachinePubkey)
+                    new PublicKey(candyMachineAccount)
                 )
 
                 const {
@@ -139,7 +144,7 @@ const UpdateCreateCandyMachineForm: FC<{
 
                 await updateV2({
                     newSettings,
-                    candyMachinePubkey,
+                    candyMachinePubkey: candyMachineAccount,
                     publicKey,
                     treasuryWallet,
                     anchorProgram,
@@ -154,117 +159,194 @@ const UpdateCreateCandyMachineForm: FC<{
         setIsInteractingWithCM(false)
     }
 
-    return (
-        <form onSubmit={onSubmit} noValidate>
-            <div className='d-flex flex-column flex-justify-between col-12 col-md-8 col-lg-6'>
-                <FormInput
-                    id='price'
-                    text='Price of each NFT (SOL)'
-                    type='number'
-                    onChange={onChange}
-                    defaultValue={
-                        fetchedValues?.price ? new BN(fetchedValues.price).toNumber() / LAMPORTS_PER_SOL : undefined
-                    }
-                    required
-                />
-                <FormInput
-                    id='treasury-account'
-                    text='Treasury Account'
-                    type='text'
-                    onChange={onChange}
-                    defaultValue={fetchedValues?.solTreasuryAccount?.toBase58()}
-                />
-                <FormInput
-                    id='captcha'
-                    text='Captcha?'
-                    type='checkbox'
-                    onChange={onChange}
-                    defaultChecked={fetchedValues?.gatekeeper ?? false}
-                />
+    const fetchCandyMachine = async (): Promise<IFetchedCandyMachineConfig | undefined> => {
+        if (candyMachineAccount && anchorWallet && connection) {
+            setErrorMessage('')
+            try {
+                setIsLoading(true)
+                const provider = new AnchorProvider(connection, anchorWallet, {
+                    preflightCommitment: 'processed',
+                })
 
-                <FormInput
-                    id='mutable'
-                    text='Mutable?'
-                    type='checkbox'
-                    onChange={onChange}
-                    defaultChecked={fetchedValues?.isMutable}
-                />
-                <FormInput
-                    id='date-mint'
-                    text='Date for mint'
-                    type='date'
-                    onChange={onChange}
-                    defaultValue={
-                        fetchedValues?.goLiveDate ? parseDateFromDateBN(fetchedValues?.goLiveDate) : getCurrentDate()
-                    }
-                    required
-                />
-                <FormInput
-                    id='time-mint'
-                    text='Time for mint (GMT)'
-                    type='time'
-                    onChange={onChange}
-                    defaultValue={
-                        fetchedValues?.goLiveDate ? parseTimeFromDateBN(fetchedValues?.goLiveDate) : getCurrentTime()
-                    }
-                    required
-                />
+                const idl = await Program.fetchIdl(CANDY_MACHINE_PROGRAM_V2_ID, provider)
 
-                {/* No default value since it is dangerous to transfer the authority of the CM to another account. */}
-                <FormInput
-                    id='new-authority'
-                    placeholder='Enter a new authority'
-                    text='New Authority'
-                    type='text'
-                    onChange={onChange}
-                />
+                const program = new Program(idl!, CANDY_MACHINE_PROGRAM_V2_ID, provider)
 
-                <div className='my-5'>
-                    <label
-                        htmlFor='cache'
-                        className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
-                        style={{ border: '1px solid #1b1f2426' }}
-                    >
-                        Upload Cache file
-                    </label>
-                    <input
-                        id='cache'
-                        type='file'
-                        name='cache'
-                        onChange={uploadCache}
-                        className='w-full p-2 d-none'
-                        required
-                    />
-                </div>
+                const state: any = await program.account.candyMachine.fetch(new PublicKey(candyMachineAccount))
 
-                {errorMessage.length > 0 && (
-                    <div className='my-3 color-fg-closed color-bg-closed border color-border-closed-emphasis p-3 rounded-2'>
-                        <span>
-                            <StyledOcticon icon={AlertIcon} size={16} color='danger.fg' sx={{ marginRight: '6px' }} />{' '}
-                            {errorMessage}
-                        </span>
-                    </div>
-                )}
+                state.data.solTreasuryAccount = state.wallet
+                state.data.itemsRedeemed = state.itemsRedeemed
+                setErrorMessage('')
+                return state.data
+            } catch (err) {
+                setErrorMessage((err as Error).message)
+            }
+            setIsLoading(false)
+        }
+    }
 
-                {!isInteractingWithCM && (
-                    <Button variant='primary' size='medium' type='submit' sx={{ width: 'fit-content' }}>
-                        Update Candy Machine
-                    </Button>
-                )}
+    useEffect(() => {
+        setErrorMessage('')
+        setIsLoading(false)
+        fetchCandyMachine().then(setCandyMachineConfig)
+        setIsLoading(false)
+    }, [connection])
 
-                {isInteractingWithCM && (
-                    <Button isLoading disabled size='medium' sx={{ width: 'fit-content' }}>
-                        Updating Candy Machine... <Spinner size='small' />
-                    </Button>
-                )}
-
-                {!isInteractingWithCM && status && (
-                    <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
-                        {status}
-                    </span>
-                )}
+    if (isLoading) {
+        return (
+            <div className='d-flex flex-items-center'>
+                <h3 className='mr-3'>Loading...</h3>
+                <Spinner size='small' />
             </div>
-        </form>
+        )
+    }
+    if (errorMessage) {
+        return (
+            <div className='d-flex flex-column items-center justify-center my-5 col-12 col-md-8 col-lg-6'>
+                <h3 className='color-fg-accent'> Error fetching candy machine config</h3>
+                <Button
+                    className='rounded-lg bg-slate-400 p-2 mt-4'
+                    onClick={() => fetchCandyMachine()}
+                    sx={{ width: 'fit-content' }}
+                >
+                    Fetch again
+                </Button>
+            </div>
+        )
+    }
+
+    return (
+        <>
+            {candyMachineConfig?.uuid && (
+                <div className='d-flex flex-column'>
+                    <div className='d-flex flex-column mb-6'>
+                        <h3>Configuration</h3>
+                        <div className='border-y width-full my-4' />
+                        <form onSubmit={onSubmit} noValidate>
+                            <div className='d-flex flex-column flex-justify-between col-12 col-md-8 col-lg-6'>
+                                <FormInput
+                                    id='price'
+                                    text='Price of each NFT (SOL)'
+                                    type='number'
+                                    onChange={onChange}
+                                    defaultValue={
+                                        candyMachineConfig?.price
+                                            ? new BN(candyMachineConfig.price).toNumber() / LAMPORTS_PER_SOL
+                                            : undefined
+                                    }
+                                    required
+                                />
+                                <FormInput
+                                    id='treasury-account'
+                                    text='Treasury Account'
+                                    type='text'
+                                    onChange={onChange}
+                                    defaultValue={candyMachineConfig?.solTreasuryAccount?.toBase58()}
+                                />
+                                <FormInput
+                                    id='captcha'
+                                    text='Captcha?'
+                                    type='checkbox'
+                                    onChange={onChange}
+                                    defaultChecked={candyMachineConfig?.gatekeeper ?? false}
+                                />
+
+                                <FormInput
+                                    id='mutable'
+                                    text='Mutable?'
+                                    type='checkbox'
+                                    onChange={onChange}
+                                    defaultChecked={candyMachineConfig?.isMutable}
+                                />
+                                <FormInput
+                                    id='date-mint'
+                                    text='Date for mint'
+                                    type='date'
+                                    onChange={onChange}
+                                    defaultValue={
+                                        candyMachineConfig?.goLiveDate
+                                            ? parseDateFromDateBN(candyMachineConfig?.goLiveDate)
+                                            : getCurrentDate()
+                                    }
+                                    required
+                                />
+                                <FormInput
+                                    id='time-mint'
+                                    text='Time for mint (GMT)'
+                                    type='time'
+                                    onChange={onChange}
+                                    defaultValue={
+                                        candyMachineConfig?.goLiveDate
+                                            ? parseTimeFromDateBN(candyMachineConfig?.goLiveDate)
+                                            : getCurrentTime()
+                                    }
+                                    required
+                                />
+
+                                {/* No default value since it is dangerous to transfer the authority of the CM to another account. */}
+                                <FormInput
+                                    id='new-authority'
+                                    placeholder='Enter a new authority'
+                                    text='New Authority'
+                                    type='text'
+                                    onChange={onChange}
+                                />
+
+                                <div className='my-5'>
+                                    <label
+                                        htmlFor='cache'
+                                        className='px-4 py-2 rounded-2 cursor-pointer color-bg-inset'
+                                        style={{ border: '1px solid #1b1f2426' }}
+                                    >
+                                        Upload Cache file
+                                    </label>
+                                    <input
+                                        id='cache'
+                                        type='file'
+                                        name='cache'
+                                        onChange={uploadCache}
+                                        className='w-full p-2 d-none'
+                                        required
+                                    />
+                                </div>
+
+                                {errorMessage.length > 0 && (
+                                    <div className='my-3 color-fg-closed color-bg-closed border color-border-closed-emphasis p-3 rounded-2'>
+                                        <span>
+                                            <StyledOcticon
+                                                icon={AlertIcon}
+                                                size={16}
+                                                color='danger.fg'
+                                                sx={{ marginRight: '6px' }}
+                                            />{' '}
+                                            {errorMessage}
+                                        </span>
+                                    </div>
+                                )}
+
+                                {!isInteractingWithCM && (
+                                    <Button variant='primary' size='medium' type='submit' sx={{ width: 'fit-content' }}>
+                                        Update Candy Machine
+                                    </Button>
+                                )}
+
+                                {isInteractingWithCM && (
+                                    <Button isLoading disabled size='medium' sx={{ width: 'fit-content' }}>
+                                        Updating Candy Machine... <Spinner size='small' />
+                                    </Button>
+                                )}
+
+                                {!isInteractingWithCM && status && (
+                                    <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
+                                        {status}
+                                    </span>
+                                )}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+        </>
     )
 }
 
@@ -314,4 +396,4 @@ const FormInput: FC<Input> = ({
     )
 }
 
-export default UpdateCreateCandyMachineForm
+export default UpdateCreateCandyMachine

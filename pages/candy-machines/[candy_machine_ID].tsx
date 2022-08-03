@@ -1,8 +1,5 @@
-import { AnchorProvider, Program } from '@project-serum/anchor'
 import { Button, Link, Spinner, Text } from '@primer/react'
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/constants'
 import { getAllNftsByCM, getNftByMint } from 'lib/nft/actions'
-import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Nft } from 'lib/nft/interfaces'
 import { nftsState } from 'lib/recoil-store/atoms'
 import { NftCard, Popup, RefreshButton, UpdateCandyMachine, DeleteCandyMachine, VerifyCandyMachine } from 'components'
@@ -11,10 +8,10 @@ import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
 import { useRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
-import { PublicKey } from '@solana/web3.js'
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import { LinkExternalIcon } from '@primer/octicons-react'
+import UpdateCreateCandyMachine from 'components/candy-machine/UpdateCandyMachine'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -23,13 +20,12 @@ const CandyMachine: NextPage = () => {
 
     const anchorWallet = useAnchorWallet()
     const { connection, isDevnet } = useRPC()
-    const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
+    // const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
     const [error, setError] = useState('')
     const [isLoadingNfts, setIsLoadingNfts] = useState(false)
     const [nfts, setNfts] = useState<Nft[]>([])
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft>()
-    const [isLoading, setIsLoading] = useState<boolean>(false)
     const { isUserMinting, itemsRemaining, mintAccount, refreshCandyMachineState, isCaptcha, itemsAvailable } =
         useMintCandyMachine(candyMachineAccount as string)
     const [hasCollection, setHasCollection] = useState<boolean>(false)
@@ -65,32 +61,6 @@ const CandyMachine: NextPage = () => {
         setIsLoadingNfts(false)
     }
 
-    const fetchCandyMachine = async (): Promise<IFetchedCandyMachineConfig | undefined> => {
-        if (candyMachineAccount && anchorWallet && connection) {
-            setError('')
-            try {
-                setIsLoading(true)
-                const provider = new AnchorProvider(connection, anchorWallet, {
-                    preflightCommitment: 'processed',
-                })
-
-                const idl = await Program.fetchIdl(CANDY_MACHINE_PROGRAM_V2_ID, provider)
-
-                const program = new Program(idl!, CANDY_MACHINE_PROGRAM_V2_ID, provider)
-
-                const state: any = await program.account.candyMachine.fetch(new PublicKey(candyMachineAccount))
-
-                state.data.solTreasuryAccount = state.wallet
-                state.data.itemsRedeemed = state.itemsRedeemed
-                setError('')
-                return state.data
-            } catch (err) {
-                setError((err as Error).message)
-            }
-            setIsLoading(false)
-        }
-    }
-
     const fetchNfts = async () => {
         setIsLoadingNfts(true)
         try {
@@ -117,10 +87,7 @@ const CandyMachine: NextPage = () => {
     useEffect(() => {
         setError('')
         refreshCandyMachineState()
-        setIsLoading(false)
-        fetchCandyMachine().then(setCandyMachineConfig)
         fetchNfts()
-        setIsLoading(false)
     }, [connection])
 
     const loadingText = (
@@ -169,34 +136,9 @@ const CandyMachine: NextPage = () => {
             </div>
             <div className='d-flex flex-justify-center flex-column'>
                 <h2 className='my-5 wb-break-all'>[CM]: {candyMachineAccount}</h2>
-                {isLoading && loadingText}
-                {!isLoading && (
+                {
                     <>
-                        {error ? (
-                            <div className='d-flex flex-column items-center justify-center my-5 col-12 col-md-8 col-lg-6'>
-                                <h3 className='color-fg-accent'> Error fetching candy machine config</h3>
-                                <Button
-                                    className='rounded-lg bg-slate-400 p-2 mt-4'
-                                    onClick={() => fetchCandyMachine()}
-                                    sx={{ width: 'fit-content' }}
-                                >
-                                    Fetch again
-                                </Button>
-                            </div>
-                        ) : (
-                            candyMachineConfig?.uuid && (
-                                <div className='d-flex flex-column'>
-                                    <div className='d-flex flex-column mb-6'>
-                                        <h3>Configuration</h3>
-                                        <div className='border-y width-full my-4' />
-                                        <UpdateCandyMachine
-                                            fetchedValues={candyMachineConfig}
-                                            candyMachinePubkey={candyMachineAccount}
-                                        />
-                                    </div>
-                                </div>
-                            )
-                        )}
+                        <UpdateCreateCandyMachine candyMachineAccount={candyMachineAccount} />
                         <div className='d-flex flex-justify-center flex-items-start flex-column mb-10 width-full p-0'>
                             <div className='d-flex flex-justify-between flex-items-center width-full mb-4'>
                                 <h3 className='r-0'>NFTs</h3>
@@ -328,7 +270,7 @@ const CandyMachine: NextPage = () => {
                             )}
                         </div>
                     </>
-                )}
+                }
 
                 {isDeleteOpen && (
                     <Popup onClose={() => setIsDeleteOpen(false)} title='Delete Candy Machine' size='small'>
