@@ -33,11 +33,12 @@
 ## Features
 
 - See, create, manage, and delete your candymachines
-- Preview available and see minted NFTs
+- Preview candymachine available NFTs to mint
+- See candymachine minted NFTs
 - Mint from candymachine
-- Link on mints and candymachines to solana.fm
-- Mainnet and devnet support
-- Compatible with Phantom, Solflare, Torus, Sollet, Glow and Slope wallets
+- Provide links of mints and candymachines to solana.fm explorer
+- Compatible with Phantom, Solflare, Torus, Sollet, Glow and Slope extension wallets
+- Support for Devnet and Mainnet
 
 ## Run
 
@@ -47,7 +48,7 @@ Clone the repo, and run the development server:
 yarn dev 
 ```
 
-The app should ope at [http://localhost:3000](http://localhost:3000).
+The app should open at [http://localhost:3000](http://localhost:3000).
 
 ## Acknowledgments
 The code of course would not be possible without the amazing work of the Metaplex team and the contributors to their [codebase](https://github.com/metaplex-foundation/metaplex/).
