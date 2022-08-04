@@ -6,7 +6,7 @@
 <h1 align="center">Sugar Rush</h1>
 
 <p align="center">
-<a href="https://sugarrush.gg/">sugarrush.gg</a>
+<a href="https://www.sugarrush.gg/">sugarrush.gg</a>
 </p>
 
 <p align="center">The Solana Candymachine Management Dashboard</p>
