@@ -1,6 +1,6 @@
 import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
-import { PublicKey } from '@solana/web3.js'
+import { Connection, PublicKey } from '@solana/web3.js'
 import { ICache, saveCache } from 'lib/cache'
 import { CANDY_MACHINE_PROGRAM_V2_ID, CONFIG_ARRAY_START_V2, CONFIG_LINE_SIZE_V2 } from 'lib/candy-machine/constants'
 import { Account } from 'lib/candy-machine/types'
@@ -31,7 +31,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
             setError('')
             let errorMessage = ''
             try {
-                const provider = new AnchorProvider(connection, anchorWallet, {
+                const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
                     preflightCommitment: 'processed',
                 })
 
