@@ -5,7 +5,7 @@ import { NOTIFICATION_TIMEOUT_NEVER } from 'lib/constants'
 import { INotification } from 'lib/interfaces'
 import { FC, useEffect, useRef } from 'react'
 
-const Notification: FC<INotification> = ({ type, message, icon, timeout, id }) => {
+function useRemoveNotification({ id, timeout }: INotification) {
     const flash = useRef<HTMLDivElement>(null)
     const { removeNotification, setStyles } = useNotification(flash)
 
@@ -29,6 +29,15 @@ const Notification: FC<INotification> = ({ type, message, icon, timeout, id }) =
     const onClose = (id: string) => {
         removeNotification(id)
     }
+
+    return {
+        flash,
+        onClose,
+    }
+}
+
+const Notification: FC<INotification> = ({ type, message, icon, timeout, id }) => {
+    const { flash, onClose } = useRemoveNotification({ id, timeout })
 
     return (
         <Flash
