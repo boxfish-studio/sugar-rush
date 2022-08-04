@@ -3,20 +3,30 @@
   <a href="http://boxfish.studio"><img src="doc/img/suggar-rush-gh-splash-thin-min.png" title="Sugar Rush. By Boxfish Studio"></a>
 </h1>
 
-<h2 align="center">
-  Sugar Rush
-</h2>
-
-<p align="center">The Solana Candymachine Management Dashboard, by <a href="https://boxfish.studio">Boxfish Studio</a></p>
+<h1 align="center">Sugar Rush</h1>
 
 <p align="center">
-    <a href="#About">About</a> ◈
-    <a href="#using-the-program">Using the program</a> ◈
-    <a href="#installation">Installation</a> ◈
-    <a href="#community-contributions">Community contributions</a> ◈
-    <a href="#acknowledgments">Acknowledgments</a> ◈
-    <a href="#authors">Authors</a>
+<a href="https://sugarrush.gg/">sugarrush.gg</a>
 </p>
+
+<p align="center">The Solana Candymachine Management Dashboard</p>
+
+
+<p align="center">
+  <a aria-label="build status" href="https://github.com/boxfish-studio/sugar-rush/actions/workflows/deploy_prod.yaml">
+    <img alt="" src="https://github.com/boxfish-studio/sugar-rush/actions/workflows/deploy_prod.yaml/badge.svg">
+  </a>
+  <a aria-label="contributors graph" href="https://github.com/boxfish-studio/sugar-rush/graphs/contributors">
+    <img alt="" src="https://img.shields.io/github/contributors/boxfish-studio/sugar-rush.svg">
+  </a>
+  <a aria-label="last commit" href="https://github.com/boxfish-studio/sugar-rush/commits/main">
+    <img alt="" src="https://img.shields.io/github/last-commit/boxfish-studio/sugar-rush.svg">
+  </a>
+  <a aria-label="license" href="https://github.com/boxfish-studio/sugar-rush/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/boxfish-studio/sugar-rush.svg" alt="">
+  </a>
+</p>
+
 
 ---
 
