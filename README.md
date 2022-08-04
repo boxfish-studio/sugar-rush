@@ -6,7 +6,7 @@
 <h1 align="center">Sugar Rush</h1>
 
 <p align="center">
-<a href="https://www.sugarrush.gg/">sugarrush.gg</a>
+<a href="http://sugarrush.gg/">sugarrush.gg</a>
 </p>
 
 <p align="center">The Solana Candymachine Management Dashboard</p>
@@ -78,10 +78,10 @@ Pull requests are more than welcome!
 ## Acknowledgments
 The code of course would not be possible without the amazing work of the Metaplex team and the contributors to their [codebase](https://github.com/metaplex-foundation/metaplex/).
 
-## Authors
+## License
 
-[Boxfish Studio].
+[Apache 2.0](./LICENSE) &copy; [Boxfish Studio]
 
 
-[Boxfish Studio]: http://boxfish.studio
+[Boxfish Studio]: https://boxfish.studio
 
