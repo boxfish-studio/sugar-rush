@@ -1,4 +1,4 @@
-import { Button, Link, Spinner, Text } from '@primer/react'
+import { Button, Link, Text } from '@primer/react'
 import { getAllNftsByCM, getNftByMint } from 'lib/nft/actions'
 import { Nft } from 'lib/nft/interfaces'
 import { nftsState } from 'lib/recoil-store/atoms'
@@ -13,10 +13,9 @@ import {
     NftCollection,
 } from 'components'
 import { useEffect, useState } from 'react'
-import { useMintCandyMachine, useRPC } from 'hooks'
+import { useRPC, useRefreshCandyMachine } from 'hooks'
 import { useRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
-import { Connection, PublicKey } from '@solana/web3.js'
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import { LinkExternalIcon } from '@primer/octicons-react'
@@ -29,19 +28,10 @@ const CandyMachine: NextPage = () => {
     const { connection, isDevnet } = useRPC()
     const [error, setError] = useState('')
     const [isLoadingNfts, setIsLoadingNfts] = useState(false)
-    const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft>()
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const {
-        isUserMinting,
-        itemsRemaining,
-        mintAccount,
-        refreshCandyMachineState,
-        isCaptcha,
-        setIsCaptcha,
-        itemsAvailable,
-    } = useMintCandyMachine(candyMachineAccount as string)
-    const [hasCollection, setHasCollection] = useState<boolean>(false)
+    const { itemsRemaining, refreshCandyMachineState, setIsCaptcha, itemsAvailable } = useRefreshCandyMachine(
+        candyMachineAccount as string
+    )
     const [nftsRecoilState, setNftsRecoilState] = useRecoilState(nftsState)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
@@ -52,7 +42,6 @@ const CandyMachine: NextPage = () => {
         try {
             if (!connection) return
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
-            setMintedNfts(nfts)
             setNftsRecoilState(nfts)
             // @ts-ignore
             if (nfts[0]?.collection?.key) {
@@ -127,7 +116,7 @@ const CandyMachine: NextPage = () => {
                         <h3 className='r-0'>NFTs</h3>
                         <div className='l-0 d-flex flex-justify-end flex-items-center'>
                             <span className='pr-2'>
-                                {isLoadingNfts ? '' : `${mintedNfts?.length}/${itemsAvailable} Minted`}
+                                {isLoadingNfts ? '' : `${nftsRecoilState?.length}/${itemsAvailable} Minted`}
                             </span>
                             <RefreshButton onClick={fetchNfts} isLoading={isLoadingNfts} />
                         </div>
@@ -138,7 +127,7 @@ const CandyMachine: NextPage = () => {
                         candyMachineAccount={candyMachineAccount}
                         itemsRemaining={itemsRemaining}
                         itemsAvailable={itemsAvailable}
-                        mintedNfts={mintedNfts}
+                        mintedNfts={nftsRecoilState}
                     />
                     {error?.includes('Error to fetch data') && (
                         <Text as='p' className='mt-3 mb-4'>
@@ -148,7 +137,7 @@ const CandyMachine: NextPage = () => {
                     <NftMinted
                         candyMachineAccount={candyMachineAccount}
                         fetchNfts={fetchNfts}
-                        nfts={mintedNfts}
+                        nfts={nftsRecoilState}
                         isLoading={isLoadingNfts}
                     />
                 </div>

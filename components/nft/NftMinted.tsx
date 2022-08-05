@@ -10,9 +10,7 @@ const NftMinted: FC<{
     isLoading: boolean
     fetchNfts: () => void
 }> = ({ candyMachineAccount, fetchNfts, nfts, isLoading }) => {
-    const { isUserMinting, itemsRemaining, mintAccount, isCaptcha, itemsAvailable } = useMintCandyMachine(
-        candyMachineAccount as string
-    )
+    const { isUserMinting, itemsRemaining, mintAccount, isCaptcha } = useMintCandyMachine(candyMachineAccount as string)
 
     if (isLoading) {
         return (
