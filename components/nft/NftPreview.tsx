@@ -6,9 +6,8 @@ import NftCard from './NftCard'
 const NftPreview: FC<{
     candyMachineAccount: string
     itemsRemaining: number
-    itemsAvailable: number
     mintedNfts: Nft[]
-}> = ({ candyMachineAccount, itemsRemaining, itemsAvailable, mintedNfts }) => {
+}> = ({ candyMachineAccount, itemsRemaining, mintedNfts }) => {
     const [nfts, setNfts] = useState<Nft[]>([])
     const [cache, setCache] = useState<File>()
 
@@ -37,7 +36,7 @@ const NftPreview: FC<{
     }
 
     return (
-        <div className='mb-7'>
+        <div className='mb-7 mt-5'>
             {!nfts.length ? (
                 <>
                     <h4>NFTs Preview · {itemsRemaining}</h4>
@@ -50,7 +49,7 @@ const NftPreview: FC<{
                 </>
             ) : (
                 <>
-                    <h4>Unminted NFTs - {itemsAvailable - itemsRemaining}</h4>
+                    <h4>Unminted NFTs - {itemsRemaining}</h4>
                     <div className='mt-3 nfts-grid'>
                         {nfts.map(({ name, image }, index) => {
                             if (!mintedNfts?.some((minted) => minted.name === name)) {

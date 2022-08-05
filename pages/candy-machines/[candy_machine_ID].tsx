@@ -126,7 +126,6 @@ const CandyMachine: NextPage = () => {
                     <NftPreview
                         candyMachineAccount={candyMachineAccount}
                         itemsRemaining={itemsRemaining}
-                        itemsAvailable={itemsAvailable}
                         mintedNfts={nftsRecoilState}
                     />
                     {error?.includes('Error to fetch data') && (

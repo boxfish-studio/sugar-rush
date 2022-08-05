@@ -3,7 +3,7 @@ import { AnchorProvider } from '@project-serum/anchor'
 import { useRPC } from 'hooks'
 import { Transaction, Connection } from '@solana/web3.js'
 import { awaitTransactionSignatureConfirmation } from 'lib/candy-machine/upload/transactions'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DEFAULT_TIMEOUT } from 'lib/constants'
 import { SetupState } from 'lib/candy-machine/interfaces'
 import { createAccountsForMint, mintOneNft } from 'lib/candy-machine/mint/mint'
@@ -17,6 +17,10 @@ const useMintCandyMachine = (account: string) => {
     const [mintMessage, setMintMessage] = useState({ error: false, message: '' })
     const { itemsRemaining, refreshCandyMachineState, candyMachine, setItemsRemaining, setIsActive, isCaptcha } =
         useRefreshCandyMachine(account as string)
+
+    useEffect(() => {
+        refreshCandyMachineState()
+    }, [])
 
     const wallet = useWallet()
 
