@@ -21,7 +21,17 @@ const CreateCandyMachine: FC = () => {
 
     const { files, uploadAssets } = useUploadFiles()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('')
+    const [error, setError] = useState('')
+
+    useEffect(() => {
+        if (error.length > 0) {
+            addNotification({
+                message: 'There was an error creating the candy machine \n' + error,
+                type: NotificationType.Error,
+            })
+            setError('')
+        }
+    }, [error])
 
     const initialState = {
         price: 0,
@@ -40,37 +50,40 @@ const CreateCandyMachine: FC = () => {
 
     function isFormValid(): boolean {
         if (files.length === 0) {
-            setErrorMessage('There are no files to upload')
+            setError('There are no files to upload')
             return false
         }
         if (files.length % 2 != 0) {
-            setErrorMessage('You have to upload 2 files per NFT')
+            setError('You have to upload 2 files per NFT')
             return false
         }
         if (values['number-of-nfts'] * 2 != files.length) {
-            setErrorMessage('Does not match the number of nfts')
+            setError('Does not match the number of nfts')
             return false
         }
         let isZeroJsonFile: boolean = files.filter((e) => e.name === '0.json').length === 0 ? false : true
         if (!isZeroJsonFile) {
-            setErrorMessage('The 0.json file must exist in Files')
+            setError('The 0.json file must exist in Files')
             return false
         }
         if (values.price == 0 || isNaN(values.price)) {
-            setErrorMessage('The Price of each NFT cannot be 0')
+            setError('The Price of each NFT cannot be 0')
             return false
         }
         if (values['number-of-nfts'] == 0 || isNaN(values['number-of-nfts'])) {
-            setErrorMessage('The Number of NFTs cannot be 0')
+            setError('The Number of NFTs cannot be 0')
             return false
         }
 
-        setErrorMessage('')
+        setError('')
         return true
     }
     async function createCandyMachineV2() {
         if (!connection) {
-            setErrorMessage('Select network first')
+            addNotification({
+                message: 'Select network first',
+                type: NotificationType.Error,
+            })
             return
         }
         if (!isFormValid()) return
