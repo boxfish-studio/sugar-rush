@@ -1,7 +1,7 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
+import { useForm, useRPC, useUploadCache, useUploadFiles, useNotification } from 'hooks'
 import { Connection } from '@solana/web3.js'
-import { useForm, useRPC, useUploadFiles } from 'hooks'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
 import { StorageType } from 'lib/candy-machine/enums'
 import { ICandyMachineConfig } from 'lib/candy-machine/interfaces'
@@ -9,18 +9,18 @@ import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/c
 import { uploadV2 } from 'lib/candy-machine/upload/upload'
 import { getCurrentDate, getCurrentTime, parseDateToUTC } from 'lib/utils'
 import React, { FC, useState, useEffect } from 'react'
-import { Box, Button, Spinner, StyledOcticon } from '@primer/react'
-import { AlertIcon } from '@primer/octicons-react'
+import { Box, Button, Spinner } from '@primer/react'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
+import { NotificationType } from 'lib/interfaces'
 
 const CreateCandyMachine: FC = () => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
+    const { addNotification } = useNotification()
 
     const { files, uploadAssets } = useUploadFiles()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
-    const [status, setStatus] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
 
     const initialState = {
@@ -75,7 +75,6 @@ const CreateCandyMachine: FC = () => {
         }
         if (!isFormValid()) return
         setIsInteractingWithCM(true)
-        setStatus('')
         let candyMachine: string = ''
         const config: ICandyMachineConfig = {
             price: values.price,
@@ -170,9 +169,15 @@ const CreateCandyMachine: FC = () => {
                 })
 
                 if (typeof _candyMachine === 'string') candyMachine = _candyMachine
-                setStatus(`Candy Machine created successfully! ${candyMachine}`)
+                addNotification({
+                    message: `Candy Machine created successfully! ${candyMachine}`,
+                    type: NotificationType.Success,
+                })
             } catch (err) {
-                setErrorMessage('upload was not successful, please re-run.')
+                addNotification({
+                    message: `An error occurred while creating the Candy Machine`,
+                    type: NotificationType.Error,
+                })
             }
             const endMilliseconds = Date.now()
             console.log(endMilliseconds.toString())
@@ -200,21 +205,10 @@ const CreateCandyMachine: FC = () => {
                     className='overflow-y-scroll d-flex flex-column pb-4 height-full'
                     sx={{ maxHeight: ['380px', '550px'] }}
                 >
-                    {errorMessage.length > 0 && (
-                        <span className='color-fg-closed color-bg-closed border color-border-closed-emphasis mt-3 p-3 rounded-2'>
-                            <StyledOcticon icon={AlertIcon} size={16} color='danger.fg' sx={{ marginRight: '6px' }} />{' '}
-                            {errorMessage}
-                        </span>
-                    )}
                     {isInteractingWithCM && (
                         <span className='color-fg-accent color-bg-accent border color-border-accent rounded-2 mt-4 p-3'>
                             IMPORTANT! Make sure to save the Cache file that will be downloaded at the end! Without it,
                             you will not be able to update your Candy Machine.
-                        </span>
-                    )}
-                    {!isInteractingWithCM && status && (
-                        <span className='color-fg-success color-bg-success border color-border-success rounded-2 mt-4 p-3 wb-break-word'>
-                            {status}
                         </span>
                     )}
                     {isInteractingWithCM && (

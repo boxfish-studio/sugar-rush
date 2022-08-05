@@ -9,7 +9,7 @@ import {
     SolletWalletAdapter,
     TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
-import { Navbar, Footer, CheckConnectedWallet } from 'components'
+import { Navbar, Footer, CheckConnectedWallet, NotificationManager } from 'components'
 import type { AppProps } from 'next/app'
 import { useMemo } from 'react'
 import { RecoilRoot } from 'recoil'
@@ -45,6 +45,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                             </div>
                         </CheckConnectedWallet>
                     </WalletModalProvider>
+                    <NotificationManager />
                     <Footer />
                 </RecoilRoot>
             </WalletProvider>
