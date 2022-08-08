@@ -8,8 +8,8 @@ import {
     UpdateCandyMachine,
     DeleteCandyMachine,
     VerifyCandyMachine,
-    NftPreview,
-    NftMinted,
+    PreviewNFTs,
+    MintedNFTs,
     NftCollection,
 } from 'components'
 import { useEffect, useState } from 'react'
@@ -123,7 +123,7 @@ const CandyMachine: NextPage = () => {
                     </div>
                     <div className='border-y width-full' />
                     {collectionNft && <NftCollection nft={collectionNft} />}
-                    <NftPreview
+                    <PreviewNFTs
                         candyMachineAccount={candyMachineAccount}
                         itemsRemaining={itemsRemaining}
                         mintedNfts={nftsRecoilState}
@@ -133,7 +133,7 @@ const CandyMachine: NextPage = () => {
                             Error to fetch data. Please, click the refresh button to try again.
                         </Text>
                     )}
-                    <NftMinted
+                    <MintedNFTs
                         candyMachineAccount={candyMachineAccount}
                         fetchNfts={fetchNfts}
                         nfts={nftsRecoilState}
