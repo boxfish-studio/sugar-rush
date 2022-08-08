@@ -26,6 +26,7 @@ export const networkState = atom<null | {
 }>({
     key: 'networkState',
     default: null,
+    dangerouslyAllowMutability: true,
 })
 
 export const notificationState: RecoilState<INotification[]> = atom<INotification[]>({

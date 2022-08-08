@@ -27,7 +27,7 @@ const useMintCandyMachine = (account: string) => {
     async function refreshCandyMachineState() {
         try {
             if (!anchorWallet || !wallet.publicKey || !connection || !network) return
-            const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
+            const provider = new AnchorProvider(connection, anchorWallet, {
                 preflightCommitment: 'recent',
             })
 
@@ -82,7 +82,7 @@ const useMintCandyMachine = (account: string) => {
             setIsUserMinting(true)
             refreshCandyMachineState()
 
-            const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
+            const provider = new AnchorProvider(connection, anchorWallet, {
                 preflightCommitment: 'recent',
             })
 

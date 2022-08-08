@@ -91,7 +91,7 @@ const UpdateCreateCandyMachineForm: FC<{
             }
 
             if (publicKey && anchorWallet && candyMachinePubkey && connection && network) {
-                const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
+                const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'recent',
                 })
 
