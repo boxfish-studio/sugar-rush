@@ -37,6 +37,7 @@ const CandyMachine: NextPage = () => {
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
 
     const fetchNfts = async () => {
+        setNftsRecoilState([])
         setIsLoadingNfts(true)
         setError('')
         try {
@@ -52,7 +53,6 @@ const CandyMachine: NextPage = () => {
                 }
             }
         } catch (err) {
-            setNftsRecoilState([])
             setError((err as Error).message)
             console.error(err)
         }
@@ -123,15 +123,10 @@ const CandyMachine: NextPage = () => {
                     </div>
                     <div className='border-y width-full' />
                     {collectionNft && <NftCollection nft={collectionNft} />}
-                    <PreviewNFTs
-                        candyMachineAccount={candyMachineAccount}
-                        itemsRemaining={itemsRemaining}
-                        mintedNfts={nftsRecoilState}
-                    />
+                    <PreviewNFTs candyMachineAccount={candyMachineAccount} itemsRemaining={itemsRemaining} />
                     <MintedNFTs
                         candyMachineAccount={candyMachineAccount}
                         fetchNfts={fetchNfts}
-                        nfts={nftsRecoilState}
                         isLoading={isLoadingNfts}
                         error={error}
                     />

@@ -87,7 +87,7 @@ const useMintCandyMachine = (account: string) => {
                 candyMachine.state.isSoldOut = remaining === 0
                 setSetupTxn(undefined)
                 addNotification({
-                    message: `Congratulations! Mint succeeded!`,
+                    message: 'Mint succeeded! Please, click the refresh button to see the new NFT.',
                     type: NotificationType.Success,
                 })
             } else if (status && !status.err) {
