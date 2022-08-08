@@ -7,8 +7,8 @@ import { MutableRefObject } from 'react'
 
 const styles = Object.freeze({
     opacity: '0',
-    transform: 'translateY(-50%)',
-    transition: 'all 0.5s',
+    transform: 'translateX(-30%)',
+    transition: 'all 0.3s',
 })
 
 function useNotification<T extends HTMLElement>(element?: MutableRefObject<T | null>) {

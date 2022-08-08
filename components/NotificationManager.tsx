@@ -1,10 +1,10 @@
 import { AlertIcon, CheckIcon, InfoIcon, XIcon } from '@primer/octicons-react'
 import { Notification } from 'components'
 import { useNotification } from 'hooks'
-import { INotification, NotificationType } from 'lib/interfaces'
+import { NotificationType } from 'lib/interfaces'
 
 export default function NotificationManager() {
-    const { notifications, removeNotification } = useNotification()
+    const { notifications } = useNotification()
 
     function getNotificationIcon(type: NotificationType | undefined) {
         switch (type) {
