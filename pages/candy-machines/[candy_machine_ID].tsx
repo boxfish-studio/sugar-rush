@@ -128,16 +128,12 @@ const CandyMachine: NextPage = () => {
                         itemsRemaining={itemsRemaining}
                         mintedNfts={nftsRecoilState}
                     />
-                    {error?.includes('Error to fetch data') && (
-                        <Text as='p' className='mt-3 mb-4'>
-                            Error to fetch data. Please, click the refresh button to try again.
-                        </Text>
-                    )}
                     <MintedNFTs
                         candyMachineAccount={candyMachineAccount}
                         fetchNfts={fetchNfts}
                         nfts={nftsRecoilState}
                         isLoading={isLoadingNfts}
+                        error={error}
                     />
                 </div>
             </div>

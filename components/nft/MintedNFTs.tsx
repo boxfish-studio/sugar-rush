@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Spinner } from '@primer/react'
+import { Spinner, Text } from '@primer/react'
 import { Nft } from 'lib/nft/interfaces'
 import NftCard from './NftCard'
 import { useMintCandyMachine } from 'hooks'
@@ -9,7 +9,8 @@ const MintedNFTs: FC<{
     nfts: Nft[]
     isLoading: boolean
     fetchNfts: () => void
-}> = ({ candyMachineAccount, fetchNfts, nfts, isLoading }) => {
+    error: string
+}> = ({ candyMachineAccount, fetchNfts, nfts, isLoading, error }) => {
     const { isUserMinting, itemsRemaining, mintAccount, isCaptcha } = useMintCandyMachine(candyMachineAccount as string)
 
     if (isLoading) {
@@ -23,6 +24,11 @@ const MintedNFTs: FC<{
 
     return (
         <div>
+            {error?.includes('Error to fetch data') && (
+                <Text as='p' className='mt-3 mb-4'>
+                    Error to fetch data. Please, click the refresh button to try again.
+                </Text>
+            )}
             <h4>Minted NFTs - {nfts.length}</h4>
             <div className='nfts-grid mt-3'>
                 {itemsRemaining > 0 && isCaptcha && (
