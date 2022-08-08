@@ -19,6 +19,7 @@ const useForm = <T,>(callback: () => any, initialState: T) => {
         onChange,
         onSubmit,
         values,
+        setValues,
     }
 }
 
