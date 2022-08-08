@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Spinner, Text } from '@primer/react'
+import { Spinner } from '@primer/react'
 import NftCard from './NftCard'
 import { useMintCandyMachine } from 'hooks'
 import { useRecoilValue } from 'recoil'
@@ -8,8 +8,7 @@ import { nftsState } from 'lib/recoil-store/atoms'
 const MintedNFTs: FC<{
     candyMachineAccount: string
     isLoading: boolean
-    error: string
-}> = ({ candyMachineAccount, isLoading, error }) => {
+}> = ({ candyMachineAccount, isLoading }) => {
     const { isUserMinting, itemsRemaining, mintAccount, isCaptcha } = useMintCandyMachine(candyMachineAccount as string)
     const nfts = useRecoilValue(nftsState)
 
@@ -24,11 +23,6 @@ const MintedNFTs: FC<{
 
     return (
         <div>
-            {error?.includes('Error to fetch data') && (
-                <Text as='p' className='mt-3 mb-4'>
-                    Error to fetch data. Please, click the refresh button to try again.
-                </Text>
-            )}
             <h4>Minted NFTs - {nfts.length}</h4>
             <div className='nfts-grid mt-3'>
                 {itemsRemaining > 0 && isCaptcha && (

@@ -63,12 +63,9 @@ const CandyMachine: NextPage = () => {
 
     useEffect(() => {
         setError('')
+        fetchNfts()
         refreshCandyMachineState()
     }, [connection])
-
-    useEffect(() => {
-        fetchNfts()
-    }, [])
 
     if (error.includes('Account does not exist')) {
         return (
@@ -124,12 +121,12 @@ const CandyMachine: NextPage = () => {
                     <div className='border-y width-full' />
                     {collectionNft && <NftCollection nft={collectionNft} />}
                     <PreviewNFTs candyMachineAccount={candyMachineAccount} itemsRemaining={itemsRemaining} />
-                    <MintedNFTs
-                        candyMachineAccount={candyMachineAccount}
-                        fetchNfts={fetchNfts}
-                        isLoading={isLoadingNfts}
-                        error={error}
-                    />
+                    {error?.includes('Error to fetch data') && (
+                        <Text as='p' className='mt-3 mb-4'>
+                            Error to fetch data. Please, click the refresh button to try again.
+                        </Text>
+                    )}
+                    <MintedNFTs candyMachineAccount={candyMachineAccount} isLoading={isLoadingNfts} />
                 </div>
             </div>
             {isDeleteOpen && (
