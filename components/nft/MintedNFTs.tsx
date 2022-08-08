@@ -4,7 +4,7 @@ import { Nft } from 'lib/nft/interfaces'
 import NftCard from './NftCard'
 import { useMintCandyMachine } from 'hooks'
 
-const NftMinted: FC<{
+const MintedNFTs: FC<{
     candyMachineAccount: string
     nfts: Nft[]
     isLoading: boolean
@@ -75,4 +75,4 @@ const NftMinted: FC<{
     )
 }
 
-export default NftMinted
+export default MintedNFTs

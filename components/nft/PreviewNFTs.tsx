@@ -3,7 +3,7 @@ import { Text } from '@primer/react'
 import { Nft } from 'lib/nft/interfaces'
 import NftCard from './NftCard'
 
-const NftPreview: FC<{
+const PreviewNFTs: FC<{
     candyMachineAccount: string
     itemsRemaining: number
     mintedNfts: Nft[]
@@ -74,4 +74,4 @@ const NftPreview: FC<{
     )
 }
 
-export default NftPreview
+export default PreviewNFTs
