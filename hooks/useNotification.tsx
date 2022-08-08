@@ -1,8 +1,10 @@
-import { INotification } from 'lib/interfaces'
+import { INotification, NotificationType } from 'lib/interfaces'
 import { notificationState } from 'lib/recoil-store/atoms'
 import { generateRandomId } from 'lib/utils'
 import { useRecoilState } from 'recoil'
 import { NOTIFICATION_TIMEOUT_DEFAULT } from 'lib/constants'
+
+type ActionNotification = 'creating' | 'updating' | 'deleting'
 
 const useNotification = () => {
     const [notifications, setNotifications] = useRecoilState<INotification[]>(notificationState)
@@ -17,6 +19,13 @@ const useNotification = () => {
         setNotifications((notificationsPrev) => notificationsPrev.filter((n) => n.id !== id))
     }
 
-    return { notifications, addNotification, removeNotification }
+    const populateNotificationError = (action: ActionNotification, newError: string) => {
+        addNotification({
+            message: `There was an error ${action} the candy machine \n` + newError,
+            type: NotificationType.Error,
+        })
+    }
+
+    return { notifications, addNotification, removeNotification, populateNotificationError }
 }
 export default useNotification

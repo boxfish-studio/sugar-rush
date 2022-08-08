@@ -11,7 +11,6 @@ import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, pa
 import { FC, useEffect, useState } from 'react'
 import { Button, Spinner, StyledOcticon, Text } from '@primer/react'
 import { AlertIcon } from '@primer/octicons-react'
-import { NotificationType } from 'lib/interfaces'
 
 const UpdateCandyMachine: FC<{
     candyMachineAccount?: string | string[]
@@ -20,7 +19,7 @@ const UpdateCandyMachine: FC<{
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
-    const { addNotification } = useNotification()
+    const { populateNotificationError } = useNotification()
 
     const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
@@ -50,23 +49,29 @@ const UpdateCandyMachine: FC<{
 
     const { onChange, onSubmit, values, setValues } = useForm(updateCandyMachineV2, initialState)
 
-    function isFormUpdateValid(): boolean {
+    async function isFormUpdateValid(): Promise<boolean> {
         if (!values['date-mint'] || !values['time-mint']) return false
         if (!cache) {
-            setError('There are no files to upload')
+            populateNotificationError('updating', 'There are no files to upload')
+            return false
+        }
+        let cacheData = await cache.text()
+        let cacheDataJson = JSON.parse(cacheData)
+        if (cacheDataJson.candyMachine !== candyMachineAccount) {
+            populateNotificationError('updating', 'The cache file is not from this candy machine')
             return false
         }
         if (values.price == 0 || isNaN(values.price)) {
-            setError('The Price of each NFT cannot be 0')
+            populateNotificationError('updating', 'The Price of each NFT cannot be 0')
             return false
         }
-        setError('')
         return true
     }
 
     async function updateCandyMachineV2() {
         try {
-            if (!isFormUpdateValid()) return
+            const isValidForm = await isFormUpdateValid()
+            if (!isValidForm) return
             setIsInteractingWithCM(true)
             setStatus('')
 
@@ -157,7 +162,7 @@ const UpdateCandyMachine: FC<{
                 setStatus('Candy Machine updated successfully!')
             }
         } catch (err) {
-            setError('Candy Machine update was not successful, please re-run.')
+            populateNotificationError('updating', 'Candy Machine update was not successful, please re-run.')
         }
         setIsInteractingWithCM(false)
     }
@@ -216,16 +221,6 @@ const UpdateCandyMachine: FC<{
         } as const
         setValues(updateInitialState)
     }, [candyMachineConfig])
-
-    useEffect(() => {
-        if (error.length > 0) {
-            addNotification({
-                message: 'There was an error updating the candy machine \n' + error,
-                type: NotificationType.Error,
-            })
-            setError('')
-        }
-    }, [error])
 
     if (isLoading) {
         return (
