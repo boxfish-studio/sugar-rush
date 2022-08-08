@@ -26,8 +26,8 @@ const useRefreshCandyMachine = (account: string) => {
             })
 
             const idl = await Program.fetchIdl(CANDY_MACHINE_PROGRAM_V2_ID, provider)
-
-            const program = new Program(idl!, CANDY_MACHINE_PROGRAM_V2_ID, provider)
+            if (!idl) return
+            const program = new Program(idl, CANDY_MACHINE_PROGRAM_V2_ID, provider)
             const state: any = await program.account.candyMachine.fetch(new PublicKey(account))
             const itemsAvailable = state.data.itemsAvailable.toNumber()
             const itemsRedeemed = state.itemsRedeemed.toNumber()
