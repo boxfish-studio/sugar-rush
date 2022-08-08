@@ -1,6 +1,6 @@
 import { Nft } from 'lib/nft/interfaces'
 import { INotification, NotificationType } from 'lib/interfaces'
-import { atom, RecoilState } from 'recoil'
+import { atom, RecoilState, selector } from 'recoil'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import { Connection } from '@solana/web3.js'
 
@@ -17,6 +17,11 @@ export const candyMachinesState: RecoilState<string[]> = atom<string[]>({
 export const nftsState: RecoilState<Nft[]> = atom<Nft[]>({
     key: 'nftsState',
     default: [],
+})
+
+export const nftsLength = selector({
+    key: 'nftsLength',
+    get: ({ get }) => get(nftsState).length,
 })
 
 export const networkState = atom<null | {
