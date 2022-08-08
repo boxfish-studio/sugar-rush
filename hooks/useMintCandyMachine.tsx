@@ -11,7 +11,7 @@ import useRefreshCandyMachine from './useRefreshCandyMachine'
 
 const useMintCandyMachine = (account: string) => {
     const anchorWallet = useAnchorWallet()
-    const { connection, network } = useRPC()
+    const { connection } = useRPC()
     const [isUserMinting, setIsUserMinting] = useState(false)
     const [setupTxn, setSetupTxn] = useState<SetupState>()
     const [mintMessage, setMintMessage] = useState({ error: false, message: '' })
