@@ -76,7 +76,7 @@ const CandyMachine: NextPage = () => {
             setError('')
             try {
                 setIsLoading(true)
-                const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
+                const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'processed',
                 })
 
