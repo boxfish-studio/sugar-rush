@@ -31,7 +31,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
             setError('')
             let errorMessage = ''
             try {
-                const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
+                const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'processed',
                 })
 
