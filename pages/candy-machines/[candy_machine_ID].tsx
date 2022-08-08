@@ -37,6 +37,7 @@ const CandyMachine: NextPage = () => {
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
 
     const fetchNfts = async () => {
+        setCollectionNft(undefined)
         setIsLoadingNfts(true)
         setError('')
         try {
