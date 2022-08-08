@@ -103,7 +103,7 @@ const CreateCandyMachine: FC = () => {
 
         if (publicKey && anchorWallet && connection && network) {
             const { supportedFiles, elemCount } = verifyAssets(files, config.storage, config.number)
-            const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
+            const provider = new AnchorProvider(connection, anchorWallet, {
                 preflightCommitment: 'recent',
             })
 

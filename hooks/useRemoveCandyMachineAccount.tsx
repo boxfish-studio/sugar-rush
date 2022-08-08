@@ -16,7 +16,7 @@ const useRemoveCandyMachineAccount = (accounts: string[]) => {
 
     const removeAccount = async (candyMachineAccount: string) => {
         if (!anchorWallet || !connection) return
-        const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
+        const provider = new AnchorProvider(connection, anchorWallet, {
             preflightCommitment: 'recent',
         })
 

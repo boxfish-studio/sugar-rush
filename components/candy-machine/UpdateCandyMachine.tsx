@@ -96,7 +96,7 @@ const UpdateCandyMachine: FC<{
             }
 
             if (publicKey && anchorWallet && candyMachineAccount && connection && network) {
-                const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
+                const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'recent',
                 })
 
@@ -167,7 +167,7 @@ const UpdateCandyMachine: FC<{
             setError('')
             try {
                 setIsLoading(true)
-                const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
+                const provider = new AnchorProvider(connection, anchorWallet, {
                     preflightCommitment: 'processed',
                 })
 

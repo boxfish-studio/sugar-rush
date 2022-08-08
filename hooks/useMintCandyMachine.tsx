@@ -31,7 +31,7 @@ const useMintCandyMachine = (account: string) => {
             setIsUserMinting(true)
             refreshCandyMachineState()
 
-            const provider = new AnchorProvider(new Connection(connection.rpcEndpoint), anchorWallet, {
+            const provider = new AnchorProvider(connection, anchorWallet, {
                 preflightCommitment: 'recent',
             })
 
