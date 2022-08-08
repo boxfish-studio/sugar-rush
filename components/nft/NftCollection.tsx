@@ -9,18 +9,7 @@ const NftCollection: FC<{
         <div className='mb-5 mt-5'>
             <h4>Collection</h4>
             <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
-                <NftCard
-                    title={nft.name}
-                    imageLink={nft.image}
-                    buttons={[
-                        {
-                            text: 'View in Solscan',
-                            as: 'link',
-                            variant: 'invisible',
-                            hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
-                        },
-                    ]}
-                />
+                <NftCard title={nft.name} imageLink={nft.image} />
             </div>
         </div>
     )
