@@ -103,6 +103,7 @@ const CandyMachine: NextPage = () => {
         try {
             if (!connection) return
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
+            if (nfts.length === 0) return setIsLoadingNfts(false)
             setMintedNfts(nfts)
             setNftsRecoilState(nfts)
             const collectionNftPubkey = (nfts[0]?.collection as ICollectionNft)?.key
