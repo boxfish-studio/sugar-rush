@@ -268,8 +268,8 @@ const CandyMachine: NextPage = () => {
                                             <h4>Collection</h4>
                                             <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
                                                 <NftCard
-                                                    title={collectionNft?.name || 'Not available'}
-                                                    imageLink={collectionNft?.image || '/logo.png'}
+                                                    title={collectionNft?.name ?? 'Not available'}
+                                                    imageLink={collectionNft?.image ?? '/logo.png'}
                                                     buttons={[
                                                         {
                                                             text: 'View in Solscan',
