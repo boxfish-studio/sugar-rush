@@ -15,6 +15,7 @@ import { Connection, PublicKey } from '@solana/web3.js'
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import { LinkExternalIcon } from '@primer/octicons-react'
+import { ICollectionNft } from 'lib/nft/interfaces'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -28,7 +29,7 @@ const CandyMachine: NextPage = () => {
     const [isLoadingNfts, setIsLoadingNfts] = useState(false)
     const [nfts, setNfts] = useState<Nft[]>([])
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
-    const [collectionNft, setCollectionNft] = useState<Nft>()
+    const [collectionNft, setCollectionNft] = useState<Nft | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const {
         isUserMinting,
@@ -99,25 +100,22 @@ const CandyMachine: NextPage = () => {
 
     const fetchNfts = async () => {
         setIsLoadingNfts(true)
-        setError('')
         try {
             if (!connection) return
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
+            if (nfts.length === 0) return setIsLoadingNfts(false)
             setMintedNfts(nfts)
             setNftsRecoilState(nfts)
-            // @ts-ignore
-            if (nfts[0]?.collection?.key) {
-                setHasCollection(true)
-                // @ts-ignore
-                let nftCollectionData = await getNftByMint(nfts[0].collection.key, connection)
-                if (nftCollectionData.name !== '') {
-                    setCollectionNft(nftCollectionData)
-                }
+            const collectionNftPubkey = (nfts[0]?.collection as ICollectionNft)?.key
+            if (!collectionNftPubkey) return
+            setHasCollection(true)
+            let nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
+            if (nftCollectionData?.name !== '') {
+                setCollectionNft(nftCollectionData)
             }
         } catch (err) {
-            setNftsRecoilState([])
-            setError((err as Error).message)
             console.error(err)
+            setNftsRecoilState([])
         }
         setIsLoadingNfts(false)
     }
@@ -131,6 +129,7 @@ const CandyMachine: NextPage = () => {
         fetchCandyMachine().then(setCandyMachineConfig)
         fetchNfts()
         setIsLoading(false)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [connection])
 
     const loadingText = (
@@ -170,7 +169,7 @@ const CandyMachine: NextPage = () => {
                 <Button leadingIcon={LinkExternalIcon}>
                     <Link
                         target='_blank'
-                        href={`https://solscan.io/account/${candyMachineAccount}?${isDevnet}`}
+                        href={`https://solscan.io/account/${candyMachineAccount}${isDevnet}`}
                         sx={{ textDecoration: 'none', color: '#24292F' }}
                     >
                         View in Solscan
@@ -268,23 +267,20 @@ const CandyMachine: NextPage = () => {
                                     {hasCollection && (
                                         <div className='mb-5'>
                                             <h4>Collection</h4>
-
-                                            {collectionNft && (
-                                                <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
-                                                    <NftCard
-                                                        title={collectionNft.name}
-                                                        imageLink={collectionNft.image}
-                                                        buttons={[
-                                                            {
-                                                                text: 'View in Solscan',
-                                                                as: 'link',
-                                                                variant: 'invisible',
-                                                                hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
-                                                            },
-                                                        ]}
-                                                    />
-                                                </div>
-                                            )}
+                                            <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
+                                                <NftCard
+                                                    title={collectionNft?.name ?? 'Not available'}
+                                                    imageLink={collectionNft?.image ?? '/logo.png'}
+                                                    buttons={[
+                                                        {
+                                                            text: 'View in Solscan',
+                                                            as: 'link',
+                                                            variant: 'invisible',
+                                                            hash: collectionNft?.mint?.toBase58(),
+                                                        },
+                                                    ]}
+                                                />
+                                            </div>
                                         </div>
                                     )}
                                     {error?.includes('Error to fetch data') && (
