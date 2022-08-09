@@ -66,7 +66,7 @@ const NftCard: FC<{
                                     key={i}
                                     target='_blank'
                                     rel='noopener noreferrer'
-                                    href={`https://solscan.io/account/${btn.hash}?${isDevnet}`}
+                                    href={`https://solscan.io/account/${btn.hash}${isDevnet}`}
                                 >
                                     <Button leadingIcon={LinkExternalIcon} variant={btn.variant}>
                                         {btn.text}
