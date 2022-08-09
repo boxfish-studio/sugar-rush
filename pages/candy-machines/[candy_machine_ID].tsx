@@ -168,7 +168,7 @@ const CandyMachine: NextPage = () => {
                 <Button leadingIcon={LinkExternalIcon}>
                     <Link
                         target='_blank'
-                        href={`https://solscan.io/account/${candyMachineAccount}?${isDevnet}`}
+                        href={`https://solscan.io/account/${candyMachineAccount}${isDevnet}`}
                         sx={{ textDecoration: 'none', color: '#24292F' }}
                     >
                         View in Solscan
