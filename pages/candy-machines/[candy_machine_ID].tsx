@@ -61,7 +61,7 @@ const CandyMachine: NextPage = () => {
         if (!cacheDataJson.items) {
             alert('NFTs Preview not available in cache file')
         } else if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
-            const nfts = Object.values(cacheDataJson.items).map((nft: any) => {
+            const nfts = Object.values(cacheDataJson?.items)?.map((nft: any) => {
                 return {
                     image: nft.imageLink,
                     name: nft.name,
@@ -136,7 +136,7 @@ const CandyMachine: NextPage = () => {
     }, [connection])
 
     useEffect(() => {
-        setUnmintedNfts(nfts.filter((nft) => !mintedNfts.includes(nft)))
+        setUnmintedNfts(nfts?.filter((nft) => !mintedNfts?.includes(nft)))
     }, [nfts, mintedNfts])
 
     const loadingText = (
