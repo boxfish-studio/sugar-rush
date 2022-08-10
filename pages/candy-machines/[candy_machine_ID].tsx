@@ -243,12 +243,18 @@ const CandyMachine: NextPage = () => {
                                             </button>
                                         </h4>
                                         <div className='mt-3 nfts-grid'>
-                                            {nfts.map(({ name, image }, index) => {
+                                            {nfts.map(({ name, image, mint }, index) => {
                                                 if (
                                                     !mintedNfts?.some((minted) => minted.name === name) &&
                                                     (index < 10 || viewAllPreview)
                                                 ) {
-                                                    return <NftCard title={name} imageLink={image} key={index} />
+                                                    return (
+                                                        <NftCard
+                                                            title={name}
+                                                            imageLink={image}
+                                                            key={mint?.toBase58()}
+                                                        />
+                                                    )
                                                 }
                                             })}
                                         </div>
@@ -347,7 +353,7 @@ const CandyMachine: NextPage = () => {
                                                         <NftCard
                                                             title={name}
                                                             imageLink={image}
-                                                            key={index}
+                                                            key={mint?.toBase58()}
                                                             buttons={[
                                                                 {
                                                                     text: 'View in Solscan',
