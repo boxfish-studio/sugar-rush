@@ -13,6 +13,7 @@ export { default as NetworkTps } from './NetworkTps'
 export { default as Notification } from './Notification'
 export { default as NotificationManager } from './NotificationManager'
 export { default as Breadcrumb } from './Breadcrumb'
+export * from './ChunksWrapper'
 
 export * from './nft'
 export * from './candy-machine'

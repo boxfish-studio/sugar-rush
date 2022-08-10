@@ -5,7 +5,16 @@ import { getAllNftsByCM, getNftByMint } from 'lib/nft/actions'
 import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Nft } from 'lib/nft/interfaces'
 import { nftsState } from 'lib/recoil-store/atoms'
-import { NftCard, Popup, RefreshButton, UpdateCandyMachine, DeleteCandyMachine, VerifyCandyMachine } from 'components'
+import {
+    NftCard,
+    Popup,
+    RefreshButton,
+    UpdateCandyMachine,
+    DeleteCandyMachine,
+    VerifyCandyMachine,
+    FilterWrapper,
+    FilterArrayContext,
+} from 'components'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
@@ -17,7 +26,7 @@ import type { NextPage } from 'next'
 import { LinkExternalIcon } from '@primer/octicons-react'
 import { ICollectionNft } from 'lib/nft/interfaces'
 
-const MINIMUM_NFTS_TO_SHOW = 5
+const MINIMUM_NFTS_TO_SHOW = 6
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -235,31 +244,29 @@ const CandyMachine: NextPage = () => {
                                     </>
                                 ) : (
                                     <>
-                                        <h4>
-                                            Unminted NFTs - {itemsAvailable - itemsRemaining}{' '}
-                                            <button
-                                                onClick={() => setViewAllPreview((prev) => !prev)}
-                                                className='border-0 color-bg-transparent color-fg-accent underline'
-                                            >
-                                                {viewAllPreview ? 'See less' : 'See all'}
-                                            </button>
-                                        </h4>
-                                        <div className='mt-3 nfts-grid'>
-                                            {nfts.map(({ name, image, mint }, index) => {
-                                                if (
-                                                    !mintedNfts?.some((minted) => minted.name === name) &&
-                                                    (index < MINIMUM_NFTS_TO_SHOW || viewAllPreview)
-                                                ) {
-                                                    return (
-                                                        <NftCard
-                                                            title={name}
-                                                            imageLink={image}
-                                                            key={mint?.toBase58()}
-                                                        />
-                                                    )
-                                                }
-                                            })}
-                                        </div>
+                                        <h4>Unminted NFTs - {itemsAvailable - itemsRemaining} </h4>
+                                        <FilterWrapper arr={nfts}>
+                                            <FilterArrayContext.Consumer>
+                                                {([unmintedArr, showAllUnminted]) => (
+                                                    <div className='nfts-grid'>
+                                                        {unmintedArr.map(({ name, image, mint }, index) => {
+                                                            if (
+                                                                !mintedNfts?.some((minted) => minted.name === name) &&
+                                                                (index < MINIMUM_NFTS_TO_SHOW || showAllUnminted)
+                                                            ) {
+                                                                return (
+                                                                    <NftCard
+                                                                        title={name}
+                                                                        imageLink={image}
+                                                                        key={mint?.toBase58()}
+                                                                    />
+                                                                )
+                                                            }
+                                                        })}
+                                                    </div>
+                                                )}
+                                            </FilterArrayContext.Consumer>
+                                        </FilterWrapper>
                                         <Text as='p' className='my-3'>
                                             {cache?.name}
                                         </Text>
@@ -311,15 +318,7 @@ const CandyMachine: NextPage = () => {
                                         </Text>
                                     )}
                                     <div>
-                                        <h4>
-                                            Minted NFTs - {mintedNfts.length}{' '}
-                                            <button
-                                                onClick={() => setViewAllMinted((prev) => !prev)}
-                                                className='border-0 color-bg-transparent color-fg-accent underline'
-                                            >
-                                                {viewAllMinted ? 'See less' : 'See all'}
-                                            </button>
-                                        </h4>
+                                        <h4>Minted NFTs - {mintedNfts.length} </h4>
 
                                         <div className='nfts-grid mt-3'>
                                             {itemsRemaining > 0 && isCaptcha && (
@@ -349,24 +348,32 @@ const CandyMachine: NextPage = () => {
                                                     ]}
                                                 />
                                             )}
-                                            {mintedNfts.map(({ name, image, mint }, index) => {
-                                                if (index < MINIMUM_NFTS_TO_SHOW || viewAllMinted)
-                                                    return (
-                                                        <NftCard
-                                                            title={name}
-                                                            imageLink={image}
-                                                            key={mint?.toBase58()}
-                                                            buttons={[
-                                                                {
-                                                                    text: 'View in Solscan',
-                                                                    as: 'link',
-                                                                    variant: 'invisible',
-                                                                    hash: mint?.toBase58(),
-                                                                },
-                                                            ]}
-                                                        />
-                                                    )
-                                            })}
+                                            <FilterWrapper arr={mintedNfts}>
+                                                <FilterArrayContext.Consumer>
+                                                    {([mintedArray, showAllMinted]) => (
+                                                        <div className='nfts-grid'>
+                                                            {mintedArray.map(({ name, image, mint }, index) => {
+                                                                if (index < MINIMUM_NFTS_TO_SHOW || showAllMinted)
+                                                                    return (
+                                                                        <NftCard
+                                                                            title={name}
+                                                                            imageLink={image}
+                                                                            key={mint?.toBase58()}
+                                                                            buttons={[
+                                                                                {
+                                                                                    text: 'View in Solscan',
+                                                                                    as: 'link',
+                                                                                    variant: 'invisible',
+                                                                                    hash: mint?.toBase58(),
+                                                                                },
+                                                                            ]}
+                                                                        />
+                                                                    )
+                                                            })}
+                                                        </div>
+                                                    )}
+                                                </FilterArrayContext.Consumer>
+                                            </FilterWrapper>
                                         </div>
                                     </div>
                                 </>
