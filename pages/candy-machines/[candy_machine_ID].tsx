@@ -20,13 +20,12 @@ import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
 import { useRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
-import { Connection, PublicKey } from '@solana/web3.js'
+import { PublicKey } from '@solana/web3.js'
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import { LinkExternalIcon } from '@primer/octicons-react'
 import { ICollectionNft } from 'lib/nft/interfaces'
-
-const MINIMUM_NFTS_TO_SHOW = 6
+import { MINIMUM_NFTS_TO_SHOW } from 'lib/constants'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -56,8 +55,6 @@ const CandyMachine: NextPage = () => {
     const [cache, setCache] = useState<File>()
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
-    const [viewAllMinted, setViewAllMinted] = useState(false)
-    const [viewAllPreview, setViewAllPreview] = useState(false)
 
     const viewNfts = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsLoadingNfts(true)
