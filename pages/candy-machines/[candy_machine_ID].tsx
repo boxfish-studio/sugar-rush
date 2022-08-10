@@ -5,16 +5,8 @@ import { getAllNftsByCM, getNftByMint } from 'lib/nft/actions'
 import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Nft } from 'lib/nft/interfaces'
 import { nftsState } from 'lib/recoil-store/atoms'
-import {
-    NftCard,
-    Popup,
-    RefreshButton,
-    UpdateCandyMachine,
-    DeleteCandyMachine,
-    VerifyCandyMachine,
-    FilterWrapper,
-    FilterArrayContext,
-} from 'components'
+import { NftCard, Popup, RefreshButton, UpdateCandyMachine, DeleteCandyMachine, VerifyCandyMachine } from 'components'
+import { FilterArrayContext, FilterWrapper } from 'contexts/ArrayWrapper'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
