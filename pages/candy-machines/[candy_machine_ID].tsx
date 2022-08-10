@@ -17,6 +17,8 @@ import type { NextPage } from 'next'
 import { LinkExternalIcon } from '@primer/octicons-react'
 import { ICollectionNft } from 'lib/nft/interfaces'
 
+const MINIMUM_NFTS_TO_SHOW = 5
+
 const CandyMachine: NextPage = () => {
     const router = useRouter()
 
@@ -246,7 +248,7 @@ const CandyMachine: NextPage = () => {
                                             {nfts.map(({ name, image, mint }, index) => {
                                                 if (
                                                     !mintedNfts?.some((minted) => minted.name === name) &&
-                                                    (index < 10 || viewAllPreview)
+                                                    (index < MINIMUM_NFTS_TO_SHOW || viewAllPreview)
                                                 ) {
                                                     return (
                                                         <NftCard
@@ -348,7 +350,7 @@ const CandyMachine: NextPage = () => {
                                                 />
                                             )}
                                             {mintedNfts.map(({ name, image, mint }, index) => {
-                                                if (index < 10 || viewAllMinted)
+                                                if (index < MINIMUM_NFTS_TO_SHOW || viewAllMinted)
                                                     return (
                                                         <NftCard
                                                             title={name}
