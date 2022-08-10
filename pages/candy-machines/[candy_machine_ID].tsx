@@ -45,6 +45,8 @@ const CandyMachine: NextPage = () => {
     const [cache, setCache] = useState<File>()
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
+    const [viewAllMinted, setViewAllMinted] = useState(false)
+    const [viewAllPreview, setViewAllPreview] = useState(false)
 
     const viewNfts = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsLoadingNfts(true)
@@ -221,7 +223,7 @@ const CandyMachine: NextPage = () => {
                             <div className='mt-5 mb-7'>
                                 {!nfts.length ? (
                                     <>
-                                        <h4>NFTs Preview · {itemsRemaining}</h4>
+                                        <h4>NFTs Preview · {itemsRemaining} </h4>
                                         <Text as='p' className='mt-3 mb-4'>
                                             Upload cache file to preview NFTs
                                         </Text>
@@ -231,10 +233,21 @@ const CandyMachine: NextPage = () => {
                                     </>
                                 ) : (
                                     <>
-                                        <h4>Unminted NFTs - {itemsAvailable - itemsRemaining}</h4>
+                                        <h4>
+                                            Unminted NFTs - {itemsAvailable - itemsRemaining}{' '}
+                                            <button
+                                                onClick={() => setViewAllPreview((prev) => !prev)}
+                                                className='border-0 color-bg-transparent color-fg-accent underline'
+                                            >
+                                                {viewAllPreview ? 'See less' : 'See all'}
+                                            </button>
+                                        </h4>
                                         <div className='mt-3 nfts-grid'>
                                             {nfts.map(({ name, image }, index) => {
-                                                if (!mintedNfts?.some((minted) => minted.name === name)) {
+                                                if (
+                                                    !mintedNfts?.some((minted) => minted.name === name) &&
+                                                    (index < 10 || viewAllPreview)
+                                                ) {
                                                     return <NftCard title={name} imageLink={image} key={index} />
                                                 }
                                             })}
@@ -260,6 +273,7 @@ const CandyMachine: NextPage = () => {
                                     required
                                 />
                             </div>
+
                             {isLoadingNfts ? (
                                 loadingText
                             ) : (
@@ -289,7 +303,16 @@ const CandyMachine: NextPage = () => {
                                         </Text>
                                     )}
                                     <div>
-                                        <h4>Minted NFTs - {mintedNfts.length}</h4>
+                                        <h4>
+                                            Minted NFTs - {mintedNfts.length}{' '}
+                                            <button
+                                                onClick={() => setViewAllMinted((prev) => !prev)}
+                                                className='border-0 color-bg-transparent color-fg-accent underline'
+                                            >
+                                                {viewAllMinted ? 'See less' : 'See all'}
+                                            </button>
+                                        </h4>
+
                                         <div className='nfts-grid mt-3'>
                                             {itemsRemaining > 0 && isCaptcha && (
                                                 <NftCard
@@ -318,9 +341,9 @@ const CandyMachine: NextPage = () => {
                                                     ]}
                                                 />
                                             )}
-                                            {mintedNfts.map(
-                                                ({ name, image, mint }, index) =>
-                                                    index < 10 && (
+                                            {mintedNfts.map(({ name, image, mint }, index) => {
+                                                if (index < 10 || viewAllMinted)
+                                                    return (
                                                         <NftCard
                                                             title={name}
                                                             imageLink={image}
@@ -335,7 +358,7 @@ const CandyMachine: NextPage = () => {
                                                             ]}
                                                         />
                                                     )
-                                            )}
+                                            })}
                                         </div>
                                     </div>
                                 </>
