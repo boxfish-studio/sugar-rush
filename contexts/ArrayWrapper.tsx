@@ -15,18 +15,18 @@ export const ArrayWrapper: FC<{ array: Array<any>; children: ReactNode; limit: n
     limit,
 }) => {
     const [showAll, setShowAll] = useState(false)
-    const [arr, setArr] = useState([...originalArray])
+    const [filteredArray, setFilteredArray] = useState([...originalArray])
 
     useEffect(() => {
         if (showAll) {
-            setArr(originalArray)
+            setFilteredArray(originalArray)
         } else {
-            setArr(originalArray.slice(0, limit))
+            setFilteredArray(originalArray.slice(0, limit))
         }
     }, [showAll, originalArray, limit])
 
     return (
-        <FilterArrayContext.Provider value={[arr, showAll]}>
+        <FilterArrayContext.Provider value={[filteredArray, showAll]}>
             <div className='d-flex flex-column flex-items-start'>
                 {originalArray.length > limit && (
                     <button
