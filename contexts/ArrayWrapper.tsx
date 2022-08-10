@@ -1,5 +1,4 @@
-import { FC, ReactNode, useState, createContext } from 'react'
-import { MINIMUM_NFTS_TO_SHOW } from 'lib/constants'
+import { FC, ReactNode, useState, createContext, useEffect } from 'react'
 
 type FilterArray = [Array<any>, boolean]
 
@@ -10,24 +9,35 @@ enum State {
     ShowLess = 'Show Less',
 }
 
-export const FilterWrapper: FC<{ arr: Array<any>; children: ReactNode }> = ({ arr, children }) => {
+export const ArrayWrapper: FC<{ array: Array<any>; children: ReactNode; limit: number }> = ({
+    array: originalArray,
+    children,
+    limit,
+}) => {
     const [showAll, setShowAll] = useState(false)
+    const [arr, setArr] = useState([...originalArray])
+
+    useEffect(() => {
+        if (showAll) {
+            setArr(originalArray)
+        } else {
+            setArr(originalArray.slice(0, limit))
+        }
+    }, [showAll, originalArray, limit])
 
     return (
-        <>
-            <FilterArrayContext.Provider value={[arr, showAll]}>
-                <div className='d-flex flex-column flex-items-start'>
-                    {arr.length > MINIMUM_NFTS_TO_SHOW && (
-                        <button
-                            onClick={() => setShowAll((prev) => !prev)}
-                            className='border-0 color-bg-transparent color-fg-accent underline mb-2'
-                        >
-                            {showAll ? State.ShowLess : State.ShowAll}
-                        </button>
-                    )}
-                    {children}
-                </div>
-            </FilterArrayContext.Provider>
-        </>
+        <FilterArrayContext.Provider value={[arr, showAll]}>
+            <div className='d-flex flex-column flex-items-start'>
+                {originalArray.length > limit && (
+                    <button
+                        onClick={() => setShowAll((prev) => !prev)}
+                        className='border-0 color-bg-transparent color-fg-accent underline mb-2'
+                    >
+                        {showAll ? State.ShowLess : State.ShowAll}
+                    </button>
+                )}
+                {children}
+            </div>
+        </FilterArrayContext.Provider>
     )
 }

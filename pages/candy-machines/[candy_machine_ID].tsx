@@ -6,7 +6,7 @@ import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Nft } from 'lib/nft/interfaces'
 import { nftsState } from 'lib/recoil-store/atoms'
 import { NftCard, Popup, RefreshButton, UpdateCandyMachine, DeleteCandyMachine, VerifyCandyMachine } from 'components'
-import { FilterArrayContext, FilterWrapper } from 'contexts/ArrayWrapper'
+import { FilterArrayContext, ArrayWrapper } from 'contexts/ArrayWrapper'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
@@ -31,6 +31,7 @@ const CandyMachine: NextPage = () => {
     const [isLoadingNfts, setIsLoadingNfts] = useState(false)
     const [nfts, setNfts] = useState<Nft[]>([])
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
+    const [unmintedNfts, setUnmintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const {
@@ -134,6 +135,10 @@ const CandyMachine: NextPage = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [connection])
 
+    useEffect(() => {
+        setUnmintedNfts(nfts.filter((nft) => !mintedNfts.includes(nft)))
+    }, [nfts, mintedNfts])
+
     const loadingText = (
         <div className='d-flex flex-items-center'>
             <h3 className='mr-3'>Loading...</h3>
@@ -234,28 +239,21 @@ const CandyMachine: NextPage = () => {
                                 ) : (
                                     <>
                                         <h4>Unminted NFTs - {itemsAvailable - itemsRemaining} </h4>
-                                        <FilterWrapper arr={nfts}>
+                                        <ArrayWrapper array={unmintedNfts} limit={MINIMUM_NFTS_TO_SHOW}>
                                             <FilterArrayContext.Consumer>
-                                                {([unmintedArr, showAllUnminted]) => (
+                                                {([unmintedArr]) => (
                                                     <div className='nfts-grid'>
-                                                        {unmintedArr.map(({ name, image, mint }, index) => {
-                                                            if (
-                                                                !mintedNfts?.some((minted) => minted.name === name) &&
-                                                                (index < MINIMUM_NFTS_TO_SHOW || showAllUnminted)
-                                                            ) {
-                                                                return (
-                                                                    <NftCard
-                                                                        title={name}
-                                                                        imageLink={image}
-                                                                        key={mint?.toBase58()}
-                                                                    />
-                                                                )
-                                                            }
-                                                        })}
+                                                        {unmintedArr.map(({ name, image, mint }) => (
+                                                            <NftCard
+                                                                title={name}
+                                                                imageLink={image}
+                                                                key={mint?.toBase58()}
+                                                            />
+                                                        ))}
                                                     </div>
                                                 )}
                                             </FilterArrayContext.Consumer>
-                                        </FilterWrapper>
+                                        </ArrayWrapper>
                                         <Text as='p' className='my-3'>
                                             {cache?.name}
                                         </Text>
@@ -337,32 +335,31 @@ const CandyMachine: NextPage = () => {
                                                     ]}
                                                 />
                                             )}
-                                            <FilterWrapper arr={mintedNfts}>
+                                            <ArrayWrapper array={mintedNfts} limit={MINIMUM_NFTS_TO_SHOW}>
                                                 <FilterArrayContext.Consumer>
-                                                    {([mintedArray, showAllMinted]) => (
+                                                    {([mintedArray]) => (
                                                         <div className='nfts-grid'>
-                                                            {mintedArray.map(({ name, image, mint }, index) => {
-                                                                if (index < MINIMUM_NFTS_TO_SHOW || showAllMinted)
-                                                                    return (
-                                                                        <NftCard
-                                                                            title={name}
-                                                                            imageLink={image}
-                                                                            key={mint?.toBase58()}
-                                                                            buttons={[
-                                                                                {
-                                                                                    text: 'View in Solscan',
-                                                                                    as: 'link',
-                                                                                    variant: 'invisible',
-                                                                                    hash: mint?.toBase58(),
-                                                                                },
-                                                                            ]}
-                                                                        />
-                                                                    )
+                                                            {mintedArray?.map(({ name, image, mint }) => {
+                                                                return (
+                                                                    <NftCard
+                                                                        title={name}
+                                                                        imageLink={image}
+                                                                        key={mint?.toBase58()}
+                                                                        buttons={[
+                                                                            {
+                                                                                text: 'View in Solscan',
+                                                                                as: 'link',
+                                                                                variant: 'invisible',
+                                                                                hash: mint?.toBase58(),
+                                                                            },
+                                                                        ]}
+                                                                    />
+                                                                )
                                                             })}
                                                         </div>
                                                     )}
                                                 </FilterArrayContext.Consumer>
-                                            </FilterWrapper>
+                                            </ArrayWrapper>
                                         </div>
                                     </div>
                                 </>
