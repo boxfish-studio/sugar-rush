@@ -17,7 +17,7 @@ const CreateCandyMachine: FC = () => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
-    const { addNotification, populateNotificationError } = useNotification()
+    const { addNotification, addCandyMachineNotificationError } = useNotification()
 
     const { files, uploadAssets } = useUploadFiles()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
@@ -39,28 +39,28 @@ const CreateCandyMachine: FC = () => {
 
     function isFormValid(): boolean {
         if (files.length === 0) {
-            populateNotificationError(CandyMachineAction.Create, 'There are no files to upload')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'There are no files to upload')
             return false
         }
         if (files.length % 2 != 0) {
-            populateNotificationError(CandyMachineAction.Create, 'You have to upload 2 files per NFT')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'You have to upload 2 files per NFT')
             return false
         }
         if (values['number-of-nfts'] * 2 != files.length) {
-            populateNotificationError(CandyMachineAction.Create, 'Does not match the number of nfts')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'Does not match the number of nfts')
             return false
         }
         let isZeroJsonFile: boolean = files.filter((e) => e.name === '0.json').length === 0 ? false : true
         if (!isZeroJsonFile) {
-            populateNotificationError(CandyMachineAction.Create, 'The 0.json file must exist in Files')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'The 0.json file must exist in Files')
             return false
         }
         if (values.price == 0 || isNaN(values.price)) {
-            populateNotificationError(CandyMachineAction.Create, 'The Price of each NFT cannot be 0')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'The Price of each NFT cannot be 0')
             return false
         }
         if (values['number-of-nfts'] == 0 || isNaN(values['number-of-nfts'])) {
-            populateNotificationError(CandyMachineAction.Create, 'The Number of NFTs cannot be 0')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'The Number of NFTs cannot be 0')
             return false
         }
 
@@ -68,7 +68,7 @@ const CreateCandyMachine: FC = () => {
     }
     async function createCandyMachineV2() {
         if (!connection) {
-            populateNotificationError(CandyMachineAction.Create, 'Select network first')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'Select network first')
             return
         }
         if (!isFormValid()) return
@@ -173,7 +173,7 @@ const CreateCandyMachine: FC = () => {
                 })
             } catch (err) {
                 console.error(err)
-                populateNotificationError(CandyMachineAction.Create, (err as Error).message)
+                addCandyMachineNotificationError(CandyMachineAction.Create, (err as Error).message)
             }
             const endMilliseconds = Date.now()
             console.log(endMilliseconds.toString())

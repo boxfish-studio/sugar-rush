@@ -19,7 +19,7 @@ const UpdateCandyMachine: FC<{
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
-    const { populateNotificationError } = useNotification()
+    const { addCandyMachineNotificationError } = useNotification()
 
     const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
@@ -52,17 +52,17 @@ const UpdateCandyMachine: FC<{
     async function isFormUpdateValid(): Promise<boolean> {
         if (!values['date-mint'] || !values['time-mint']) return false
         if (!cache) {
-            populateNotificationError(CandyMachineAction.Update, 'There are no files to upload')
+            addCandyMachineNotificationError(CandyMachineAction.Update, 'There are no files to upload')
             return false
         }
         let cacheData = await cache.text()
         let cacheDataJson = JSON.parse(cacheData)
         if (cacheDataJson.candyMachine !== candyMachineAccount) {
-            populateNotificationError(CandyMachineAction.Update, 'The cache file is not from this candy machine')
+            addCandyMachineNotificationError(CandyMachineAction.Update, 'The cache file is not from this candy machine')
             return false
         }
         if (values.price == 0 || isNaN(values.price)) {
-            populateNotificationError(CandyMachineAction.Update, 'The Price of each NFT cannot be 0')
+            addCandyMachineNotificationError(CandyMachineAction.Update, 'The Price of each NFT cannot be 0')
             return false
         }
         return true
@@ -162,7 +162,7 @@ const UpdateCandyMachine: FC<{
                 setStatus('Candy Machine updated successfully!')
             }
         } catch (err) {
-            populateNotificationError(
+            addCandyMachineNotificationError(
                 CandyMachineAction.Update,
                 'Candy Machine update was not successful, please re-run.'
             )

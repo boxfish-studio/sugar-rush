@@ -18,13 +18,13 @@ const useNotification = () => {
         setNotifications((notificationsPrev) => notificationsPrev.filter((n) => n.id !== id))
     }
 
-    const populateNotificationError = (action: CandyMachineAction, newError: string) => {
+    const addCandyMachineNotificationError = (action: CandyMachineAction, newError: string) => {
         addNotification({
             message: `There was an error ${action} the candy machine \n` + newError,
             type: NotificationType.Error,
         })
     }
 
-    return { notifications, addNotification, removeNotification, populateNotificationError }
+    return { notifications, addNotification, removeNotification, addCandyMachineNotificationError }
 }
 export default useNotification

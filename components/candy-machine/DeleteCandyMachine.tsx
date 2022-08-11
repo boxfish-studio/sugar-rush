@@ -14,7 +14,7 @@ const DeleteCandyMachine: FC<{
     const [transaction, setTransaction] = useState('')
     const { removeAccount } = useRemoveCandyMachineAccount([candyMachineAccount])
     const router = useRouter()
-    const { addNotification, populateNotificationError } = useNotification()
+    const { addNotification, addCandyMachineNotificationError } = useNotification()
 
     const deleteCM = async () => {
         try {
@@ -28,7 +28,7 @@ const DeleteCandyMachine: FC<{
             })
         } catch (error) {
             console.log(error)
-            populateNotificationError(CandyMachineAction.Delete, (error as Error).message)
+            addCandyMachineNotificationError(CandyMachineAction.Delete, (error as Error).message)
         }
         setIsDeleting(false)
     }
