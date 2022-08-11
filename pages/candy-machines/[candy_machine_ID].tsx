@@ -335,7 +335,12 @@ const CandyMachine: NextPage = () => {
                                                     ]}
                                                 />
                                             )}
-                                            <ArrayWrapper array={mintedNfts} minimum={MINIMUM_NFTS_TO_SHOW}>
+                                            <ArrayWrapper
+                                                array={mintedNfts}
+                                                minimum={
+                                                    itemsRemaining > 0 ? MINIMUM_NFTS_TO_SHOW - 1 : MINIMUM_NFTS_TO_SHOW
+                                                }
+                                            >
                                                 <FilterArrayContext.Consumer>
                                                     {([mintedArray]) => (
                                                         <div className='nfts-grid'>
