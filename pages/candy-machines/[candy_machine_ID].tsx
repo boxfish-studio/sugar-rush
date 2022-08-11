@@ -6,6 +6,7 @@ import { IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { Nft } from 'lib/nft/interfaces'
 import { nftsState } from 'lib/recoil-store/atoms'
 import { NftCard, Popup, RefreshButton, UpdateCandyMachine, DeleteCandyMachine, VerifyCandyMachine } from 'components'
+import { FilterArrayContext, ArrayWrapper } from 'contexts/ArrayWrapper'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
 import { useMintCandyMachine, useRPC } from 'hooks'
@@ -15,6 +16,8 @@ import { PublicKey } from '@solana/web3.js'
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import { LinkExternalIcon } from '@primer/octicons-react'
+import { ICollectionNft } from 'lib/nft/interfaces'
+import { MINIMUM_NFTS_TO_SHOW } from 'lib/constants'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -28,7 +31,8 @@ const CandyMachine: NextPage = () => {
     const [isLoadingNfts, setIsLoadingNfts] = useState(false)
     const [nfts, setNfts] = useState<Nft[]>([])
     const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
-    const [collectionNft, setCollectionNft] = useState<Nft>()
+    const [unmintedNfts, setUnmintedNfts] = useState<Nft[]>([])
+    const [collectionNft, setCollectionNft] = useState<Nft | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const {
         isUserMinting,
@@ -54,8 +58,10 @@ const CandyMachine: NextPage = () => {
         setCache(e.target.files[0])
         let cacheData = await e.target.files[0].text()
         let cacheDataJson = JSON.parse(cacheData)
-        if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
-            const nfts = Object.values(cacheDataJson.items).map((nft: any) => {
+        if (!cacheDataJson.items) {
+            alert('NFTs Preview not available in cache file')
+        } else if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
+            const nfts = Object.values(cacheDataJson?.items)?.map((nft: any) => {
                 return {
                     image: nft.imageLink,
                     name: nft.name,
@@ -63,9 +69,6 @@ const CandyMachine: NextPage = () => {
             })
 
             setNfts(nfts)
-            if (!!cacheDataJson.items) {
-                alert('NFTs Preview not available in cache file')
-            }
         } else {
             alert('This cache file is not from this candy machine')
         }
@@ -103,20 +106,19 @@ const CandyMachine: NextPage = () => {
         try {
             if (!connection) return
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
+            if (nfts.length === 0) return setIsLoadingNfts(false)
             setMintedNfts(nfts)
             setNftsRecoilState(nfts)
-            // @ts-ignore
-            if (nfts[0]?.collection?.key) {
-                setHasCollection(true)
-                // @ts-ignore
-                let nftCollectionData = await getNftByMint(nfts[0].collection.key, connection)
-                if (nftCollectionData.name !== '') {
-                    setCollectionNft(nftCollectionData)
-                }
+            const collectionNftPubkey = (nfts[0]?.collection as ICollectionNft)?.key
+            if (!collectionNftPubkey) return
+            setHasCollection(true)
+            let nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
+            if (nftCollectionData?.name !== '') {
+                setCollectionNft(nftCollectionData)
             }
-        } catch (e) {
+        } catch (err) {
+            console.error(err)
             setNftsRecoilState([])
-            console.error(e)
         }
         setIsLoadingNfts(false)
     }
@@ -130,7 +132,12 @@ const CandyMachine: NextPage = () => {
         fetchCandyMachine().then(setCandyMachineConfig)
         fetchNfts()
         setIsLoading(false)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [connection])
+
+    useEffect(() => {
+        setUnmintedNfts(nfts?.filter((nft) => !mintedNfts?.includes(nft)))
+    }, [nfts, mintedNfts])
 
     const loadingText = (
         <div className='d-flex flex-items-center'>
@@ -169,7 +176,7 @@ const CandyMachine: NextPage = () => {
                 <Button leadingIcon={LinkExternalIcon}>
                     <Link
                         target='_blank'
-                        href={`https://solscan.io/account/${candyMachineAccount}?${isDevnet}`}
+                        href={`https://solscan.io/account/${candyMachineAccount}${isDevnet}`}
                         sx={{ textDecoration: 'none', color: '#24292F' }}
                     >
                         View in Solscan
@@ -221,21 +228,32 @@ const CandyMachine: NextPage = () => {
                             <div className='mt-5 mb-7'>
                                 {!nfts.length ? (
                                     <>
-                                        <h4>NFTs Preview · {itemsRemaining}</h4>
+                                        <h4>NFTs Preview · {itemsRemaining} </h4>
                                         <Text as='p' className='mt-3 mb-4'>
                                             Upload cache file to preview NFTs
+                                        </Text>
+                                        <Text as='p' className='my-3'>
+                                            {cache?.name}
                                         </Text>
                                     </>
                                 ) : (
                                     <>
-                                        <h4>Unminted NFTs - {itemsAvailable - itemsRemaining}</h4>
-                                        <div className='mt-3 nfts-grid'>
-                                            {nfts.map(({ name, image }, index) => {
-                                                if (!mintedNfts?.some((minted) => minted.name === name)) {
-                                                    return <NftCard title={name} imageLink={image} key={index} />
-                                                }
-                                            })}
-                                        </div>
+                                        <h4>Unminted NFTs - {itemsAvailable - itemsRemaining} </h4>
+                                        <ArrayWrapper array={unmintedNfts} minimum={MINIMUM_NFTS_TO_SHOW}>
+                                            <FilterArrayContext.Consumer>
+                                                {([unmintedArr]) => (
+                                                    <div className='nfts-grid'>
+                                                        {unmintedArr.map(({ name, image, mint }) => (
+                                                            <NftCard
+                                                                title={name}
+                                                                imageLink={image}
+                                                                key={mint?.toBase58()}
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </FilterArrayContext.Consumer>
+                                        </ArrayWrapper>
                                         <Text as='p' className='my-3'>
                                             {cache?.name}
                                         </Text>
@@ -257,6 +275,7 @@ const CandyMachine: NextPage = () => {
                                     required
                                 />
                             </div>
+
                             {isLoadingNfts ? (
                                 loadingText
                             ) : (
@@ -264,28 +283,30 @@ const CandyMachine: NextPage = () => {
                                     {hasCollection && (
                                         <div className='mb-5'>
                                             <h4>Collection</h4>
-
-                                            {collectionNft && (
-                                                <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
-                                                    <NftCard
-                                                        title={collectionNft.name}
-                                                        imageLink={collectionNft.image}
-                                                        buttons={[
-                                                            {
-                                                                text: 'View in Solscan',
-                                                                as: 'link',
-                                                                variant: 'invisible',
-                                                                hash: '14eoYMYLY19gtfE1gwWDhnjDD3fDjGTQTGyicBKT33Ns',
-                                                            },
-                                                        ]}
-                                                    />
-                                                </div>
-                                            )}
+                                            <div className='d-flex flex-justify-start flex-items-center gap-5 mt-3'>
+                                                <NftCard
+                                                    title={collectionNft?.name ?? 'Not available'}
+                                                    imageLink={collectionNft?.image ?? '/logo.png'}
+                                                    buttons={[
+                                                        {
+                                                            text: 'View in Solscan',
+                                                            as: 'link',
+                                                            variant: 'invisible',
+                                                            hash: collectionNft?.mint?.toBase58(),
+                                                        },
+                                                    ]}
+                                                />
+                                            </div>
                                         </div>
                                     )}
-
+                                    {error?.includes('Error to fetch data') && (
+                                        <Text as='p' className='mt-3 mb-4'>
+                                            Error to fetch data. Please, click the refresh button to try again.
+                                        </Text>
+                                    )}
                                     <div>
-                                        <h4>Minted NFTs - {mintedNfts.length}</h4>
+                                        <h4>Minted NFTs - {mintedNfts.length} </h4>
+
                                         <div className='nfts-grid mt-3'>
                                             {itemsRemaining > 0 && isCaptcha && (
                                                 <NftCard
@@ -314,24 +335,36 @@ const CandyMachine: NextPage = () => {
                                                     ]}
                                                 />
                                             )}
-                                            {mintedNfts.map(
-                                                ({ name, image, mint }, index) =>
-                                                    index < 10 && (
-                                                        <NftCard
-                                                            title={name}
-                                                            imageLink={image}
-                                                            key={index}
-                                                            buttons={[
-                                                                {
-                                                                    text: 'View in Solscan',
-                                                                    as: 'link',
-                                                                    variant: 'invisible',
-                                                                    hash: mint?.toBase58(),
-                                                                },
-                                                            ]}
-                                                        />
-                                                    )
-                                            )}
+                                            <ArrayWrapper
+                                                array={mintedNfts}
+                                                minimum={
+                                                    itemsRemaining > 0 ? MINIMUM_NFTS_TO_SHOW - 1 : MINIMUM_NFTS_TO_SHOW
+                                                }
+                                            >
+                                                <FilterArrayContext.Consumer>
+                                                    {([mintedArray]) => (
+                                                        <div className='nfts-grid'>
+                                                            {mintedArray?.map(({ name, image, mint }) => {
+                                                                return (
+                                                                    <NftCard
+                                                                        title={name}
+                                                                        imageLink={image}
+                                                                        key={mint?.toBase58()}
+                                                                        buttons={[
+                                                                            {
+                                                                                text: 'View in Solscan',
+                                                                                as: 'link',
+                                                                                variant: 'invisible',
+                                                                                hash: mint?.toBase58(),
+                                                                            },
+                                                                        ]}
+                                                                    />
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    )}
+                                                </FilterArrayContext.Consumer>
+                                            </ArrayWrapper>
                                         </div>
                                     </div>
                                 </>
