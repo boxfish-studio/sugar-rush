@@ -171,8 +171,8 @@ const UpdateCandyMachine: FC<{
     }
 
     const fetchCandyMachine = async (): Promise<IFetchedCandyMachineConfig | undefined> => {
+        setError('')
         if (candyMachineAccount && anchorWallet && connection) {
-            setError('')
             try {
                 setIsLoading(true)
                 const provider = new AnchorProvider(connection, anchorWallet, {
@@ -187,7 +187,6 @@ const UpdateCandyMachine: FC<{
 
                 state.data.solTreasuryAccount = state.wallet
                 state.data.itemsRedeemed = state.itemsRedeemed
-                setError('')
                 return state.data
             } catch (err) {
                 setError((err as Error)?.message)
