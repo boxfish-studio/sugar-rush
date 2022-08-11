@@ -19,11 +19,6 @@ export const nftsState: RecoilState<Nft[]> = atom<Nft[]>({
     default: [],
 })
 
-export const nftsLength = selector({
-    key: 'nftsLength',
-    get: ({ get }) => get(nftsState).length,
-})
-
 export const networkState = atom<null | {
     connection: Connection
     network: keyof typeof WalletAdapterNetwork

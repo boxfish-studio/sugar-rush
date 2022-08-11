@@ -1,7 +1,7 @@
 import { Button, Link, Text } from '@primer/react'
 import { getAllNftsByCM, getNftByMint } from 'lib/nft/actions'
 import { Nft } from 'lib/nft/interfaces'
-import { nftsLength, nftsState } from 'lib/recoil-store/atoms'
+import { nftsState } from 'lib/recoil-store/atoms'
 import {
     Popup,
     RefreshButton,
@@ -14,7 +14,7 @@ import {
 } from 'components'
 import { useEffect, useState } from 'react'
 import { useRPC, useRefreshCandyMachine } from 'hooks'
-import { useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilState, useResetRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import type { NextPage } from 'next'
@@ -32,8 +32,7 @@ const CandyMachine: NextPage = () => {
     const { itemsRemaining, refreshCandyMachineState, setIsCaptcha, itemsAvailable } = useRefreshCandyMachine(
         candyMachineAccount as string
     )
-    const nftsRecoilLength = useRecoilValue(nftsLength)
-    const setNftsRecoilState = useSetRecoilState(nftsState)
+    const [nftRecoilState, setNftsRecoilState] = useRecoilState(nftsState)
     const resetNftRecoilState = useResetRecoilState(nftsState)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
@@ -115,7 +114,7 @@ const CandyMachine: NextPage = () => {
                         <h3 className='r-0'>NFTs</h3>
                         <div className='l-0 d-flex flex-justify-end flex-items-center'>
                             <span className='pr-2'>
-                                {isLoadingNfts ? '' : `${nftsRecoilLength}/${itemsAvailable} Minted`}
+                                {isLoadingNfts ? '' : `${nftRecoilState?.length}/${itemsAvailable} Minted`}
                             </span>
                             <RefreshButton onClick={fetchNfts} isLoading={isLoadingNfts} />
                         </div>
