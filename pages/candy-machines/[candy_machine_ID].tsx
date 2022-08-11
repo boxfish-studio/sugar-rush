@@ -239,7 +239,7 @@ const CandyMachine: NextPage = () => {
                                 ) : (
                                     <>
                                         <h4>Unminted NFTs - {itemsAvailable - itemsRemaining} </h4>
-                                        <ArrayWrapper array={unmintedNfts} limit={MINIMUM_NFTS_TO_SHOW}>
+                                        <ArrayWrapper array={unmintedNfts} minimum={MINIMUM_NFTS_TO_SHOW}>
                                             <FilterArrayContext.Consumer>
                                                 {([unmintedArr]) => (
                                                     <div className='nfts-grid'>
@@ -335,7 +335,7 @@ const CandyMachine: NextPage = () => {
                                                     ]}
                                                 />
                                             )}
-                                            <ArrayWrapper array={mintedNfts} limit={MINIMUM_NFTS_TO_SHOW}>
+                                            <ArrayWrapper array={mintedNfts} minimum={MINIMUM_NFTS_TO_SHOW}>
                                                 <FilterArrayContext.Consumer>
                                                     {([mintedArray]) => (
                                                         <div className='nfts-grid'>
