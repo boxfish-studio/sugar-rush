@@ -4,7 +4,7 @@ import { LAMPORTS_PER_SOL, PublicKey, Connection } from '@solana/web3.js'
 import { useForm, useNotification, useRPC, useUploadCache } from 'hooks'
 import { updateV2 } from 'lib/candy-machine'
 import { CANDY_MACHINE_PROGRAM_V2_ID, DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
-import { StorageType } from 'lib/candy-machine/enums'
+import { CandyMachineAction, StorageType } from 'lib/candy-machine/enums'
 import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { getCandyMachineV2Config, loadCandyProgramV2 } from 'lib/candy-machine/upload/config'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
@@ -52,17 +52,17 @@ const UpdateCandyMachine: FC<{
     async function isFormUpdateValid(): Promise<boolean> {
         if (!values['date-mint'] || !values['time-mint']) return false
         if (!cache) {
-            populateNotificationError('updating', 'There are no files to upload')
+            populateNotificationError(CandyMachineAction.Update, 'There are no files to upload')
             return false
         }
         let cacheData = await cache.text()
         let cacheDataJson = JSON.parse(cacheData)
         if (cacheDataJson.candyMachine !== candyMachineAccount) {
-            populateNotificationError('updating', 'The cache file is not from this candy machine')
+            populateNotificationError(CandyMachineAction.Update, 'The cache file is not from this candy machine')
             return false
         }
         if (values.price == 0 || isNaN(values.price)) {
-            populateNotificationError('updating', 'The Price of each NFT cannot be 0')
+            populateNotificationError(CandyMachineAction.Update, 'The Price of each NFT cannot be 0')
             return false
         }
         return true
@@ -162,7 +162,10 @@ const UpdateCandyMachine: FC<{
                 setStatus('Candy Machine updated successfully!')
             }
         } catch (err) {
-            populateNotificationError('updating', 'Candy Machine update was not successful, please re-run.')
+            populateNotificationError(
+                CandyMachineAction.Update,
+                'Candy Machine update was not successful, please re-run.'
+            )
         }
         setIsInteractingWithCM(false)
     }
