@@ -173,7 +173,7 @@ const CreateCandyMachine: FC = () => {
                 })
             } catch (err) {
                 console.error(err)
-                addCandyMachineNotificationError(CandyMachineAction.Create, (err as Error).message)
+                addCandyMachineNotificationError(CandyMachineAction.Create, (err as Error)?.message)
             }
             const endMilliseconds = Date.now()
             console.log(endMilliseconds.toString())

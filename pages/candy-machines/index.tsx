@@ -37,7 +37,7 @@ const ManageCandyMachines: NextPage = () => {
             setError('')
         } catch (err) {
             console.error(err)
-            setError((err as Error).message)
+            setError((err as Error)?.message)
         }
         setIsRefreshLoading(false)
     }
@@ -47,14 +47,14 @@ const ManageCandyMachines: NextPage = () => {
         setError('')
         setIsLoading(true)
         fetchAccounts()
-            .catch((e: any) => setError((e as Error).message))
+            .catch((e: any) => setError((e as Error)?.message))
             .finally(() => {
                 setIsLoading(false)
             })
     }, [connection])
 
     useEffect(() => {
-        if (error.length > 0) {
+        if (error?.length > 0) {
             addNotification({
                 message: 'There was an error fetching accounts. Please, click the refresh button to try again.',
                 type: NotificationType.Error,

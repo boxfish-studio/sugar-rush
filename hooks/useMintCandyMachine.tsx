@@ -105,7 +105,7 @@ const useMintCandyMachine = (account: string) => {
         } catch (err) {
             console.log(err)
             addNotification({
-                message: `Mint failed! ${(err as Error).message}. Please try again!`,
+                message: `Mint failed! ${(err as Error)?.message}. Please try again!`,
                 type: NotificationType.Error,
             })
         } finally {

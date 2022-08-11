@@ -28,7 +28,7 @@ const DeleteCandyMachine: FC<{
             })
         } catch (error) {
             console.log(error)
-            addCandyMachineNotificationError(CandyMachineAction.Delete, (error as Error).message)
+            addCandyMachineNotificationError(CandyMachineAction.Delete, (error as Error)?.message)
         }
         setIsDeleting(false)
     }

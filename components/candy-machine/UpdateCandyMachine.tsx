@@ -190,7 +190,7 @@ const UpdateCandyMachine: FC<{
                 setError('')
                 return state.data
             } catch (err) {
-                setError((err as Error).message)
+                setError((err as Error)?.message)
             }
             setIsLoading(false)
         }
@@ -233,7 +233,7 @@ const UpdateCandyMachine: FC<{
             </div>
         )
     }
-    if (error.toLowerCase().includes('fetch')) {
+    if (error?.toLowerCase()?.includes('fetch')) {
         return (
             <div className='d-flex flex-column items-center justify-center my-5 col-12 col-md-8 col-lg-6'>
                 <h3 className='color-fg-accent'> Error fetching candy machine config</h3>

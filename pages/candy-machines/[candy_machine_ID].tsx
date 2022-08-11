@@ -55,7 +55,7 @@ const CandyMachine: NextPage = () => {
                 }
             }
         } catch (err) {
-            setError((err as Error).message)
+            setError((err as Error)?.message)
             console.error(err)
         }
         setIsLoadingNfts(false)
