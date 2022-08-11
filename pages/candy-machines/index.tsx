@@ -9,17 +9,16 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { Button, Spinner } from '@primer/react'
-import { NotificationType } from 'lib/interfaces'
+import { CandyMachineAction } from 'lib/candy-machine/enums'
 
 const ManageCandyMachines: NextPage = () => {
     const { connection } = useRPC()
     const { publicKey } = useWallet()
-    const { addNotification } = useNotification()
+    const { addCandyMachineNotificationError } = useNotification()
 
     const [accounts, setAccounts] = useRecoilState(candyMachinesState)
     const [isLoading, setIsLoading] = useState(false)
     const [isRefreshLoading, setIsRefreshLoading] = useState(false)
-    const [error, setError] = useState('')
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
     const searchInput = useRecoilValue(candyMachineSearchState)
@@ -34,34 +33,22 @@ const ManageCandyMachines: NextPage = () => {
         try {
             const accounts = await fetchCandyMachineAccounts(connection, publicKey!)
             setAccounts(accounts)
-            setError('')
         } catch (err) {
             console.error(err)
-            setError((err as Error)?.message)
+            addCandyMachineNotificationError(CandyMachineAction.Fetch, (err as Error)?.message)
         }
         setIsRefreshLoading(false)
     }
 
     useEffect(() => {
         if (!connection) return
-        setError('')
         setIsLoading(true)
         fetchAccounts()
-            .catch((e: any) => setError((e as Error)?.message))
+            .catch((e: any) => addCandyMachineNotificationError(CandyMachineAction.Fetch, (e as Error)?.message))
             .finally(() => {
                 setIsLoading(false)
             })
     }, [connection])
-
-    useEffect(() => {
-        if (error?.length > 0) {
-            addNotification({
-                message: 'There was an error fetching accounts. Please, click the refresh button to try again.',
-                type: NotificationType.Error,
-            })
-            setError('')
-        }
-    }, [error])
 
     if (isLoading) {
         return (
