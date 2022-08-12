@@ -1,15 +1,19 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { Text } from '@primer/react'
 import { Nft } from 'lib/nft/interfaces'
 import NftCard from './NftCard'
+import { ArrayWrapper, FilterArrayContext } from 'contexts/ArrayWrapper'
+import { MINIMUM_NFTS_TO_SHOW } from 'lib/constants'
 
 const PreviewNFTs: FC<{
     candyMachineAccount: string
     itemsRemaining: number
+    itemsAvailable: number
     mintedNfts: Nft[]
-}> = ({ candyMachineAccount, itemsRemaining, mintedNfts }) => {
+}> = ({ candyMachineAccount, itemsRemaining, itemsAvailable, mintedNfts }) => {
     const [nfts, setNfts] = useState<Nft[]>([])
     const [cache, setCache] = useState<File>()
+    const [unmintedNfts, setUnmintedNfts] = useState<Nft[]>([])
 
     const viewNfts = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length == 0) {
@@ -35,6 +39,10 @@ const PreviewNFTs: FC<{
         }
     }
 
+    useEffect(() => {
+        setUnmintedNfts(nfts?.filter((nft) => !mintedNfts?.includes(nft)))
+    }, [nfts, mintedNfts])
+
     return (
         <div className='mb-7 mt-5'>
             {!nfts.length ? (
@@ -49,14 +57,18 @@ const PreviewNFTs: FC<{
                 </>
             ) : (
                 <>
-                    <h4>Unminted NFTs - {itemsRemaining}</h4>
-                    <div className='mt-3 nfts-grid'>
-                        {nfts.map(({ name, image }, index) => {
-                            if (!mintedNfts?.some((minted) => minted.name === name)) {
-                                return <NftCard title={name} imageLink={image} key={index} />
-                            }
-                        })}
-                    </div>
+                    <h4>Unminted NFTs - {itemsAvailable - itemsRemaining}</h4>
+                    <ArrayWrapper array={unmintedNfts} minimum={MINIMUM_NFTS_TO_SHOW}>
+                        <FilterArrayContext.Consumer>
+                            {([unmintedArr]) => (
+                                <div className='nfts-grid'>
+                                    {unmintedArr.map(({ name, image, mint }) => (
+                                        <NftCard title={name} imageLink={image} key={mint?.toBase58()} />
+                                    ))}
+                                </div>
+                            )}
+                        </FilterArrayContext.Consumer>
+                    </ArrayWrapper>
                     <Text as='p' className='my-3'>
                         {cache?.name}
                     </Text>

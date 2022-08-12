@@ -26,7 +26,7 @@ interface IPropertiesNft {
     creators?: ICreatorsNft[]
 }
 
-interface ICollectionNft {
+export interface ICollectionNft {
     name: string
     family: string
     verified?: number

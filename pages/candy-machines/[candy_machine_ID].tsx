@@ -19,6 +19,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import { LinkExternalIcon } from '@primer/octicons-react'
+import { ICollectionNft } from 'lib/nft/interfaces'
 
 const CandyMachine: NextPage = () => {
     const router = useRouter()
@@ -28,34 +29,33 @@ const CandyMachine: NextPage = () => {
     const { connection, isDevnet } = useRPC()
     const [error, setError] = useState('')
     const [isLoadingNfts, setIsLoadingNfts] = useState(false)
-    const [collectionNft, setCollectionNft] = useState<Nft>()
     const { itemsRemaining, refreshCandyMachineState, setIsCaptcha, itemsAvailable } = useRefreshCandyMachine(
         candyMachineAccount as string
     )
+    const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
+    const [collectionNft, setCollectionNft] = useState<Nft | null>(null)
     const [nftsRecoilState, setNftsRecoilState] = useRecoilState(nftsState)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
 
     const fetchNfts = async () => {
-        setCollectionNft(undefined)
+        setCollectionNft(null)
         setIsLoadingNfts(true)
-        setError('')
         try {
             if (!connection) return
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
+            if (nfts.length === 0) return setIsLoadingNfts(false)
+            setMintedNfts(nfts)
             setNftsRecoilState(nfts)
-            // @ts-ignore
-            if (nfts[0]?.collection?.key) {
-                // @ts-ignore
-                let nftCollectionData = await getNftByMint(nfts[0].collection.key, connection)
-                if (nftCollectionData.name !== '') {
-                    setCollectionNft(nftCollectionData)
-                }
+            const collectionNftPubkey = (nfts[0]?.collection as ICollectionNft)?.key
+            if (!collectionNftPubkey) return
+            let nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
+            if (nftCollectionData?.name !== '') {
+                setCollectionNft(nftCollectionData)
             }
         } catch (err) {
-            setNftsRecoilState([])
-            setError((err as Error).message)
             console.error(err)
+            setNftsRecoilState([])
         }
         setIsLoadingNfts(false)
     }
@@ -102,7 +102,7 @@ const CandyMachine: NextPage = () => {
                 <Button leadingIcon={LinkExternalIcon}>
                     <Link
                         target='_blank'
-                        href={`https://solscan.io/account/${candyMachineAccount}?${isDevnet}`}
+                        href={`https://solscan.io/account/${candyMachineAccount}${isDevnet}`}
                         sx={{ textDecoration: 'none', color: '#24292F' }}
                     >
                         View in Solscan
@@ -127,7 +127,8 @@ const CandyMachine: NextPage = () => {
                     <PreviewNFTs
                         candyMachineAccount={candyMachineAccount}
                         itemsRemaining={itemsRemaining}
-                        mintedNfts={nftsRecoilState}
+                        itemsAvailable={itemsAvailable}
+                        mintedNfts={mintedNfts}
                     />
                     {error?.includes('Error to fetch data') && (
                         <Text as='p' className='mt-3 mb-4'>

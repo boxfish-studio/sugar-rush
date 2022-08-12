@@ -3,6 +3,8 @@ import { Spinner } from '@primer/react'
 import { Nft } from 'lib/nft/interfaces'
 import NftCard from './NftCard'
 import { useMintCandyMachine } from 'hooks'
+import { ArrayWrapper, FilterArrayContext } from 'contexts/ArrayWrapper'
+import { MINIMUM_NFTS_TO_SHOW } from 'lib/constants'
 
 const MintedNFTs: FC<{
     candyMachineAccount: string
@@ -52,24 +54,34 @@ const MintedNFTs: FC<{
                         ]}
                     />
                 )}
-                {nfts.map(
-                    ({ name, image, mint }, index) =>
-                        index < 10 && (
-                            <NftCard
-                                title={name}
-                                imageLink={image}
-                                key={index}
-                                buttons={[
-                                    {
-                                        text: 'View in Solscan',
-                                        as: 'link',
-                                        variant: 'invisible',
-                                        hash: mint?.toBase58(),
-                                    },
-                                ]}
-                            />
-                        )
-                )}
+                <ArrayWrapper
+                    array={nfts}
+                    minimum={itemsRemaining > 0 ? MINIMUM_NFTS_TO_SHOW - 1 : MINIMUM_NFTS_TO_SHOW}
+                >
+                    <FilterArrayContext.Consumer>
+                        {([mintedArray]) => (
+                            <div className='nfts-grid'>
+                                {mintedArray?.map(({ name, image, mint }) => {
+                                    return (
+                                        <NftCard
+                                            title={name}
+                                            imageLink={image}
+                                            key={mint?.toBase58()}
+                                            buttons={[
+                                                {
+                                                    text: 'View in Solscan',
+                                                    as: 'link',
+                                                    variant: 'invisible',
+                                                    hash: mint?.toBase58(),
+                                                },
+                                            ]}
+                                        />
+                                    )
+                                })}
+                            </div>
+                        )}
+                    </FilterArrayContext.Consumer>
+                </ArrayWrapper>
             </div>
         </div>
     )
