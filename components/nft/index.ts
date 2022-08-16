@@ -1,2 +1,5 @@
 export { default as NftCard } from './NftCard'
 export { default as NftDetails } from './NftDetails'
+export { default as PreviewNFTs } from './PreviewNFTs'
+export { default as MintedNFTs } from './MintedNFTs'
+export { default as NftCollection } from './NftCollection'
