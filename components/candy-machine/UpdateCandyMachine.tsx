@@ -50,9 +50,12 @@ const UpdateCandyMachine: FC<{
     const { onChange, onSubmit, values, setValues } = useForm(updateCandyMachineV2, initialState)
 
     async function isFormUpdateValid(): Promise<boolean> {
-        if (!values['date-mint'] || !values['time-mint']) return false
+        if (!values['date-mint'] || !values['time-mint']) {
+            addCandyMachineNotificationError(CandyMachineAction.Update, 'Date or time is invalid')
+            return false
+        }
         if (!cache) {
-            addCandyMachineNotificationError(CandyMachineAction.Update, 'There are no files to upload')
+            addCandyMachineNotificationError(CandyMachineAction.Update, 'You must upload the cache file')
             return false
         }
         let cacheData = await cache.text()
