@@ -14,7 +14,7 @@ import {
 } from 'components'
 import { useEffect, useState } from 'react'
 import { useRPC, useRefreshCandyMachine } from 'hooks'
-import { useRecoilState, useResetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import type { NextPage } from 'next'
@@ -34,21 +34,19 @@ const CandyMachine: NextPage = () => {
     )
     const [collectionNft, setCollectionNft] = useState<Nft | null>(null)
     const [nftRecoilState, setNftRecoilState] = useRecoilState(nftsState)
-    const resetNftRecoilState = useResetRecoilState(nftsState)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
 
     const fetchNfts = async () => {
-        resetNftRecoilState()
+        if (!connection) return
         setCollectionNft(null)
         setIsLoadingNfts(true)
         try {
-            if (!connection) return
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
             if (nfts.length === 0) throw new Error('No NFTs found')
             setNftRecoilState(nfts)
             const collectionNftPubkey = (nfts[0]?.collection as ICollectionNft)?.key
-            if (!collectionNftPubkey) throw new Error("Couldn't find the collection Nft")
+            if (!collectionNftPubkey) throw new Error("Couldn't find collectionNftPubkey")
             let nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
             if (nftCollectionData?.name !== '') {
                 setCollectionNft(nftCollectionData)
@@ -66,6 +64,7 @@ const CandyMachine: NextPage = () => {
         setError('')
         fetchNfts()
         refreshCandyMachineState()
+        fetchNfts()
     }, [connection])
 
     if (error.includes('Account does not exist')) {
