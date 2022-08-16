@@ -45,10 +45,10 @@ const CandyMachine: NextPage = () => {
         try {
             if (!connection) return
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
-            if (nfts.length === 0) return setIsLoadingNfts(false)
+            if (nfts.length === 0) throw new Error('No NFTs found')
             setNftRecoilState(nfts)
             const collectionNftPubkey = (nfts[0]?.collection as ICollectionNft)?.key
-            if (!collectionNftPubkey) return setIsLoadingNfts(false)
+            if (!collectionNftPubkey) throw new Error("Couldn't find the collection Nft")
             let nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
             if (nftCollectionData?.name !== '') {
                 setCollectionNft(nftCollectionData)
@@ -56,7 +56,6 @@ const CandyMachine: NextPage = () => {
         } catch (err) {
             setError((err as Error)?.message)
             console.error(err)
-            setNftRecoilState([])
         }
         setIsLoadingNfts(false)
     }
