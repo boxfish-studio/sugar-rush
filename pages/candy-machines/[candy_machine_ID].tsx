@@ -39,23 +39,22 @@ const CandyMachine: NextPage = () => {
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
 
     const fetchNfts = async () => {
+        if (!connection) return
         setCollectionNft(null)
         setIsLoadingNfts(true)
         try {
-            if (!connection) return
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
-            if (nfts.length === 0) return setIsLoadingNfts(false)
+            if (nfts.length === 0) throw new Error('No NFTs found')
             setMintedNfts(nfts)
             setNftsRecoilState(nfts)
             const collectionNftPubkey = (nfts[0]?.collection as ICollectionNft)?.key
-            if (!collectionNftPubkey) return
+            if (!collectionNftPubkey) throw new Error("Couldn't find collectionNftPubkey")
             let nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
             if (nftCollectionData?.name !== '') {
                 setCollectionNft(nftCollectionData)
             }
         } catch (err) {
             console.error(err)
-            setNftsRecoilState([])
         }
         setIsLoadingNfts(false)
     }
@@ -65,11 +64,8 @@ const CandyMachine: NextPage = () => {
     useEffect(() => {
         setError('')
         refreshCandyMachineState()
-    }, [connection])
-
-    useEffect(() => {
         fetchNfts()
-    }, [])
+    }, [connection])
 
     if (error.includes('Account does not exist')) {
         return (
