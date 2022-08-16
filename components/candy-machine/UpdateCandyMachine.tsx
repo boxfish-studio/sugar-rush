@@ -1,6 +1,6 @@
 import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
-import { LAMPORTS_PER_SOL, PublicKey, Connection } from '@solana/web3.js'
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
 import { useForm, useRPC, useUploadCache } from 'hooks'
 import { updateV2 } from 'lib/candy-machine'
 import { CANDY_MACHINE_PROGRAM_V2_ID, DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
