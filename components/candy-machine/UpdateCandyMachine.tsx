@@ -12,7 +12,7 @@ import {
     IFetchedCandyMachineConfig,
     updateV2,
 } from '@boxfish-studio/candymachine-client-sdk'
-import { CandyMachineAction } from 'lib/candy-machine/enums'
+import { CandyMachineAction } from 'lib/enums'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
 import { FC, useEffect, useState } from 'react'
 import { Button, Spinner, StyledOcticon, Text } from '@primer/react'

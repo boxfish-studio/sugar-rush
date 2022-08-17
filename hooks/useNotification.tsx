@@ -3,7 +3,7 @@ import { notificationState } from 'lib/recoil-store/atoms'
 import { generateRandomId } from 'lib/utils'
 import { useRecoilState } from 'recoil'
 import { NOTIFICATION_TIMEOUT_DEFAULT } from 'lib/constants'
-import { CandyMachineAction } from 'lib/candy-machine/enums'
+import { CandyMachineAction } from 'lib/enums'
 
 const useNotification = () => {
     const [notifications, setNotifications] = useRecoilState<INotification[]>(notificationState)

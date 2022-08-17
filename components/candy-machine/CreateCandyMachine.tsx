@@ -10,7 +10,7 @@ import {
     verifyAssets,
     uploadV2,
 } from '@boxfish-studio/candymachine-client-sdk'
-import { CandyMachineAction } from 'lib/candy-machine/enums'
+import { CandyMachineAction } from 'lib/enums'
 import { getCurrentDate, getCurrentTime, parseDateToUTC } from 'lib/utils'
 import React, { FC, useState, useEffect } from 'react'
 import { Box, Button, Spinner } from '@primer/react'
