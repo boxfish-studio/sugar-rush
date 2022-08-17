@@ -2,11 +2,14 @@ import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { AnchorProvider } from '@project-serum/anchor'
 import { useRPC, useNotification } from 'hooks'
 import { Transaction, Connection } from '@solana/web3.js'
-import { awaitTransactionSignatureConfirmation } from 'lib/candy-machine/upload/transactions'
 import { useEffect, useState } from 'react'
 import { DEFAULT_TIMEOUT } from 'lib/constants'
-import { SetupState } from 'lib/candy-machine/interfaces'
-import { createAccountsForMint, mintOneNft } from 'lib/candy-machine/mint/mint'
+import { SetupState } from '@boxfish-studio/candymachine-client-sdk'
+import {
+    createAccountsForMint,
+    mintOneNft,
+    awaitTransactionSignatureConfirmation,
+} from '@boxfish-studio/candymachine-client-sdk'
 import useRefreshCandyMachine from './useRefreshCandyMachine'
 import { NotificationType } from 'lib/interfaces'
 
