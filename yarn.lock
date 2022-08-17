@@ -1013,10 +1013,10 @@
     eip1193-provider "^1.0.1"
     js-sha3 "^0.8.0"
 
-"@boxfish-studio/candymachine-client-sdk@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@boxfish-studio/candymachine-client-sdk/-/candymachine-client-sdk-0.0.2.tgz#27805edc24b54587ea94b1b0f0602299ae4a6dea"
-  integrity sha512-sxDfF+zAsypt0GjbRWS9byKE/cE211P20CRPZZVaK7/iAkp0yQMUhBkvbrTMdipqzht7/iOFIfU2vxWfJX4Xhg==
+"@boxfish-studio/candymachine-client-sdk@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@boxfish-studio/candymachine-client-sdk/-/candymachine-client-sdk-0.0.4.tgz#d52deb5a73cda78abb07470dae851c604c25555c"
+  integrity sha512-D+vexAlM+pb2cpTJ1K1CZyzG+MWjJYeAvJpGSWt8DxMRS2ezpiivU0OdMLP/f2HFpLBb6odijWLiLnfBJRoVUg==
   dependencies:
     "@metaplex/arweave-cost" "^1.0.4"
     "@project-serum/anchor" "^0.25.0"
