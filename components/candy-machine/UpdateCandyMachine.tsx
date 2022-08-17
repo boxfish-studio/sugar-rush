@@ -205,25 +205,7 @@ const UpdateCandyMachine: FC<{
     }, [connection])
 
     useEffect(() => {
-        const updateInitialState = {
-            price: candyMachineConfig?.price ? new BN(candyMachineConfig?.price).toNumber() / LAMPORTS_PER_SOL : 0,
-            'number-of-nfts': 0,
-            'treasury-account': candyMachineConfig?.solTreasuryAccount?.toBase58() ?? '',
-            captcha: candyMachineConfig?.gatekeeper ?? false,
-            mutable: candyMachineConfig?.isMutable ?? false,
-            'date-mint': candyMachineConfig?.goLiveDate
-                ? parseDateFromDateBN(candyMachineConfig?.goLiveDate)
-                : getCurrentDate(),
-            'time-mint': candyMachineConfig?.goLiveDate
-                ? parseTimeFromDateBN(candyMachineConfig?.goLiveDate)
-                : getCurrentTime(),
-
-            storage: '',
-            files: [],
-            cache: null,
-            'new-authority': '',
-        } as const
-        setValues(updateInitialState)
+        setValues(initialState)
     }, [candyMachineConfig])
 
     if (isLoading) {
