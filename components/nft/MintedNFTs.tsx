@@ -1,18 +1,18 @@
 import { FC } from 'react'
 import { Spinner } from '@primer/react'
-import { Nft } from 'lib/nft/interfaces'
 import NftCard from './NftCard'
 import { useMintCandyMachine } from 'hooks'
+import { useRecoilValue } from 'recoil'
+import { nftsState } from 'lib/recoil-store/atoms'
 import { ArrayWrapper, FilterArrayContext } from 'contexts/ArrayWrapper'
 import { MINIMUM_NFTS_TO_SHOW } from 'lib/constants'
 
 const MintedNFTs: FC<{
     candyMachineAccount: string
-    nfts: Nft[]
     isLoading: boolean
-    fetchNfts: () => void
-}> = ({ candyMachineAccount, fetchNfts, nfts, isLoading }) => {
+}> = ({ candyMachineAccount, isLoading }) => {
     const { isUserMinting, itemsRemaining, mintAccount, isCaptcha } = useMintCandyMachine(candyMachineAccount as string)
+    const nfts = useRecoilValue(nftsState)
 
     if (isLoading) {
         return (
@@ -49,7 +49,7 @@ const MintedNFTs: FC<{
                                 isLoading: isUserMinting,
                                 as: 'button',
                                 variant: 'primary',
-                                onClick: () => mintAccount().then(fetchNfts),
+                                onClick: () => mintAccount(),
                             },
                         ]}
                     />

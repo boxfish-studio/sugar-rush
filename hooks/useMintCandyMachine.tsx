@@ -1,6 +1,6 @@
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { AnchorProvider } from '@project-serum/anchor'
-import { useRPC } from 'hooks'
+import { useRPC, useNotification } from 'hooks'
 import { Transaction, Connection } from '@solana/web3.js'
 import { awaitTransactionSignatureConfirmation } from 'lib/candy-machine/upload/transactions'
 import { useEffect, useState } from 'react'
@@ -8,15 +8,16 @@ import { DEFAULT_TIMEOUT } from 'lib/constants'
 import { SetupState } from 'lib/candy-machine/interfaces'
 import { createAccountsForMint, mintOneNft } from 'lib/candy-machine/mint/mint'
 import useRefreshCandyMachine from './useRefreshCandyMachine'
+import { NotificationType } from 'lib/interfaces'
 
 const useMintCandyMachine = (account: string) => {
     const anchorWallet = useAnchorWallet()
     const { connection } = useRPC()
     const [isUserMinting, setIsUserMinting] = useState(false)
     const [setupTxn, setSetupTxn] = useState<SetupState>()
-    const [mintMessage, setMintMessage] = useState({ error: false, message: '' })
     const { itemsRemaining, refreshCandyMachineState, candyMachine, setItemsRemaining, setIsActive, isCaptcha } =
         useRefreshCandyMachine(account as string)
+    const { addNotification } = useNotification()
 
     useEffect(() => {
         refreshCandyMachineState()
@@ -85,18 +86,28 @@ const useMintCandyMachine = (account: string) => {
                 setIsActive((candyMachine.state.isActive = remaining > 0))
                 candyMachine.state.isSoldOut = remaining === 0
                 setSetupTxn(undefined)
-                setMintMessage({ error: false, message: 'Congratulations! Mint succeeded!' })
+                addNotification({
+                    message: 'Mint succeeded! Please, click the refresh button to see the new NFT.',
+                    type: NotificationType.Success,
+                })
             } else if (status && !status.err) {
-                setMintMessage({
-                    error: true,
+                addNotification({
                     message:
                         'Mint likely failed! Anti-bot SOL 0.01 fee potentially charged! Check the explorer to confirm the mint failed and if so, make sure you are eligible to mint before trying again.',
+                    type: NotificationType.Error,
                 })
             } else {
-                setMintMessage({ error: true, message: 'Mint failed! Please try again!' })
+                addNotification({
+                    message: 'Mint failed! Please try again!',
+                    type: NotificationType.Error,
+                })
             }
         } catch (err) {
             console.log(err)
+            addNotification({
+                message: `Mint failed! ${(err as Error)?.message}. Please try again!`,
+                type: NotificationType.Error,
+            })
         } finally {
             setIsUserMinting(false)
         }
@@ -105,7 +116,6 @@ const useMintCandyMachine = (account: string) => {
     return {
         mintAccount,
         isUserMinting,
-        mintMessage,
         itemsRemaining,
         isCaptcha,
     }

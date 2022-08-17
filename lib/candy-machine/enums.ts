@@ -7,3 +7,10 @@ export enum StorageType {
     NftStorage = 'nft-storage',
     Pinata = 'pinata',
 }
+
+export enum CandyMachineAction {
+    Create = 'creating',
+    Update = 'updating',
+    Delete = 'deleting',
+    Fetch = 'fetching',
+}

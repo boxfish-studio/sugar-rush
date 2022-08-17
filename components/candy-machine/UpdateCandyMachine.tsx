@@ -1,10 +1,10 @@
 import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
-import { useForm, useRPC, useUploadCache } from 'hooks'
+import { useForm, useNotification, useRPC, useUploadCache } from 'hooks'
 import { updateV2 } from 'lib/candy-machine'
 import { CANDY_MACHINE_PROGRAM_V2_ID, DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
-import { StorageType } from 'lib/candy-machine/enums'
+import { CandyMachineAction, StorageType } from 'lib/candy-machine/enums'
 import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { getCandyMachineV2Config, loadCandyProgramV2 } from 'lib/candy-machine/upload/config'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
@@ -19,11 +19,11 @@ const UpdateCandyMachine: FC<{
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
-
+    const { addCandyMachineNotificationError } = useNotification()
     const { cache, uploadCache } = useUploadCache()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
     const [status, setStatus] = useState('')
-    const [errorMessage, setErrorMessage] = useState('')
+    const [error, setError] = useState('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [candyMachineConfig, setCandyMachineConfig] = useState<IFetchedCandyMachineConfig>()
 
@@ -46,26 +46,34 @@ const UpdateCandyMachine: FC<{
         'new-authority': '',
     } as const
 
-    const { onChange, onSubmit, values } = useForm(updateCandyMachineV2, initialState)
+    const { onChange, onSubmit, values, setValues } = useForm(updateCandyMachineV2, initialState)
 
-    function isFormUpdateValid(): boolean {
-        if (!values['date-mint'] || !values['time-mint']) return false
-        if (values.price === 0 || isNaN(values.price)) return false
+    async function isFormUpdateValid(): Promise<boolean> {
+        if (!values['date-mint'] || !values['time-mint']) {
+            addCandyMachineNotificationError(CandyMachineAction.Update, 'Date or time is invalid')
+            return false
+        }
         if (!cache) {
-            setErrorMessage('There are no files to upload')
+            addCandyMachineNotificationError(CandyMachineAction.Update, 'You must upload the cache file')
+            return false
+        }
+        let cacheData = await cache.text()
+        let cacheDataJson = JSON.parse(cacheData)
+        if (cacheDataJson.candyMachine !== candyMachineAccount) {
+            addCandyMachineNotificationError(CandyMachineAction.Update, 'The cache file is not from this candy machine')
             return false
         }
         if (values.price == 0 || isNaN(values.price)) {
-            setErrorMessage('The Price of each NFT cannot be 0')
+            addCandyMachineNotificationError(CandyMachineAction.Update, 'The Price of each NFT cannot be 0')
             return false
         }
-        setErrorMessage('')
         return true
     }
 
     async function updateCandyMachineV2() {
         try {
-            if (!isFormUpdateValid()) return
+            const isValidForm = await isFormUpdateValid()
+            if (!isValidForm) return
             setIsInteractingWithCM(true)
             setStatus('')
 
@@ -156,14 +164,17 @@ const UpdateCandyMachine: FC<{
                 setStatus('Candy Machine updated successfully!')
             }
         } catch (err) {
-            setErrorMessage('Candy Machine update was not successful, please re-run.')
+            addCandyMachineNotificationError(
+                CandyMachineAction.Update,
+                'Candy Machine update was not successful, please re-run.'
+            )
         }
         setIsInteractingWithCM(false)
     }
 
     const fetchCandyMachine = async (): Promise<IFetchedCandyMachineConfig | undefined> => {
+        setError('')
         if (candyMachineAccount && anchorWallet && connection) {
-            setErrorMessage('')
             try {
                 setIsLoading(true)
                 const provider = new AnchorProvider(connection, anchorWallet, {
@@ -178,21 +189,24 @@ const UpdateCandyMachine: FC<{
 
                 state.data.solTreasuryAccount = state.wallet
                 state.data.itemsRedeemed = state.itemsRedeemed
-                setErrorMessage('')
                 return state.data
             } catch (err) {
-                setErrorMessage((err as Error).message)
+                setError((err as Error)?.message)
             }
             setIsLoading(false)
         }
     }
 
     useEffect(() => {
-        setErrorMessage('')
+        setError('')
         setIsLoading(false)
         fetchCandyMachine().then(setCandyMachineConfig)
         setIsLoading(false)
     }, [connection])
+
+    useEffect(() => {
+        setValues(initialState)
+    }, [candyMachineConfig])
 
     if (isLoading) {
         return (
@@ -202,7 +216,7 @@ const UpdateCandyMachine: FC<{
             </div>
         )
     }
-    if (errorMessage) {
+    if (error?.toLowerCase()?.includes('fetch')) {
         return (
             <div className='d-flex flex-column items-center justify-center my-5 col-12 col-md-8 col-lg-6'>
                 <h3 className='color-fg-accent'> Error fetching candy machine config</h3>
@@ -313,7 +327,7 @@ const UpdateCandyMachine: FC<{
                                         required
                                     />
                                 </div>
-                                {errorMessage.length > 0 && (
+                                {error?.length > 0 && (
                                     <div className='my-3 color-fg-closed color-bg-closed border color-border-closed-emphasis p-3 rounded-2'>
                                         <span>
                                             <StyledOcticon
@@ -322,7 +336,7 @@ const UpdateCandyMachine: FC<{
                                                 color='danger.fg'
                                                 sx={{ marginRight: '6px' }}
                                             />{' '}
-                                            {errorMessage}
+                                            {error}
                                         </span>
                                     </div>
                                 )}

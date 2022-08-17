@@ -2,18 +2,20 @@ import { FC, useEffect, useState } from 'react'
 import { Text } from '@primer/react'
 import { Nft } from 'lib/nft/interfaces'
 import NftCard from './NftCard'
+import { useRecoilValue } from 'recoil'
+import { nftsState } from 'lib/recoil-store/atoms'
 import { ArrayWrapper, FilterArrayContext } from 'contexts/ArrayWrapper'
 import { MINIMUM_NFTS_TO_SHOW } from 'lib/constants'
 
 const PreviewNFTs: FC<{
     candyMachineAccount: string
-    itemsRemaining: number
     itemsAvailable: number
-    mintedNfts: Nft[]
-}> = ({ candyMachineAccount, itemsRemaining, itemsAvailable, mintedNfts }) => {
+    itemsRemaining: number
+}> = ({ candyMachineAccount, itemsAvailable, itemsRemaining }) => {
     const [nfts, setNfts] = useState<Nft[]>([])
     const [cache, setCache] = useState<File>()
     const [unmintedNfts, setUnmintedNfts] = useState<Nft[]>([])
+    const mintedNfts = useRecoilValue(nftsState)
 
     const viewNfts = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length == 0) {

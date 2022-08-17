@@ -1,62 +1,50 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useWallet } from '@solana/wallet-adapter-react'
 import { CandyMachineList, CreateCandyMachine, Popup, SearchBar, RefreshButton } from 'components'
-import { useRPC } from 'hooks'
+import { useNotification, useRPC } from 'hooks'
 import { candyMachinesState, candyMachineSearchState } from 'lib/recoil-store/atoms'
 import { fetchCandyMachineAccounts } from 'lib/utils'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { Button, Spinner } from '@primer/react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { CandyMachineAction } from 'lib/candy-machine/enums'
 
 const ManageCandyMachines: NextPage = () => {
+    const { connection } = useRPC()
+    const { publicKey } = useWallet()
+    const { addCandyMachineNotificationError } = useNotification()
+
     const [accounts, setAccounts] = useRecoilState(candyMachinesState)
     const [isLoading, setIsLoading] = useState(false)
     const [isRefreshLoading, setIsRefreshLoading] = useState(false)
-    const [error, setError] = useState(false)
-    const { connection } = useRPC()
-    const { publicKey } = useWallet()
     const [isCreateOpen, setIsCreateOpen] = useState(false)
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
     const searchInput = useRecoilValue(candyMachineSearchState)
-    const setCandyMachines = useSetRecoilState(candyMachinesState)
 
     const searchResults = accounts.filter((account) => {
         return account.toLowerCase().includes(searchInput.trim().toLowerCase())
     })
-    const fetchAccounts = async () => {
-        if (!connection) return
-        try {
-            const accounts = await fetchCandyMachineAccounts(connection, publicKey!)
-            setAccounts(accounts)
-            setError(false)
-        } catch (err) {
-            console.error(err)
-        }
-    }
 
-    const refreshCandyMachines = async () => {
+    const fetchAccounts = async () => {
         if (!connection) return
         setIsRefreshLoading(true)
         try {
-            const candyMachines = await fetchCandyMachineAccounts(connection, publicKey!)
-            setCandyMachines(candyMachines)
-        } catch (e) {
-            console.error(e)
+            const accounts = await fetchCandyMachineAccounts(connection, publicKey!)
+            setAccounts(accounts)
+        } catch (err) {
+            console.error(err)
+            addCandyMachineNotificationError(CandyMachineAction.Fetch, (err as Error)?.message)
         }
         setIsRefreshLoading(false)
     }
 
     useEffect(() => {
         if (!connection) return
-
-        setError(false)
         setIsLoading(true)
-
         fetchAccounts()
-            .catch(() => setError(true))
+            .catch((e: any) => addCandyMachineNotificationError(CandyMachineAction.Fetch, (e as Error)?.message))
             .finally(() => {
                 setIsLoading(false)
             })
@@ -86,21 +74,14 @@ const ManageCandyMachines: NextPage = () => {
                 <Button variant='primary' onClick={() => setIsCreateOpen(true)} sx={{ textTransform: 'capitalize' }}>
                     Create candy machine
                 </Button>
-                <RefreshButton onClick={refreshCandyMachines} isLoading={isRefreshLoading} />
+                <RefreshButton onClick={fetchAccounts} isLoading={isRefreshLoading} />
             </div>
             <div className='d-flex flex-column'>
                 <div className='d-flex my-5 flex-items-center'>
                     <h2>Candy Machines ·</h2>
                     <h2 className='ml-2'>{accounts?.length}</h2>
                 </div>
-                {error ? (
-                    <div className='d-flex flex-column flex-items-center flex-justify-center mt-11'>
-                        Error fetching accounts
-                        <Button variant='danger' className='mt-4' onClick={fetchAccounts}>
-                            Fetch again
-                        </Button>
-                    </div>
-                ) : !accounts?.length ? (
+                {!accounts?.length ? (
                     <div className='mt-5 d-flex flex-column flex-md-row flex-items-start flex-md-items-center '>
                         <div className='mr-2'>You have no candy machine accounts.</div>
                         <Button

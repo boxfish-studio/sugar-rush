@@ -32,9 +32,8 @@ const CandyMachine: NextPage = () => {
     const { itemsRemaining, refreshCandyMachineState, setIsCaptcha, itemsAvailable } = useRefreshCandyMachine(
         candyMachineAccount as string
     )
-    const [mintedNfts, setMintedNfts] = useState<Nft[]>([])
     const [collectionNft, setCollectionNft] = useState<Nft | null>(null)
-    const [nftsRecoilState, setNftsRecoilState] = useRecoilState(nftsState)
+    const [nftRecoilState, setNftRecoilState] = useRecoilState(nftsState)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
     const [isVerifyOpen, setIsVerifyOpen] = useState(false)
 
@@ -45,8 +44,7 @@ const CandyMachine: NextPage = () => {
         try {
             const nfts = await getAllNftsByCM(candyMachineAccount, connection)
             if (nfts.length === 0) throw new Error('No NFTs found')
-            setMintedNfts(nfts)
-            setNftsRecoilState(nfts)
+            setNftRecoilState(nfts)
             const collectionNftPubkey = (nfts[0]?.collection as ICollectionNft)?.key
             if (!collectionNftPubkey) throw new Error("Couldn't find collectionNftPubkey")
             let nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
@@ -54,6 +52,7 @@ const CandyMachine: NextPage = () => {
                 setCollectionNft(nftCollectionData)
             }
         } catch (err) {
+            setError((err as Error)?.message)
             console.error(err)
         }
         setIsLoadingNfts(false)
@@ -63,6 +62,7 @@ const CandyMachine: NextPage = () => {
 
     useEffect(() => {
         setError('')
+        fetchNfts()
         refreshCandyMachineState()
         fetchNfts()
     }, [connection])
@@ -113,7 +113,7 @@ const CandyMachine: NextPage = () => {
                         <h3 className='r-0'>NFTs</h3>
                         <div className='l-0 d-flex flex-justify-end flex-items-center'>
                             <span className='pr-2'>
-                                {isLoadingNfts ? '' : `${nftsRecoilState?.length}/${itemsAvailable} Minted`}
+                                {isLoadingNfts ? '' : `${nftRecoilState?.length}/${itemsAvailable} Minted`}
                             </span>
                             <RefreshButton onClick={fetchNfts} isLoading={isLoadingNfts} />
                         </div>
@@ -124,19 +124,13 @@ const CandyMachine: NextPage = () => {
                         candyMachineAccount={candyMachineAccount}
                         itemsRemaining={itemsRemaining}
                         itemsAvailable={itemsAvailable}
-                        mintedNfts={mintedNfts}
                     />
                     {error?.includes('Error to fetch data') && (
                         <Text as='p' className='mt-3 mb-4'>
                             Error to fetch data. Please, click the refresh button to try again.
                         </Text>
                     )}
-                    <MintedNFTs
-                        candyMachineAccount={candyMachineAccount}
-                        fetchNfts={fetchNfts}
-                        nfts={nftsRecoilState}
-                        isLoading={isLoadingNfts}
-                    />
+                    <MintedNFTs candyMachineAccount={candyMachineAccount} isLoading={isLoadingNfts} />
                 </div>
             </div>
             {isDeleteOpen && (

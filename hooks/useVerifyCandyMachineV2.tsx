@@ -108,7 +108,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
             } catch (err) {
                 console.error(err)
                 saveCache(cacheName, env, cacheContent)
-                setError(errorMessage || (err as Error).message)
+                setError(errorMessage || (err as Error)?.message)
             }
         }
     }

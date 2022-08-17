@@ -3,7 +3,7 @@ import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { useForm, useRPC, useUploadCache, useUploadFiles, useNotification } from 'hooks'
 import { Connection } from '@solana/web3.js'
 import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
-import { StorageType } from 'lib/candy-machine/enums'
+import { CandyMachineAction, StorageType } from 'lib/candy-machine/enums'
 import { ICandyMachineConfig } from 'lib/candy-machine/interfaces'
 import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/candy-machine/upload/config'
 import { uploadV2 } from 'lib/candy-machine/upload/upload'
@@ -17,11 +17,10 @@ const CreateCandyMachine: FC = () => {
     const { publicKey } = useWallet()
     const anchorWallet = useAnchorWallet()
     const { connection, network } = useRPC()
-    const { addNotification } = useNotification()
+    const { addNotification, addCandyMachineNotificationError } = useNotification()
 
     const { files, uploadAssets } = useUploadFiles()
     const [isInteractingWithCM, setIsInteractingWithCM] = useState(false)
-    const [errorMessage, setErrorMessage] = useState('')
 
     const initialState = {
         price: 0,
@@ -40,37 +39,36 @@ const CreateCandyMachine: FC = () => {
 
     function isFormValid(): boolean {
         if (files.length === 0) {
-            setErrorMessage('There are no files to upload')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'There are no files to upload')
             return false
         }
         if (files.length % 2 != 0) {
-            setErrorMessage('You have to upload 2 files per NFT')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'You have to upload 2 files per NFT')
             return false
         }
         if (values['number-of-nfts'] * 2 != files.length) {
-            setErrorMessage('Does not match the number of nfts')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'Does not match the number of nfts')
             return false
         }
         let isZeroJsonFile: boolean = files.filter((e) => e.name === '0.json').length === 0 ? false : true
         if (!isZeroJsonFile) {
-            setErrorMessage('The 0.json file must exist in Files')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'The 0.json file must exist in Files')
             return false
         }
         if (values.price == 0 || isNaN(values.price)) {
-            setErrorMessage('The Price of each NFT cannot be 0')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'The Price of each NFT cannot be 0')
             return false
         }
         if (values['number-of-nfts'] == 0 || isNaN(values['number-of-nfts'])) {
-            setErrorMessage('The Number of NFTs cannot be 0')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'The Number of NFTs cannot be 0')
             return false
         }
 
-        setErrorMessage('')
         return true
     }
     async function createCandyMachineV2() {
         if (!connection) {
-            setErrorMessage('Select network first')
+            addCandyMachineNotificationError(CandyMachineAction.Create, 'Select network first')
             return
         }
         if (!isFormValid()) return
@@ -174,10 +172,8 @@ const CreateCandyMachine: FC = () => {
                     type: NotificationType.Success,
                 })
             } catch (err) {
-                addNotification({
-                    message: `An error occurred while creating the Candy Machine`,
-                    type: NotificationType.Error,
-                })
+                console.error(err)
+                addCandyMachineNotificationError(CandyMachineAction.Create, (err as Error)?.message)
             }
             const endMilliseconds = Date.now()
             console.log(endMilliseconds.toString())

@@ -4,6 +4,7 @@ import { Button, Spinner, Text } from '@primer/react'
 import { useRemoveCandyMachineAccount, useNotification } from 'hooks'
 import { useRouter } from 'next/router'
 import { NotificationType } from 'lib/interfaces'
+import { CandyMachineAction } from 'lib/candy-machine/enums'
 
 const DeleteCandyMachine: FC<{
     candyMachineAccount: string
@@ -13,7 +14,7 @@ const DeleteCandyMachine: FC<{
     const [transaction, setTransaction] = useState('')
     const { removeAccount } = useRemoveCandyMachineAccount([candyMachineAccount])
     const router = useRouter()
-    const { addNotification } = useNotification()
+    const { addNotification, addCandyMachineNotificationError } = useNotification()
 
     const deleteCM = async () => {
         try {
@@ -27,10 +28,7 @@ const DeleteCandyMachine: FC<{
             })
         } catch (error) {
             console.log(error)
-            addNotification({
-                message: `An error occurred while deleting the Candy Machine`,
-                type: NotificationType.Error,
-            })
+            addCandyMachineNotificationError(CandyMachineAction.Delete, (error as Error)?.message)
         }
         setIsDeleting(false)
     }

@@ -1,6 +1,6 @@
 import { Nft } from 'lib/nft/interfaces'
 import { INotification, NotificationType } from 'lib/interfaces'
-import { atom, RecoilState } from 'recoil'
+import { atom, RecoilState, selector } from 'recoil'
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base'
 import { Connection } from '@solana/web3.js'
 
