@@ -327,7 +327,7 @@ const UpdateCandyMachine: FC<{
                                         required
                                     />
                                 </div>
-                                {error.length > 0 && (
+                                {error?.length > 0 && (
                                     <div className='my-3 color-fg-closed color-bg-closed border color-border-closed-emphasis p-3 rounded-2'>
                                         <span>
                                             <StyledOcticon
