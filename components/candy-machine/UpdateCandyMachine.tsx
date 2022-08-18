@@ -11,6 +11,7 @@ import {
     CANDY_MACHINE_PROGRAM_V2_ID,
     IFetchedCandyMachineConfig,
     updateV2,
+    ICache,
 } from '@boxfish-studio/candymachine-client-sdk'
 import { CandyMachineAction } from 'lib/enums'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
@@ -64,8 +65,8 @@ const UpdateCandyMachine: FC<{
             return false
         }
         let cacheData = await cache.text()
-        let cacheDataJson = JSON.parse(cacheData)
-        if (cacheDataJson.candyMachine !== candyMachineAccount) {
+        let cacheDataJson = JSON.parse(cacheData) as ICache
+        if (cacheDataJson.program.candyMachine !== candyMachineAccount) {
             addCandyMachineNotificationError(CandyMachineAction.Update, 'The cache file is not from this candy machine')
             return false
         }
