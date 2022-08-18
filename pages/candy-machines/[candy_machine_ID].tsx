@@ -39,6 +39,7 @@ const CandyMachine: NextPage = () => {
 
     const fetchNfts = async () => {
         if (!connection) return
+        setNftRecoilState([])
         setCollectionNft(null)
         setIsLoadingNfts(true)
         try {
@@ -62,7 +63,6 @@ const CandyMachine: NextPage = () => {
 
     useEffect(() => {
         setError('')
-        fetchNfts()
         refreshCandyMachineState()
         fetchNfts()
     }, [connection])

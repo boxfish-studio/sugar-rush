@@ -12,12 +12,13 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@boxfish-studio/candymachine-client-sdk": "^0.0.4",
     "@metaplex-foundation/js": "^0.11.7",
     "@metaplex/arweave-cost": "^1.0.4",
     "@primer/components": "^33.1.0",
     "@primer/css": "^20.2.4",
     "@primer/react": "^35.4.0",
-    "@project-serum/anchor": "^0.24.2",
+    "@project-serum/anchor": "^0.25.0",
     "@solana/spl-token": "^0.2.0",
     "@solana/wallet-adapter-base": "^0.9.5",
     "@solana/wallet-adapter-react": "^0.15.4",
@@ -45,9 +46,9 @@
     "@types/react-dom": "18.0.3",
     "eslint": "8.14.0",
     "eslint-config-next": "12.1.6",
+    "git-tags": "^0.2.4",
     "husky": ">=6",
     "lint-staged": ">=10",
-    "git-tags": "^0.2.4", 
     "prettier": "2.6.2",
     "typescript": "4.6.4"
   },

@@ -1,12 +1,16 @@
 import { AnchorProvider, BN } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { useForm, useRPC, useUploadCache, useUploadFiles, useNotification } from 'hooks'
-import { Connection } from '@solana/web3.js'
-import { DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
-import { CandyMachineAction, StorageType } from 'lib/candy-machine/enums'
-import { ICandyMachineConfig } from 'lib/candy-machine/interfaces'
-import { getCandyMachineV2Config, loadCandyProgramV2, verifyAssets } from 'lib/candy-machine/upload/config'
-import { uploadV2 } from 'lib/candy-machine/upload/upload'
+import {
+    DEFAULT_GATEKEEPER,
+    StorageType,
+    ICandyMachineConfig,
+    getCandyMachineV2Config,
+    loadCandyProgramV2,
+    verifyAssets,
+    uploadV2,
+} from '@boxfish-studio/candymachine-client-sdk'
+import { CandyMachineAction } from 'lib/enums'
 import { getCurrentDate, getCurrentTime, parseDateToUTC } from 'lib/utils'
 import React, { FC, useState, useEffect } from 'react'
 import { Box, Button, Spinner } from '@primer/react'

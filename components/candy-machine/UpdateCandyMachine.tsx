@@ -2,11 +2,18 @@ import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
 import { useForm, useNotification, useRPC, useUploadCache } from 'hooks'
-import { updateV2 } from 'lib/candy-machine'
-import { CANDY_MACHINE_PROGRAM_V2_ID, DEFAULT_GATEKEEPER } from 'lib/candy-machine/constants'
-import { CandyMachineAction, StorageType } from 'lib/candy-machine/enums'
-import { ICandyMachineConfig, IFetchedCandyMachineConfig } from 'lib/candy-machine/interfaces'
-import { getCandyMachineV2Config, loadCandyProgramV2 } from 'lib/candy-machine/upload/config'
+import {
+    DEFAULT_GATEKEEPER,
+    StorageType,
+    ICandyMachineConfig,
+    getCandyMachineV2Config,
+    loadCandyProgramV2,
+    CANDY_MACHINE_PROGRAM_V2_ID,
+    IFetchedCandyMachineConfig,
+    updateV2,
+    ICache,
+} from '@boxfish-studio/candymachine-client-sdk'
+import { CandyMachineAction } from 'lib/enums'
 import { getCurrentDate, getCurrentTime, parseDateFromDateBN, parseDateToUTC, parseTimeFromDateBN } from 'lib/utils'
 import { FC, useEffect, useState } from 'react'
 import { Button, Spinner, StyledOcticon, Text } from '@primer/react'
@@ -58,8 +65,8 @@ const UpdateCandyMachine: FC<{
             return false
         }
         let cacheData = await cache.text()
-        let cacheDataJson = JSON.parse(cacheData)
-        if (cacheDataJson.candyMachine !== candyMachineAccount) {
+        let cacheDataJson = JSON.parse(cacheData) as ICache
+        if (cacheDataJson.program.candyMachine !== candyMachineAccount) {
             addCandyMachineNotificationError(CandyMachineAction.Update, 'The cache file is not from this candy machine')
             return false
         }

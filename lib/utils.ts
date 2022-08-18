@@ -1,5 +1,5 @@
 import { BN } from '@project-serum/anchor'
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/mint/constants'
+import { CANDY_MACHINE_PROGRAM_V2_ID } from '@boxfish-studio/candymachine-client-sdk'
 import { Connection, PublicKey } from '@solana/web3.js'
 
 /**

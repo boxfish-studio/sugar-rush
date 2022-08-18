@@ -3,8 +3,7 @@ import { AnchorProvider, Program, BN } from '@project-serum/anchor'
 import { useRPC } from 'hooks'
 import { PublicKey, LAMPORTS_PER_SOL, Connection } from '@solana/web3.js'
 import { useState } from 'react'
-import { CANDY_MACHINE_PROGRAM_V2_ID } from 'lib/candy-machine/mint/constants'
-import { CandyMachineAccount } from 'lib/candy-machine/interfaces'
+import { CANDY_MACHINE_PROGRAM_V2_ID, CandyMachineAccount } from '@boxfish-studio/candymachine-client-sdk'
 
 const useRefreshCandyMachine = (account: string) => {
     const anchorWallet = useAnchorWallet()

@@ -9,7 +9,7 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { Button, Spinner } from '@primer/react'
-import { CandyMachineAction } from 'lib/candy-machine/enums'
+import { CandyMachineAction } from 'lib/enums'
 
 const ManageCandyMachines: NextPage = () => {
     const { connection } = useRPC()

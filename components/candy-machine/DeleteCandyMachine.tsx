@@ -4,7 +4,7 @@ import { Button, Spinner, Text } from '@primer/react'
 import { useRemoveCandyMachineAccount, useNotification } from 'hooks'
 import { useRouter } from 'next/router'
 import { NotificationType } from 'lib/interfaces'
-import { CandyMachineAction } from 'lib/candy-machine/enums'
+import { CandyMachineAction } from 'lib/enums'
 
 const DeleteCandyMachine: FC<{
     candyMachineAccount: string

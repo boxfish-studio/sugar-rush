@@ -2,8 +2,12 @@ import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { ICache, saveCache } from 'lib/cache'
-import { CANDY_MACHINE_PROGRAM_V2_ID, CONFIG_ARRAY_START_V2, CONFIG_LINE_SIZE_V2 } from 'lib/candy-machine/constants'
-import { Account } from 'lib/candy-machine/types'
+import {
+    CANDY_MACHINE_PROGRAM_V2_ID,
+    CONFIG_ARRAY_START_V2,
+    CONFIG_LINE_SIZE_V2,
+    Account,
+} from '@boxfish-studio/candymachine-client-sdk'
 import { getTextFromUTF8Array, shardArray } from 'lib/utils'
 import { useState } from 'react'
 import useRPC from './useRPC'
