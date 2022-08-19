@@ -13,7 +13,7 @@ const Navbar: FC = () => {
                 <div className='d-flex flex-items-center flex-justify-start width-full'>
                     <div className='d-flex flex-shrink-0'>
                         <Image src='/logo.png' alt='logo' width={29} height={21} />
-                        <h4 className='ml-2'>Sugar rush</h4>
+                        <h4 className='ml-2'>Sugar Rush</h4>
                     </div>
                     <Breadcrumb />
                 </div>
