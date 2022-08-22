@@ -1,4 +1,4 @@
-name: Deploy to production
+name: CI - Production deploy
 on:
   push:
     branches:
