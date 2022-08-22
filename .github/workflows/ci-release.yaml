@@ -1,0 +1,61 @@
+name: CI - Release
+on:
+  push:
+    tags:
+      - v*
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      # fetch tags
+      - name: Checkout tags
+        run: |
+          if git rev-parse --is-shallow-repository | grep -q 'true'; then
+            git fetch --prune --unshallow --tags -f
+          else
+            git fetch --prune --tags -f
+          fi
+      # if the action is a push, diff with the previous main commit
+      - name: Build changelog
+        id: build_changelog
+        run: |
+          echo "====== build changelog ======"
+          # create changelog file
+          echo "# What's Changed" > CHANGELOG.md
+          # check total app tags and the last commit tag
+          n_tags=`git tag -l 'v*' --sort=-v:refname | wc -l`
+          prev_tag=`git tag -l 'v*' --sort=-v:refname | sed '2q;d'`
+          if [ $n_tags -eq 1 ]; then
+            last_commit=`git rev-list --max-parents=0 HEAD`
+          else
+            last_commit=`git rev-list -n 1 $prev_tag`
+          fi
+          # fill changelog with commit descriptions
+          # set max tries equal to the maximum of commits as protection
+          max_tries=`git rev-list --count HEAD`
+          i=0
+          while [ `git rev-parse HEAD~$i` != $last_commit ] && [ $i -lt $((max_tries-1)) ]
+          do
+            echo '- ' `git show -s --format=%s HEAD~$i` >> CHANGELOG.md
+            i=$((i+1))
+          done
+          # set full changelog url
+          echo >> CHANGELOG.md
+          compare=""
+          if [ $n_tags -eq 1 ]; then
+            compare=$last_commit
+          else
+            compare=$prev_tag
+          fi
+          compare="${compare}...`git tag -l 'v*' --sort=-v:refname | sed '1q;d'`"
+          echo "**Full Changelog**: https://github.com/boxfish-studio/sugar-rush/compare/${compare}" >> CHANGELOG.md
+      - name: Create Release
+        uses: actions/create-release@v1.1.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Sugar Rush ${{ github.ref }}
+          body_path: CHANGELOG.md
