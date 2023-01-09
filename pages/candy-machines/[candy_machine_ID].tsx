@@ -47,8 +47,8 @@ const CandyMachine: NextPage = () => {
             if (nfts.length === 0) throw new Error('No NFTs found')
             setNftRecoilState(nfts)
             const collectionNftPubkey = (nfts[0]?.collection as ICollectionNft)?.key
-            if (!collectionNftPubkey) throw new Error("Couldn't find collectionNftPubkey")
-            let nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
+            if (!collectionNftPubkey) throw new Error('Could not find collectionNftPubkey')
+            const nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
             if (nftCollectionData?.name !== '') {
                 setCollectionNft(nftCollectionData)
             }
