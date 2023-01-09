@@ -14,7 +14,7 @@ import type { AppProps } from 'next/app'
 import { useMemo } from 'react'
 import { RecoilRoot } from 'recoil'
 import '../styles/globals.scss'
-import { theme, ThemeProvider } from '@primer/react'
+import { theme, ThemeProvider, ThemeProviderProps } from '@primer/react'
 import deepmerge from 'deepmerge'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -34,6 +34,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     const customTheme = deepmerge(theme, {})
 
     return (
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        /* @ts-ignore */
         <ThemeProvider theme={customTheme}>
             <WalletProvider wallets={wallets}>
                 <RecoilRoot>
