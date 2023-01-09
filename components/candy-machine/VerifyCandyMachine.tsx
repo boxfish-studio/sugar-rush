@@ -14,7 +14,7 @@ const VerifyCandyMachine: FC<{
             setIsVerifying(true)
             await verifyCandyMachine({ candyMachineAccount })
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
         setIsVerifying(false)
     }

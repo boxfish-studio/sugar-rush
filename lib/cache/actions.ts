@@ -29,6 +29,7 @@ import { ICache } from './interfaces'
 //   return JSON.parse(fs.readFileSync(path).toString());
 // }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function saveCache(cacheName: string, env: string, cacheContent: ICache) {
     cacheContent.env = env
     cacheContent.cacheName = cacheName

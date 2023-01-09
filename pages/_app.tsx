@@ -17,6 +17,7 @@ import '../styles/globals.scss'
 import { theme, ThemeProvider } from '@primer/react'
 import deepmerge from 'deepmerge'
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function MyApp({ Component, pageProps }: AppProps) {
     const wallets = useMemo(
         () => [

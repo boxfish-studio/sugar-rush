@@ -3,10 +3,12 @@ import { Notification } from 'components'
 import { useNotification } from 'hooks'
 import { INotification, NotificationType } from 'lib/interfaces'
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default function NotificationManager() {
     const { notifications, removeNotification } = useNotification()
 
     const onClose = (notification: INotification) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         removeNotification(notification.id!)
     }
 

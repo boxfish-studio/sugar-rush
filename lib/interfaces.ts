@@ -7,6 +7,7 @@ export interface INavbarElement {
 
 export interface INotification {
     id?: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     icon?: any
     type?: NotificationType
     message?: string
