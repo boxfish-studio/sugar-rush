@@ -34,7 +34,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     const customTheme = deepmerge(theme, {})
 
     return (
-        // @ts-ignore
         <ThemeProvider theme={customTheme}>
             <WalletProvider wallets={wallets}>
                 <RecoilRoot>

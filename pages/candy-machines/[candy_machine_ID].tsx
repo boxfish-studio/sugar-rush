@@ -48,7 +48,7 @@ const CandyMachine: NextPage = () => {
             setNftRecoilState(nfts)
             const collectionNftPubkey = (nfts[0]?.collection as ICollectionNft)?.key
             if (!collectionNftPubkey) throw new Error("Couldn't find collectionNftPubkey")
-            let nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
+            const nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
             if (nftCollectionData?.name !== '') {
                 setCollectionNft(nftCollectionData)
             }
@@ -63,7 +63,9 @@ const CandyMachine: NextPage = () => {
 
     useEffect(() => {
         setError('')
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         refreshCandyMachineState()
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         fetchNfts()
     }, [connection])
 

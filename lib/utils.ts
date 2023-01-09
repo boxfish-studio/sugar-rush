@@ -22,7 +22,7 @@ export function parseDateToUTC(dateTime: string, time: string): string {
 }
 
 export function parseDateFromDateBN(date: BN) {
-    let year = new Date(new BN(date).toNumber() * 1000).getFullYear().toString()
+    const year = new Date(new BN(date).toNumber() * 1000).getFullYear().toString()
     let month = new Date(new BN(date).toNumber() * 1000).getMonth().toString()
     let day = new Date(new BN(date).toNumber() * 1000).getDate().toString()
 
@@ -146,7 +146,7 @@ export const fetchCandyMachineAccounts = async (rpcEndpoint: Connection, publicK
 export function generateRandomId(): string {
     let d = new Date().getTime() // Timestamp
     let d2 = (typeof performance !== 'undefined' && performance.now && performance.now() * 1000) || 0 // Time in microseconds since page-load or 0 if unsupported
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
         let r = Math.random() * 16 // random number between 0 and 16
         if (d > 0) {
             // Use timestamp until depleted

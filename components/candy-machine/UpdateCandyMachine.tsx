@@ -67,8 +67,8 @@ const UpdateCandyMachine: FC<{
             addCandyMachineNotificationError(CandyMachineAction.Update, 'You must upload the cache file')
             return false
         }
-        let cacheData = await cache.text()
-        let cacheDataJson = JSON.parse(cacheData) as ICache
+        const cacheData = await cache.text()
+        const cacheDataJson = JSON.parse(cacheData) as ICache
         if (cacheDataJson.program.candyMachine !== candyMachineAccount) {
             addCandyMachineNotificationError(CandyMachineAction.Update, 'The cache file is not from this candy machine')
             return false
@@ -152,13 +152,11 @@ const UpdateCandyMachine: FC<{
                     price,
                     whitelistMintSettings,
                     hiddenSettings,
-                    creators: candyMachineObj.data.creators.map((creator: any) => {
-                        return {
-                            address: new PublicKey(creator.address),
-                            verified: true,
-                            share: creator.share,
-                        }
-                    }),
+                    creators: candyMachineObj.data.creators.map((creator: any) => ({
+                        address: new PublicKey(creator.address),
+                        verified: true,
+                        share: creator.share,
+                    })),
                 }
 
                 await updateV2({
@@ -211,7 +209,9 @@ const UpdateCandyMachine: FC<{
     useEffect(() => {
         setError('')
         setIsLoading(false)
-        fetchCandyMachine().then(setCandyMachineConfig)
+        fetchCandyMachine()
+            .then(setCandyMachineConfig)
+            .catch((err) => setError((err as Error)?.message))
         setIsLoading(false)
     }, [connection])
 
@@ -399,28 +399,26 @@ const FormInput: FC<Input> = ({
     value,
     required,
     onChange,
-}) => {
-    return (
-        <div className={`d-flex ${type === 'checkbox' ? 'flex-row mt-3' : 'flex-column mt-0'}`}>
-            <label htmlFor={id} className={`${type === 'checkbox' ? 'my-0' : 'mt-3 mb-2'}`}>
-                {text}
-            </label>
-            <input
-                style={{ border: '1px solid #1b1f2426' }}
-                className={`w-full p-2 rounded-2 color-bg-inset ${type === 'checkbox' ? 'ml-2' : 'ml-0'}`}
-                id={id}
-                type={type}
-                step='any'
-                name={id}
-                defaultValue={defaultValue}
-                defaultChecked={defaultChecked}
-                value={value}
-                required={required}
-                onChange={onChange}
-                placeholder={placeholder}
-            />
-        </div>
-    )
-}
+}) => (
+    <div className={`d-flex ${type === 'checkbox' ? 'flex-row mt-3' : 'flex-column mt-0'}`}>
+        <label htmlFor={id} className={`${type === 'checkbox' ? 'my-0' : 'mt-3 mb-2'}`}>
+            {text}
+        </label>
+        <input
+            style={{ border: '1px solid #1b1f2426' }}
+            className={`w-full p-2 rounded-2 color-bg-inset ${type === 'checkbox' ? 'ml-2' : 'ml-0'}`}
+            id={id}
+            type={type}
+            step='any'
+            name={id}
+            defaultValue={defaultValue}
+            defaultChecked={defaultChecked}
+            value={value}
+            required={required}
+            onChange={onChange}
+            placeholder={placeholder}
+        />
+    </div>
+)
 
 export default UpdateCandyMachine
