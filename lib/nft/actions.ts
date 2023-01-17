@@ -38,7 +38,7 @@ export async function getAllNftsByCM(candyMachineAccount: string | string[], con
             )) ?? []
         return nfts
     } catch (error) {
-        console.log(error)
+        console.error(error)
         throw new Error('Error to fetch data. Reload to try again!')
     }
 }

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable no-alert */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { FC, useEffect, useState } from 'react'
 import { Text } from '@primer/react'
 import { Nft } from 'lib/nft/interfaces'
@@ -28,6 +31,7 @@ const PreviewNFTs: FC<{
         if (!cacheDataJson.items) {
             alert('NFTs Preview not available in cache file')
         } else if (cacheDataJson?.program?.candyMachine === candyMachineAccount) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const nfts = Object.values(cacheDataJson.items).map((nft: any) => {
                 return {
                     image: nft.imageLink,

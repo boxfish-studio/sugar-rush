@@ -25,7 +25,7 @@ const NetworkSelector: FC = () => {
 
     const detailsRef = useRef<HTMLDetailsElement>(null)
     function hideUl() {
-        detailsRef.current!.removeAttribute('open')
+        detailsRef.current?.removeAttribute('open')
     }
 
     useEffect(() => {

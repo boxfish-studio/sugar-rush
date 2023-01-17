@@ -136,7 +136,7 @@ const CreateCandyMachine: FC = () => {
             } = await getCandyMachineV2Config(publicKey, config, anchorProgram)
 
             const startMilliseconds = Date.now()
-            console.log('started at: ' + startMilliseconds.toString())
+            console.error('started at: ' + startMilliseconds.toString())
             try {
                 const _candyMachine = await uploadV2({
                     files: supportedFiles,
@@ -180,7 +180,7 @@ const CreateCandyMachine: FC = () => {
                 addCandyMachineNotificationError(CandyMachineAction.Create, (err as Error)?.message)
             }
             const endMilliseconds = Date.now()
-            console.log(endMilliseconds.toString())
+            console.error(endMilliseconds.toString())
 
             setIsInteractingWithCM(false)
         }
@@ -198,6 +198,7 @@ const CreateCandyMachine: FC = () => {
     }, [])
 
     return (
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         <form onSubmit={onSubmit} noValidate>
             <div className='d-flex flex-column flex-justify-between'>
                 <Box

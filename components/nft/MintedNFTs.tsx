@@ -11,7 +11,7 @@ const MintedNFTs: FC<{
     candyMachineAccount: string
     isLoading: boolean
 }> = ({ candyMachineAccount, isLoading }) => {
-    const { isUserMinting, itemsRemaining, mintAccount, isCaptcha } = useMintCandyMachine(candyMachineAccount as string)
+    const { isUserMinting, itemsRemaining, mintAccount, isCaptcha } = useMintCandyMachine(candyMachineAccount)
     const nfts = useRecoilValue(nftsState)
 
     if (isLoading) {
@@ -49,6 +49,7 @@ const MintedNFTs: FC<{
                                 isLoading: isUserMinting,
                                 as: 'button',
                                 variant: 'primary',
+                                // eslint-disable-next-line @typescript-eslint/no-misused-promises
                                 onClick: () => mintAccount(),
                             },
                         ]}

@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useWallet } from '@solana/wallet-adapter-react'
 import { CandyMachineList, CreateCandyMachine, Popup, SearchBar, RefreshButton } from 'components'
 import { useNotification, useRPC } from 'hooks'
@@ -31,6 +31,7 @@ const ManageCandyMachines: NextPage = () => {
         if (!connection) return
         setIsRefreshLoading(true)
         try {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const accounts = await fetchCandyMachineAccounts(connection, publicKey!)
             setAccounts(accounts)
         } catch (err) {
@@ -44,7 +45,7 @@ const ManageCandyMachines: NextPage = () => {
         if (!connection) return
         setIsLoading(true)
         fetchAccounts()
-            .catch((e: any) => addCandyMachineNotificationError(CandyMachineAction.Fetch, (e as Error)?.message))
+            .catch((e: unknown) => addCandyMachineNotificationError(CandyMachineAction.Fetch, (e as Error)?.message))
             .finally(() => {
                 setIsLoading(false)
             })

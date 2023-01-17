@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { AnchorProvider, Program } from '@project-serum/anchor'
 import { AnchorWallet, useAnchorWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey, TransactionInstruction, Connection } from '@solana/web3.js'

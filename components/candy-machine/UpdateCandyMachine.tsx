@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
@@ -190,6 +193,7 @@ const UpdateCandyMachine: FC<{
 
                 const idl = await Program.fetchIdl(CANDY_MACHINE_PROGRAM_V2_ID, provider)
 
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const program = new Program(idl!, CANDY_MACHINE_PROGRAM_V2_ID, provider)
 
                 const state: any = await program.account.candyMachine.fetch(new PublicKey(candyMachineAccount))
