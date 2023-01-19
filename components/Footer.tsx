@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { FC } from 'react'
-import { version } from '../version.json'
+import version from '../version.json'
 
 const Footer: FC = () => (
     <footer
@@ -15,7 +15,7 @@ const Footer: FC = () => (
                     className='color-fg-on-emphasis text-underline'
                     style={{ cursor: 'pointer' }}
                 >
-                    Sugar Rush {version}
+                    Sugar Rush {version.version}
                 </a>
             </Link>
             <span className='mr-1'> - by</span>
