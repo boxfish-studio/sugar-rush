@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useRecoilState } from 'recoil'
 import { networkState } from 'lib/recoil-store/atoms'
 

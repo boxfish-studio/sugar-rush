@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useEffect, useRef, useState } from 'react'
 
 const useSearchBar = (initialState: string[]) => {
@@ -8,9 +9,7 @@ const useSearchBar = (initialState: string[]) => {
 
     useEffect(() => {
         if (searchRef.current) {
-            const results = initialState.filter((account) => {
-                return account.toLowerCase().includes(search.toLowerCase())
-            })
+            const results = initialState.filter((account) => account.toLowerCase().includes(search.toLowerCase()))
             setSearchResults(results)
         }
     }, [search, initialState])

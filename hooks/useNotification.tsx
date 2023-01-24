@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { INotification, NotificationType } from 'lib/interfaces'
 import { notificationState } from 'lib/recoil-store/atoms'
 import { generateRandomId } from 'lib/utils'
