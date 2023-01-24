@@ -62,23 +62,21 @@ const MintedNFTs: FC<{
                     <FilterArrayContext.Consumer>
                         {([mintedArray]) => (
                             <div className='nfts-grid'>
-                                {mintedArray?.map(({ name, image, mint }) => {
-                                    return (
-                                        <NftCard
-                                            title={name}
-                                            imageLink={image}
-                                            key={mint?.toBase58()}
-                                            buttons={[
-                                                {
-                                                    text: 'View in Solscan',
-                                                    as: 'link',
-                                                    variant: 'invisible',
-                                                    hash: mint?.toBase58(),
-                                                },
-                                            ]}
-                                        />
-                                    )
-                                })}
+                                {mintedArray?.map(({ name, image, mint }) => (
+                                    <NftCard
+                                        title={name}
+                                        imageLink={image}
+                                        key={mint?.toBase58()}
+                                        buttons={[
+                                            {
+                                                text: 'View in Solscan',
+                                                as: 'link',
+                                                variant: 'invisible',
+                                                hash: mint?.toBase58(),
+                                            },
+                                        ]}
+                                    />
+                                ))}
                             </div>
                         )}
                     </FilterArrayContext.Consumer>

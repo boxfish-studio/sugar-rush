@@ -28,16 +28,14 @@ export default function NotificationManager() {
 
     return (
         <div className='notifications'>
-            {notifications?.map((notification) => {
-                return (
-                    <Notification
-                        key={`notification-${notification.id}`}
-                        {...notification}
-                        icon={getNotificationIcon(notification?.type)}
-                        onClose={() => onClose(notification)}
-                    />
-                )
-            })}
+            {notifications?.map((notification) => (
+                <Notification
+                    key={`notification-${notification.id}`}
+                    {...notification}
+                    icon={getNotificationIcon(notification?.type)}
+                    onClose={() => onClose(notification)}
+                />
+            ))}
         </div>
     )
 }

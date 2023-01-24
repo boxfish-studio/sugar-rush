@@ -23,9 +23,7 @@ const ManageCandyMachines: NextPage = () => {
     const [searchValue, setSearchValue] = useRecoilState(candyMachineSearchState)
     const searchInput = useRecoilValue(candyMachineSearchState)
 
-    const searchResults = accounts.filter((account) => {
-        return account.toLowerCase().includes(searchInput.trim().toLowerCase())
-    })
+    const searchResults = accounts.filter((account) => account.toLowerCase().includes(searchInput.trim().toLowerCase()))
 
     const fetchAccounts = async () => {
         if (!connection) return
