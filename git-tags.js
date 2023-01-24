@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const gittags = require('git-tags');
 const fs = require('fs');
 gittags.get((err, tags) => {
