@@ -66,7 +66,6 @@ const DeleteCandyMachine: FC<{
                     <Button
                         className={`width-full ${status.message ? 'mt-3' : 'mt-5'}`}
                         variant='danger'
-                        state='rest'
                         size='medium'
                         onClick={() => deleteCM()}
                     >
@@ -77,7 +76,6 @@ const DeleteCandyMachine: FC<{
                     <Button
                         className='width-full mt-3'
                         variant='outline'
-                        state='rest'
                         size='medium'
                         onClick={() => router.push('/candy-machines')}
                     >
@@ -86,7 +84,7 @@ const DeleteCandyMachine: FC<{
                 )}
                 {isDeleting && (
                     <>
-                        <Button size='medium' className='width-full mt-4' isLoading disabled>
+                        <Button size='medium' className='width-full mt-4' disabled>
                             Deleting Candy Machine... <Spinner size='small' />
                         </Button>
                     </>

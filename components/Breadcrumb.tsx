@@ -12,9 +12,7 @@ const Breadcrumb: FC = () => {
 
     useEffect(() => {
         if (router) {
-            const isCM = (path: string): boolean => {
-                return router.query.candy_machine_ID === path
-            }
+            const isCM = (path: string): boolean => router.query.candy_machine_ID === path
             const linkPath = router.asPath.split('/')
             linkPath.shift()
             const pathArray = linkPath?.map((path, i) => ({
@@ -31,8 +29,7 @@ const Breadcrumb: FC = () => {
     return (
         <>
             <Breadcrumbs className='d-none d-md-flex flex-row ml-3'>
-                {breadcrumbs.map((element) => {
-                    return (
+                {breadcrumbs.map((element) => (
                         <Link href={element.url} key={element.title}>
                             <Breadcrumbs.Item
                                 className={`${router.asPath === element.url ? 'text-bold' : ''} color-fg-on-emphasis`}
@@ -41,8 +38,7 @@ const Breadcrumb: FC = () => {
                                 {element.title}
                             </Breadcrumbs.Item>
                         </Link>
-                    )
-                })}
+                    ))}
             </Breadcrumbs>
             <div className='d-md-none'>
                 <div
@@ -70,9 +66,11 @@ const Breadcrumb: FC = () => {
                     transformOrigin: 'top',
                 }}
                 sx={{ height: '100vh' }}
+                nonce={undefined}
+                onResize={undefined}
+                onResizeCapture={undefined}
             >
-                {breadcrumbs.map((element) => {
-                    return (
+                {breadcrumbs.map((element) => (
                         <Link href={element.url} key={element.title}>
                             <NavList.Item
                                 onClick={() => setOpen(!open)}
@@ -81,8 +79,7 @@ const Breadcrumb: FC = () => {
                                 {element.title}
                             </NavList.Item>
                         </Link>
-                    )
-                })}
+                    ))}
             </NavList>
         </>
     )
