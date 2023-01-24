@@ -209,7 +209,9 @@ const UpdateCandyMachine: FC<{
     useEffect(() => {
         setError('')
         setIsLoading(false)
-        fetchCandyMachine().then(setCandyMachineConfig)
+        fetchCandyMachine()
+            .then(setCandyMachineConfig)
+            .catch((err) => setError((err as Error)?.message))
         setIsLoading(false)
     }, [connection])
 

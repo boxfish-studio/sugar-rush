@@ -63,7 +63,9 @@ const CandyMachine: NextPage = () => {
 
     useEffect(() => {
         setError('')
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         refreshCandyMachineState()
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         fetchNfts()
     }, [connection])
 
