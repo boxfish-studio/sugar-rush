@@ -66,7 +66,6 @@ const Breadcrumb: FC = () => {
                     transformOrigin: 'top',
                 }}
                 sx={{ height: '100vh' }}
-                nonce={undefined}
                 onResize={undefined}
                 onResizeCapture={undefined}
             >
