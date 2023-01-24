@@ -10,6 +10,7 @@ const Notification: FC<INotification> = ({ type, message, onClose, icon, timeout
 
     useEffect(() => {
         if (timeout !== NOTIFICATION_TIMEOUT_NEVER) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const destroyTimeout = setTimeout(() => removeNotification(id!), timeout)
             return () => clearTimeout(destroyTimeout)
         }

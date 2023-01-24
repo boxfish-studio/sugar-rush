@@ -11,7 +11,7 @@ const MintedNFTs: FC<{
     candyMachineAccount: string
     isLoading: boolean
 }> = ({ candyMachineAccount, isLoading }) => {
-    const { isUserMinting, itemsRemaining, mintAccount, isCaptcha } = useMintCandyMachine(candyMachineAccount as string)
+    const { isUserMinting, itemsRemaining, mintAccount, isCaptcha } = useMintCandyMachine(candyMachineAccount)
     const nfts = useRecoilValue(nftsState)
 
     if (isLoading) {
@@ -49,6 +49,7 @@ const MintedNFTs: FC<{
                                 isLoading: isUserMinting,
                                 as: 'button',
                                 variant: 'primary',
+                                // eslint-disable-next-line @typescript-eslint/no-misused-promises
                                 onClick: () => mintAccount(),
                             },
                         ]}
@@ -61,8 +62,7 @@ const MintedNFTs: FC<{
                     <FilterArrayContext.Consumer>
                         {([mintedArray]) => (
                             <div className='nfts-grid'>
-                                {mintedArray?.map(({ name, image, mint }) => {
-                                    return (
+                                {mintedArray?.map(({ name, image, mint }) => (
                                         <NftCard
                                             title={name}
                                             imageLink={image}
@@ -76,8 +76,7 @@ const MintedNFTs: FC<{
                                                 },
                                             ]}
                                         />
-                                    )
-                                })}
+                                    ))}
                             </div>
                         )}
                     </FilterArrayContext.Consumer>

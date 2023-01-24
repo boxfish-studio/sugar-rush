@@ -5,7 +5,7 @@ import { XCircleIcon } from '@primer/octicons-react'
 type Size = 'small' | 'large'
 
 const Popup: FC<{
-    children: any
+    children: React.ReactNode
     title: string
     onClose: () => void
     size: Size

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button, Link, Text } from '@primer/react'
 import { getAllNftsByCM, getNftByMint } from 'lib/nft/actions'
 import { Nft } from 'lib/nft/interfaces'
@@ -29,9 +30,8 @@ const CandyMachine: NextPage = () => {
     const { connection, isDevnet } = useRPC()
     const [error, setError] = useState('')
     const [isLoadingNfts, setIsLoadingNfts] = useState(false)
-    const { itemsRemaining, refreshCandyMachineState, setIsCaptcha, itemsAvailable } = useRefreshCandyMachine(
-        candyMachineAccount as string
-    )
+    const { itemsRemaining, refreshCandyMachineState, setIsCaptcha, itemsAvailable } =
+        useRefreshCandyMachine(candyMachineAccount)
     const [collectionNft, setCollectionNft] = useState<Nft | null>(null)
     const [nftRecoilState, setNftRecoilState] = useRecoilState(nftsState)
     const [isDeleteOpen, setIsDeleteOpen] = useState(false)
@@ -47,8 +47,8 @@ const CandyMachine: NextPage = () => {
             if (nfts.length === 0) throw new Error('No NFTs found')
             setNftRecoilState(nfts)
             const collectionNftPubkey = (nfts[0]?.collection as ICollectionNft)?.key
-            if (!collectionNftPubkey) throw new Error("Couldn't find collectionNftPubkey")
-            let nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
+            if (!collectionNftPubkey) throw new Error('Could not find collectionNftPubkey')
+            const nftCollectionData = await getNftByMint(collectionNftPubkey, connection)
             if (nftCollectionData?.name !== '') {
                 setCollectionNft(nftCollectionData)
             }
@@ -135,12 +135,12 @@ const CandyMachine: NextPage = () => {
             </div>
             {isDeleteOpen && (
                 <Popup onClose={() => setIsDeleteOpen(false)} title='Delete Candy Machine' size='small'>
-                    <DeleteCandyMachine candyMachineAccount={candyMachineAccount as string} />
+                    <DeleteCandyMachine candyMachineAccount={candyMachineAccount} />
                 </Popup>
             )}
             {isVerifyOpen && (
                 <Popup onClose={() => setIsVerifyOpen(false)} title='Verify Candy Machine' size='small'>
-                    <VerifyCandyMachine candyMachineAccount={candyMachineAccount as string} />
+                    <VerifyCandyMachine candyMachineAccount={candyMachineAccount} />
                 </Popup>
             )}
         </>

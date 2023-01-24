@@ -10,11 +10,11 @@ export type Manifest = {
     symbol: string
     seller_fee_basis_points: number
     properties: {
-        files: Array<{ type: string; uri: string }>
-        creators: Array<{
+        files: { type: string; uri: string }[]
+        creators: {
             address: string
             share: number
-        }>
+        }[]
     }
 }
 

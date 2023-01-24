@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { ExplorerLinks } from 'components'
 import { FC, useState } from 'react'
 import { Button, Spinner, Text } from '@primer/react'
@@ -23,11 +24,11 @@ const DeleteCandyMachine: FC<{
             const result = await removeAccount(candyMachineAccount)
             result && setTransaction(result.txid)
             addNotification({
-                message: `Candy Machine deleted successfully!`,
+                message: 'Candy Machine deleted successfully!',
                 type: NotificationType.Success,
             })
         } catch (error) {
-            console.log(error)
+            console.error(error)
             addCandyMachineNotificationError(CandyMachineAction.Delete, (error as Error)?.message)
         }
         setIsDeleting(false)

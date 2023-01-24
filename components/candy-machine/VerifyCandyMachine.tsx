@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { FC, useEffect, useState } from 'react'
 import { Button, Spinner } from '@primer/react'
 import { useUploadCache, useVerifyCandyMachineV2 } from 'hooks'
@@ -14,7 +15,7 @@ const VerifyCandyMachine: FC<{
             setIsVerifying(true)
             await verifyCandyMachine({ candyMachineAccount })
         } catch (error) {
-            console.log(error)
+            console.error(error)
         }
         setIsVerifying(false)
     }

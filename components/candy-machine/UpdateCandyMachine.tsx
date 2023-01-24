@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js'
@@ -64,8 +67,8 @@ const UpdateCandyMachine: FC<{
             addCandyMachineNotificationError(CandyMachineAction.Update, 'You must upload the cache file')
             return false
         }
-        let cacheData = await cache.text()
-        let cacheDataJson = JSON.parse(cacheData) as ICache
+        const cacheData = await cache.text()
+        const cacheDataJson = JSON.parse(cacheData) as ICache
         if (cacheDataJson.program.candyMachine !== candyMachineAccount) {
             addCandyMachineNotificationError(CandyMachineAction.Update, 'The cache file is not from this candy machine')
             return false
@@ -149,13 +152,11 @@ const UpdateCandyMachine: FC<{
                     price,
                     whitelistMintSettings,
                     hiddenSettings,
-                    creators: candyMachineObj.data.creators.map((creator: any) => {
-                        return {
+                    creators: candyMachineObj.data.creators.map((creator: any) => ({
                             address: new PublicKey(creator.address),
                             verified: true,
                             share: creator.share,
-                        }
-                    }),
+                        })),
                 }
 
                 await updateV2({
@@ -190,6 +191,7 @@ const UpdateCandyMachine: FC<{
 
                 const idl = await Program.fetchIdl(CANDY_MACHINE_PROGRAM_V2_ID, provider)
 
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const program = new Program(idl!, CANDY_MACHINE_PROGRAM_V2_ID, provider)
 
                 const state: any = await program.account.candyMachine.fetch(new PublicKey(candyMachineAccount))
@@ -395,8 +397,7 @@ const FormInput: FC<Input> = ({
     value,
     required,
     onChange,
-}) => {
-    return (
+}) => (
         <div className={`d-flex ${type === 'checkbox' ? 'flex-row mt-3' : 'flex-column mt-0'}`}>
             <label htmlFor={id} className={`${type === 'checkbox' ? 'my-0' : 'mt-3 mb-2'}`}>
                 {text}
@@ -417,6 +418,5 @@ const FormInput: FC<Input> = ({
             />
         </div>
     )
-}
 
 export default UpdateCandyMachine
