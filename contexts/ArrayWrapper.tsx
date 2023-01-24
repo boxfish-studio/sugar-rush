@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FC, ReactNode, useState, createContext, useEffect } from 'react'
 
-type FilterArray = [Array<any>, boolean]
+type FilterArray = [any[], boolean]
 
 export const FilterArrayContext = createContext<FilterArray>([[], false])
 
@@ -9,7 +10,7 @@ enum State {
     ShowLess = 'Show Less',
 }
 
-export const ArrayWrapper: FC<{ array: Array<any>; children: ReactNode; minimum: number }> = ({
+export const ArrayWrapper: FC<{ array: any[]; children: ReactNode; minimum: number }> = ({
     array: originalArray,
     children,
     minimum,

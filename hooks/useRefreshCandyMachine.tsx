@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { AnchorProvider, Program, BN } from '@project-serum/anchor'
 import { useRPC } from 'hooks'
@@ -32,8 +35,8 @@ const useRefreshCandyMachine = (account: string) => {
             const itemsRedeemed = state.itemsRedeemed.toNumber()
             const itemsRemaining = itemsAvailable - itemsRedeemed
             const captcha = !!state.data.gatekeeper
-            let nftPrice = new BN(state.data.price).toNumber() / LAMPORTS_PER_SOL
-            let active = new BN(state.goLiveDate).toNumber() < new Date().getTime() / 1000
+            const nftPrice = new BN(state.data.price).toNumber() / LAMPORTS_PER_SOL
+            const active = new BN(state.goLiveDate).toNumber() < new Date().getTime() / 1000
 
             setItemsRemaining(itemsRemaining)
             setItemsAvailable(itemsAvailable)
