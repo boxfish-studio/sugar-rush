@@ -11,8 +11,8 @@ export async function getAllNftsByCM(candyMachineAccount: string | string[], con
             (await Promise.all(
                 nftsAddresses?.map(async (nft) => {
                     if (nft.uri) {
-                        let fetchData = await fetch(nft.uri)
-                        let nftData = await fetchData.json()
+                        const fetchData = await fetch(nft.uri)
+                        const nftData = await fetchData.json()
                         return {
                             name: nftData.name,
                             image: nftData.image,
@@ -38,7 +38,7 @@ export async function getAllNftsByCM(candyMachineAccount: string | string[], con
             )) ?? []
         return nfts
     } catch (error) {
-        console.log(error)
+        console.error(error)
         throw new Error('Error to fetch data. Reload to try again!')
     }
 }
@@ -49,8 +49,8 @@ export async function getNftByMint(mintAccount: PublicKey, connection: Connectio
     const metaplex = new Metaplex(connection)
     const nftAddress = await metaplex.nfts().findByMint(mintAccount)
 
-    let fetchData = await fetch(nftAddress?.uri)
-    let nftData = await fetchData.json()
+    const fetchData = await fetch(nftAddress?.uri)
+    const nftData = await fetchData.json()
     if (nftData) {
         nft = {
             name: nftData.name,

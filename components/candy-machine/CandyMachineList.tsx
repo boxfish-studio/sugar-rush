@@ -3,16 +3,14 @@ import { FC } from 'react'
 
 const CandyMachineList: FC<{
     candyMachineAccounts: string[]
-}> = ({ candyMachineAccounts }) => {
-    return (
-        <>
-            <div style={{ display: 'grid', gridRowGap: '16px' }}>
-                {candyMachineAccounts?.map((account) => (
-                    <CandyMachineTile key={account} account={account} />
-                ))}
-            </div>
-        </>
-    )
-}
+}> = ({ candyMachineAccounts }) => (
+    <>
+        <div style={{ display: 'grid', gridRowGap: '16px' }}>
+            {candyMachineAccounts?.map((account) => (
+                <CandyMachineTile key={account} account={account} />
+            ))}
+        </div>
+    </>
+)
 
 export default CandyMachineList

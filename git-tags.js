@@ -6,6 +6,6 @@ gitSemverTags(function (err, tags) {
   const obj = {
     version: tags[0],
   };
-  fs.writeFileSync("version.json", JSON.stringify(obj), "utf8");
+  fs.writeFileSync('version.json', JSON.stringify(obj), 'utf8');
   console.log(tags);
 });

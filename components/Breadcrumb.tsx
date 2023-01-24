@@ -12,9 +12,7 @@ const Breadcrumb: FC = () => {
 
     useEffect(() => {
         if (router) {
-            const isCM = (path: string): boolean => {
-                return router.query.candy_machine_ID === path
-            }
+            const isCM = (path: string): boolean => router.query.candy_machine_ID === path
             const linkPath = router.asPath.split('/')
             linkPath.shift()
             const pathArray = linkPath?.map((path, i) => ({
@@ -31,18 +29,16 @@ const Breadcrumb: FC = () => {
     return (
         <>
             <Breadcrumbs className='d-none d-md-flex flex-row ml-3'>
-                {breadcrumbs.map((element) => {
-                    return (
-                        <Link href={element.url} key={element.title}>
-                            <Breadcrumbs.Item
-                                className={`${router.asPath === element.url ? 'text-bold' : ''} color-fg-on-emphasis`}
-                                style={{ cursor: 'pointer' }}
-                            >
-                                {element.title}
-                            </Breadcrumbs.Item>
-                        </Link>
-                    )
-                })}
+                {breadcrumbs.map((element) => (
+                    <Link href={element.url} key={element.title}>
+                        <Breadcrumbs.Item
+                            className={`${router.asPath === element.url ? 'text-bold' : ''} color-fg-on-emphasis`}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            {element.title}
+                        </Breadcrumbs.Item>
+                    </Link>
+                ))}
             </Breadcrumbs>
             <div className='d-md-none'>
                 <div
@@ -71,18 +67,16 @@ const Breadcrumb: FC = () => {
                 }}
                 sx={{ height: '100vh' }}
             >
-                {breadcrumbs.map((element) => {
-                    return (
-                        <Link href={element.url} key={element.title}>
-                            <NavList.Item
-                                onClick={() => setOpen(!open)}
-                                className={`${router.asPath === element.url ? 'text-bold' : ''} color-fg-on-emphasis`}
-                            >
-                                {element.title}
-                            </NavList.Item>
-                        </Link>
-                    )
-                })}
+                {breadcrumbs.map((element) => (
+                    <Link href={element.url} key={element.title}>
+                        <NavList.Item
+                            onClick={() => setOpen(!open)}
+                            className={`${router.asPath === element.url ? 'text-bold' : ''} color-fg-on-emphasis`}
+                        >
+                            {element.title}
+                        </NavList.Item>
+                    </Link>
+                ))}
             </NavList>
         </>
     )

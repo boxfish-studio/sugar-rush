@@ -54,7 +54,7 @@ const CreateCandyMachine: FC = () => {
             addCandyMachineNotificationError(CandyMachineAction.Create, 'Does not match the number of nfts')
             return false
         }
-        let isZeroJsonFile: boolean = files.filter((e) => e.name === '0.json').length === 0 ? false : true
+        const isZeroJsonFile: boolean = files.filter((e) => e.name === '0.json').length === 0 ? false : true
         if (!isZeroJsonFile) {
             addCandyMachineNotificationError(CandyMachineAction.Create, 'The 0.json file must exist in Files')
             return false
@@ -136,7 +136,7 @@ const CreateCandyMachine: FC = () => {
             } = await getCandyMachineV2Config(publicKey, config, anchorProgram)
 
             const startMilliseconds = Date.now()
-            console.log('started at: ' + startMilliseconds.toString())
+            console.error('started at: ' + startMilliseconds.toString())
             try {
                 const _candyMachine = await uploadV2({
                     files: supportedFiles,
@@ -180,7 +180,7 @@ const CreateCandyMachine: FC = () => {
                 addCandyMachineNotificationError(CandyMachineAction.Create, (err as Error)?.message)
             }
             const endMilliseconds = Date.now()
-            console.log(endMilliseconds.toString())
+            console.error(endMilliseconds.toString())
 
             setIsInteractingWithCM(false)
         }
@@ -198,6 +198,7 @@ const CreateCandyMachine: FC = () => {
     }, [])
 
     return (
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         <form onSubmit={onSubmit} noValidate>
             <div className='d-flex flex-column flex-justify-between'>
                 <Box
@@ -318,27 +319,25 @@ interface Input {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const FormInput: FC<Input> = ({ id, text, type, defaultValue, defaultChecked, value, required, onChange }) => {
-    return (
-        <div className={`d-flex ${type === 'checkbox' ? 'flex-row mt-3' : 'flex-column mt-0'}`}>
-            <label htmlFor={id} className={`${type === 'checkbox' ? 'my-0' : 'mt-3 mb-2'}`}>
-                {text}
-            </label>
-            <input
-                style={{ border: '1px solid #1b1f2426' }}
-                className={`w-full p-2 rounded-2 ${type === 'checkbox' ? 'ml-2' : 'ml-0'}`}
-                id={id}
-                type={type}
-                step='any'
-                name={id}
-                defaultValue={defaultValue}
-                defaultChecked={defaultChecked}
-                value={value}
-                required={required}
-                onChange={onChange}
-            />
-        </div>
-    )
-}
+const FormInput: FC<Input> = ({ id, text, type, defaultValue, defaultChecked, value, required, onChange }) => (
+    <div className={`d-flex ${type === 'checkbox' ? 'flex-row mt-3' : 'flex-column mt-0'}`}>
+        <label htmlFor={id} className={`${type === 'checkbox' ? 'my-0' : 'mt-3 mb-2'}`}>
+            {text}
+        </label>
+        <input
+            style={{ border: '1px solid #1b1f2426' }}
+            className={`w-full p-2 rounded-2 ${type === 'checkbox' ? 'ml-2' : 'ml-0'}`}
+            id={id}
+            type={type}
+            step='any'
+            name={id}
+            defaultValue={defaultValue}
+            defaultChecked={defaultChecked}
+            value={value}
+            required={required}
+            onChange={onChange}
+        />
+    </div>
+)
 
 export default CreateCandyMachine
