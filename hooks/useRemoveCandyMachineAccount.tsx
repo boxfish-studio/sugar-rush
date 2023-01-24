@@ -1,3 +1,5 @@
+/* eslint-disable no-return-await */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { AnchorProvider, Program } from '@project-serum/anchor'
 import { AnchorWallet, useAnchorWallet } from '@solana/wallet-adapter-react'

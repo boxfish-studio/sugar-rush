@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useAnchorWallet, useWallet } from '@solana/wallet-adapter-react'
 import { AnchorProvider } from '@project-serum/anchor'
 import { useRPC, useNotification } from 'hooks'
@@ -38,7 +43,7 @@ const useMintCandyMachine = (account: string) => {
                 preflightCommitment: 'recent',
             })
 
-            let setupMint: SetupState | undefined = await createAccountsForMint(candyMachine, wallet.publicKey)
+            const setupMint: SetupState | undefined = await createAccountsForMint(candyMachine, wallet.publicKey)
 
             let status: any = { err: true }
             if (setupMint?.transaction) {
@@ -58,7 +63,7 @@ const useMintCandyMachine = (account: string) => {
                 return
             }
 
-            let mintResult = await mintOneNft(
+            const mintResult = await mintOneNft(
                 candyMachine,
                 wallet.publicKey,
                 beforeTransactions,
@@ -84,7 +89,7 @@ const useMintCandyMachine = (account: string) => {
             }
 
             if (status && !status.err && metadataStatus && candyMachine) {
-                let remaining = itemsRemaining! - 1
+                const remaining = itemsRemaining! - 1
                 setItemsRemaining(remaining)
                 setIsActive((candyMachine.state.isActive = remaining > 0))
                 candyMachine.state.isSoldOut = remaining === 0

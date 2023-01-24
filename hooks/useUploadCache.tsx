@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable no-alert */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { useState } from 'react'
 
 const useUploadCache = () => {

@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { AnchorProvider, BN, Program } from '@project-serum/anchor'
 import { useAnchorWallet } from '@solana/wallet-adapter-react'
 import { Connection, PublicKey } from '@solana/web3.js'
@@ -76,7 +80,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
                             const cacheItem = cacheContent.items[key]
 
                             if (name !== cacheItem.name || uri !== cacheItem.link) {
-                                ;(errorMessage =
+                                (errorMessage =
                                     `Name (${name}) or uri (${uri}) didnt match cache values of (${cacheItem.name})` +
                                     `and (${cacheItem.link}). marking to rerun for image ${key}`),
                                     (cacheItem.onChain = false)
@@ -89,7 +93,7 @@ const useVerifyCandyMachineV2 = (cache: File) => {
                 )
 
                 if (!isGood) {
-                    throw new Error(`Not all NFTs checked out. Check out logs below for details`)
+                    throw new Error('Not all NFTs checked out. Check out logs below for details')
                 }
 
                 const lineCount = new BN(
