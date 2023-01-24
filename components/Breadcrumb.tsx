@@ -66,8 +66,6 @@ const Breadcrumb: FC = () => {
                     transformOrigin: 'top',
                 }}
                 sx={{ height: '100vh' }}
-                onResize={undefined}
-                onResizeCapture={undefined}
             >
                 {breadcrumbs.map((element) => (
                     <Link href={element.url} key={element.title}>
