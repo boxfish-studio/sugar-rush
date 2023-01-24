@@ -8,6 +8,7 @@ specifiers:
   '@next/eslint-plugin-next': ^13.1.5
   '@primer/components': ^33.1.0
   '@primer/css': ^20.8.0
+  '@primer/octicons-react': ^17.10.2
   '@primer/react': ^35.17.00
   '@project-serum/anchor': ^0.26.0
   '@solana/spl-token': ^0.3.7
@@ -21,9 +22,12 @@ specifiers:
   '@types/node': 18.11.18
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
+  '@types/styled-components': ^5.1.26
   '@typescript-eslint/eslint-plugin': ^5.49.0
   add: ^2.0.6
   autoprefixer: ^10.4.13
+  babel-plugin-styled-components: ^2.0.7
+  deepmerge: ^4.2.2
   eslint: 8.32.0
   eslint-config-next: 13.1.5
   git-tags: ^0.2.4
@@ -32,6 +36,7 @@ specifiers:
   lint-staged: '>=13.1.0'
   mime: ^3.0.0
   next: 13.1.5
+  octicons-react: link:@types/@primer/octicons-react
   postcss: ^8.4.21
   prettier: 2.8.3
   react: ^18.2.0
@@ -50,6 +55,7 @@ dependencies:
   '@next/eslint-plugin-next': 13.1.5
   '@primer/components': 33.1.0_2zpt4ilzykmne4yndyzrqd4gdm
   '@primer/css': 20.8.0
+  '@primer/octicons-react': 17.10.2_react@18.2.0
   '@primer/react': 35.17.0_2zpt4ilzykmne4yndyzrqd4gdm
   '@project-serum/anchor': 0.26.0
   '@solana/spl-token': 0.3.7_@solana+web3.js@1.73.0
@@ -62,6 +68,8 @@ dependencies:
   '@typescript-eslint/eslint-plugin': 5.49.0_7uibuqfxkfaozanbtbziikiqje
   add: 2.0.6
   autoprefixer: 10.4.13_postcss@8.4.21
+  babel-plugin-styled-components: 2.0.7_styled-components@5.3.6
+  deepmerge: 4.2.2
   js-file-download: 0.4.12
   mime: 3.0.0
   next: 13.1.5_23e7ztf2chqi3ri6onem3l5mii
@@ -78,11 +86,13 @@ devDependencies:
   '@types/node': 18.11.18
   '@types/react': 18.0.27
   '@types/react-dom': 18.0.10
+  '@types/styled-components': 5.1.26
   eslint: 8.32.0
   eslint-config-next: 13.1.5_7uibuqfxkfaozanbtbziikiqje
   git-tags: 0.2.4
   husky: 8.0.3
   lint-staged: 13.1.0
+  octicons-react: link:@types/@primer/octicons-react
   prettier: 2.8.3
   typescript: 4.9.4
 
@@ -2921,7 +2931,6 @@ packages:
     dependencies:
       '@types/react': 18.0.27
       hoist-non-react-statics: 3.3.2
-    dev: false
 
   /@types/json-schema/7.0.11:
     resolution: {integrity: sha512-wOuvG1SN4Us4rez+tylwwwCV1psiNVOkJeM3AUWUNWg/jDQY2+HE/444y5gc+jBmRqASOm2Oeh5c1axHobwRKQ==}
@@ -2995,7 +3004,6 @@ packages:
       '@types/hoist-non-react-statics': 3.3.1
       '@types/react': 18.0.27
       csstype: 3.1.1
-    dev: false
 
   /@types/styled-system/5.1.12:
     resolution: {integrity: sha512-7x4BYKKfK9QewfsFC2x5r9BK/OrfX+JF/1P21jKPMHruawDw9gvG7bTZgTVk6YkzDO2JUlsk4i8hdiAepAhD0g==}
@@ -5637,7 +5645,6 @@ packages:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
     dependencies:
       react-is: 16.13.1
-    dev: false
 
   /http-errors/1.8.1:
     resolution: {integrity: sha512-Kpk9Sm7NmI+RHhnj6OIWDI1d6fIoFAtFt9RLaTMRlg/8w49juAStsrBgp0Dp4OdxdVbRIeKhtCUvoi/RuAhO4g==}
