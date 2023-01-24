@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-return-await */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
@@ -57,7 +59,7 @@ const useRemoveCandyMachineAccount = (accounts: string[]) => {
             }
         }
 
-        return await withdrawV2(anchorProgram, anchorWallet, new PublicKey(candyMachineAccount))
+        return await withdrawV2(anchorProgram as any, anchorWallet, new PublicKey(candyMachineAccount))
     }
 
     return {
