@@ -46,7 +46,7 @@ const useRefreshCandyMachine = (account: string) => {
 
             setCandyMachine({
                 id: new PublicKey(account),
-                program,
+                program: program as any,
                 state: {
                     authority: state.authority,
                     itemsAvailable,

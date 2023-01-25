@@ -3,6 +3,7 @@ import { FC } from 'react'
 import { LinkExternalIcon } from '@primer/octicons-react'
 import { VariantType } from '@primer/react/lib/Button/types'
 import { useRPC } from 'hooks'
+import Image from 'next/image'
 
 type ButtonType = 'link' | 'button'
 
@@ -35,7 +36,13 @@ const NftCard: FC<{
                 >
                     <div className='width-full height-full position-relative'>
                         {imageLink?.length ? (
-                            <img alt={title} src={imageLink} className='object-fit-cover height-full width-full' />
+                            <Image
+                                width={165}
+                                height={165}
+                                alt={title}
+                                src={imageLink}
+                                className='object-fit-cover height-full width-full'
+                            />
                         ) : (
                             ''
                         )}

@@ -1,7 +1,8 @@
-const gitSemverTags = require("git-semver-tags");
-const fs = require("fs");
+/* eslint-disable no-console */
+const gitSemverTags = require('git-semver-tags');
+const fs = require('fs');
 
-gitSemverTags(function (err, tags) {
+gitSemverTags((err, tags) => {
   if (err) return;
   const obj = {
     version: tags[0],
