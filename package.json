@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "bash git-tags.sh && next dev",
+    "build": "bash git-tags.sh && next build",
     "start": "next start",
     "lint": "npx eslint . --ext .ts,.tsx",
-    "tag": "node git-tags.js",
+    "tag": "bash git-tags.sh",
     "format": "prettier --write  \"./**/*.{tsx,ts,css}\"",
     "prepare": "husky install"
   },
@@ -54,7 +54,6 @@
     "eslint": "8.32.0",
     "git-semver-tags": "^4.1.1",
     "eslint-config-next": "13.1.5",
-    "git-tags": "^0.2.4",
     "husky": ">=8.0.3",
     "lint-staged": ">=13.1.0",
     "octicons-react": "link:@types/@primer/octicons-react",
