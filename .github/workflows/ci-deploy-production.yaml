@@ -22,7 +22,7 @@ jobs:
           
       - name: Get tag version
         id: getdata
-        run: node git-tags.js
+        run: bash git-tags.sh
 
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
