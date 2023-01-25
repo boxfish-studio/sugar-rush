@@ -358,7 +358,7 @@ const UpdateCandyMachine: FC<{
                                 )}
 
                                 {isInteractingWithCM && (
-                                    <Button isLoading disabled size='medium' sx={{ width: 'fit-content' }}>
+                                    <Button size='medium' sx={{ width: 'fit-content' }}>
                                         Updating Candy Machine... <Spinner size='small' />
                                     </Button>
                                 )}

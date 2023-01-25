@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { FC, useEffect, useState } from 'react'
 import { Button, Spinner } from '@primer/react'
 import { useUploadCache, useVerifyCandyMachineV2 } from 'hooks'
@@ -63,7 +64,6 @@ const VerifyCandyMachine: FC<{
                     <Button
                         className={`width-full ${message || error ? 'mt-3' : 'mt-0'}`}
                         variant='primary'
-                        state='rest'
                         size='medium'
                         onClick={() => verifyCM()}
                     >
@@ -72,7 +72,7 @@ const VerifyCandyMachine: FC<{
                 )}
                 {isVerifying && (
                     <>
-                        <Button className='width-full mt-4' size='medium' isLoading disabled>
+                        <Button className='width-full mt-4' size='medium' disabled>
                             Verifying Candy Machine... <Spinner size='small' />
                         </Button>
                     </>
