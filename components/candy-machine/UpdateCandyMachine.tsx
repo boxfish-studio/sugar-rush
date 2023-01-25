@@ -209,7 +209,9 @@ const UpdateCandyMachine: FC<{
     useEffect(() => {
         setError('')
         setIsLoading(false)
-        fetchCandyMachine().then(setCandyMachineConfig)
+        fetchCandyMachine()
+            .then(setCandyMachineConfig)
+            .catch((err) => setError((err as Error)?.message))
         setIsLoading(false)
     }, [connection])
 
@@ -356,7 +358,7 @@ const UpdateCandyMachine: FC<{
                                 )}
 
                                 {isInteractingWithCM && (
-                                    <Button isLoading disabled size='medium' sx={{ width: 'fit-content' }}>
+                                    <Button size='medium' sx={{ width: 'fit-content' }}>
                                         Updating Candy Machine... <Spinner size='small' />
                                     </Button>
                                 )}

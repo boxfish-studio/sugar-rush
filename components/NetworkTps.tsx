@@ -21,6 +21,7 @@ const NetworkTps: FC = () => {
     }, [connection])
 
     useEffect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         getNetworkPerformance()
     }, [getNetworkPerformance, connection])
 

@@ -7,6 +7,7 @@ const Dashboard: NextPage = () => {
     const router = useRouter()
 
     useEffect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         router.push('/candy-machines')
     }, [])
 

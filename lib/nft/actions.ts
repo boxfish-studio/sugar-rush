@@ -1,4 +1,5 @@
-import { Metaplex } from '@metaplex-foundation/js'
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+import { Metadata, Metaplex } from '@metaplex-foundation/js'
 import { Connection, PublicKey } from '@solana/web3.js'
 import { Nft } from './interfaces'
 
@@ -6,7 +7,9 @@ export async function getAllNftsByCM(candyMachineAccount: string | string[], con
     if (!connection && !candyMachineAccount) throw new Error('Connection error')
     try {
         const metaplex = new Metaplex(connection)
-        const nftsAddresses = await metaplex.nfts().findAllByCandyMachine(new PublicKey(candyMachineAccount as string))
+        const nftsAddresses = (await metaplex
+            .candyMachinesV2()
+            .findMintedNfts({ candyMachine: new PublicKey(candyMachineAccount as string) })) as Metadata[]
         const nfts: Nft[] =
             (await Promise.all(
                 nftsAddresses?.map(async (nft) => {
@@ -20,7 +23,7 @@ export async function getAllNftsByCM(candyMachineAccount: string | string[], con
                             animation_url: nftData.animation_url,
                             external_url: nftData.external_url,
                             symbol: nftData.symbol,
-                            mint: nft.mint,
+                            mint: nft.mintAddress,
                             collection: nft.collection ?? nftData.collection,
                             attributes: nftData.attributes,
                             properties: nftData.properties,
@@ -47,7 +50,7 @@ export async function getNftByMint(mintAccount: PublicKey, connection: Connectio
     let nft: Nft = { name: '', image: '' }
     if (!connection && !mintAccount) return nft
     const metaplex = new Metaplex(connection)
-    const nftAddress = await metaplex.nfts().findByMint(mintAccount)
+    const nftAddress = await metaplex.nfts().findByMint({ mintAddress: mintAccount })
 
     const fetchData = await fetch(nftAddress?.uri)
     const nftData = await fetchData.json()
@@ -56,7 +59,7 @@ export async function getNftByMint(mintAccount: PublicKey, connection: Connectio
             name: nftData.name,
             image: nftData.image,
             description: nftData.description,
-            mint: nftAddress.mint,
+            mint: nftAddress.mint.address,
             animation_url: nftData.animation_url,
             external_url: nftData.external_url,
             symbol: nftData.symbol,

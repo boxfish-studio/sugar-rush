@@ -12,23 +12,18 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Get tag version
-        uses: satackey/action-js-inline@v0.0.2
-        id: getdata
+     
+      - uses: actions/setup-node@v3
         with:
-          # Edit the following line to install packages required to run your script.
-          required-packages: git-tags
-          script: |
-            var gittags = require("git-tags");
-            var fs = require("fs");
-            gittags.get(function (err, tags) {
-              if (err) throw err;
-              const obj = {
-                version: tags[0],
-              };
-              fs.writeFileSync("version.json", JSON.stringify(obj), "utf8");
-              console.log(tags);
-            });
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn add git-semver-tags
+          
+      - name: Get tag version
+        id: getdata
+        run: node git-tags.js
+
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:

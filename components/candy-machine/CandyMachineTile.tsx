@@ -18,10 +18,8 @@ const CandyMachineTile: FC<{
                     {account}
                 </span>
                 <div className='d-flex mt-2 mt-md-0 '>
-                    <Link href={`https://solscan.io/account/${account}?${isDevnet}`}>
-                        <a target='_blank'>
-                            <Button leadingIcon={LinkExternalIcon}>View in Solscan</Button>
-                        </a>
+                    <Link href={`https://solscan.io/account/${account}?${isDevnet}`} target='_blank'>
+                        <Button leadingIcon={LinkExternalIcon}>View in Solscan</Button>
                     </Link>
                     <Link href={`/candy-machines/${account}`}>
                         <Button variant='outline' sx={{ ml: '16px' }}>
